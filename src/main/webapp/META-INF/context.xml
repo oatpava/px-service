@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<Context path="/pxservice-dms">-->
+<Context path="/pxservice-ghb">
+    <Resources cacheMaxSize="100000" cachingAllowed="true"/>
+<!--    <Valve className="org.apache.catalina.valves.AccessLogValve" 
+           directory="logs" 
+           prefix="access_log" 
+           fileDateFormat="yyyy-MM-dd.HH" 
+           suffix=".log" 
+           pattern="%t %H cookie:%{SESSIONID}c request:%{SESSIONID}r %m %U %s %q %r" 
+    />-->
+</Context>
