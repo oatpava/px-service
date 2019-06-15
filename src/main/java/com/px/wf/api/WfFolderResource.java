@@ -1933,4 +1933,60 @@ public class WfFolderResource {
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "Method for list WfFolder by wfFolderLinkId.",
+            notes = "ขอรายการแฟ้มทะเบียนด้วยรหัสเชื่อมต่อหน่วยงาน",
+            responseContainer = "List",
+            response = WfFolderModel_groupWfFolderAndShortcut.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "WfFolder list success.")
+        ,
+        @ApiResponse(code = 404, message = "WfFolder list not found in the database.")
+        ,
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/listByLinkId/{structureId}")
+    public Response listByLinkId(
+            @BeanParam VersionModel versionModel,
+            @ApiParam(name = "structureId", value = "structureId", required = true)
+            @PathParam("structureId") int structureId
+    ) {
+        LOG.info("listByLinkId...");
+        LOG.info("structureId = " + structureId);
+        Gson gs = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "WfFolder by listByLinkId not found in the database.");
+        try {
+            WfFolderService wfFolderService = new WfFolderService();
+            List<WfFolder> listWfFolder = wfFolderService.listByStructureId(structureId);
+            if (!listWfFolder.isEmpty()) {
+                List<WfFolderModel> listWffolderModel = new ArrayList<>();
+                for (WfFolder wfFolder : listWfFolder) {
+                    listWffolderModel.add(wfFolderService.tranformToModel(wfFolder));
+                }
+                status = Response.Status.OK;
+                responseData.put("data", listWffolderModel);
+                responseData.put("message", "");
+            }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+
+        return Response.status(status)
+                .entity(gs.toJson(responseData)).build();
+    }
+
 }
