@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--<Context path="/pxservice-dms">-->
-<Context path="/pxservice-ghb">
+<Context path="/pxservice-pawn">
     <Resources cacheMaxSize="100000" cachingAllowed="true"/>
 <!--    <Valve className="org.apache.catalina.valves.AccessLogValve" 
            directory="logs" 
