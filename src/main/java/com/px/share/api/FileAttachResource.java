@@ -935,16 +935,20 @@ public class FileAttachResource {
                 String thumbnailUrl = "";
 //                ArrayList<FileAttachModel2> listFileAttachModel = new ArrayList<>();
                 for (FileAttach fileAttach : listFileAttach) {
-                    fileAttachModel = fileAttachService.tranformToModel2(fileAttach);
-                    String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
-                    url = pathDocumentHttp + "Temp/" + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+                    if (fileAttach.getFileAttachType().equalsIgnoreCase(".TTT")) {
+                        fileAttachService.delete(fileAttach);
+                    } else {
+                        fileAttachModel = fileAttachService.tranformToModel2(fileAttach);
+                        String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
+                        url = pathDocumentHttp + "Temp/" + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
 //                    url = pathDocumentHttp+fileAttachService.buildHtmlPathExt(fileAttach.getId())+fileAttach.getFileAttachType();
-                    thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
-                    urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName2(fileAttach.getId());
-                    fileAttachModel.setUrl(url);
-                    fileAttachModel.setThumbnailUrl(thumbnailUrl);
-                    fileAttachModel.setUrlNoName(urlNoName);
-                    listFileAttachModel.add(fileAttachModel);
+                        thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
+                        urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName2(fileAttach.getId());
+                        fileAttachModel.setUrl(url);
+                        fileAttachModel.setThumbnailUrl(thumbnailUrl);
+                        fileAttachModel.setUrlNoName(urlNoName);
+                        listFileAttachModel.add(fileAttachModel);
+                    }
                 }
                 listFileAttachModel.trimToSize();
                 status = Response.Status.OK;
