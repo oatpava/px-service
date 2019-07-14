@@ -123,6 +123,7 @@ public class FileAttachDaoImpl extends GenericDaoImpl<FileAttach, Integer> imple
         conjunction.add(Restrictions.eq("linkType", linkType));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("referenceId", 0));
+        conjunction.add(Restrictions.ne("fileAttachType", ".TTT"));
         DetachedCriteria criteria = DetachedCriteria.forClass(FileAttach.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
