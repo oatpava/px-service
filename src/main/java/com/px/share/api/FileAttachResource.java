@@ -2267,13 +2267,15 @@ public class FileAttachResource {
     })
     @Consumes(MediaType.APPLICATION_JSON)
     @GET
-    @Path(value = "/createEmptyData/{linkType}/{linkId}")
+    @Path(value = "/createEmptyData/{linkType}/{linkId}/{referenceId}")
     public Response createEmptyData(
             @BeanParam VersionModel versionModel,
             @ApiParam(name = "linkType", value = "linkType", required = true)
             @PathParam("linkType") String linkType,
             @ApiParam(name = "linkId", value = "linkId", required = true)
-            @PathParam("linkId") int linkId
+            @PathParam("linkId") int linkId,
+            @ApiParam(name = "referenceId", value = "referenceId", required = true)
+            @PathParam("referenceId") int referenceId
     ) throws UnsupportedEncodingException {
         LOG.debug("createEmptyData...");
 
@@ -2295,7 +2297,7 @@ public class FileAttachResource {
         fileAttach.setFileAttachType(".TTT");
         fileAttach.setLinkType(linkType);
         fileAttach.setLinkId(linkId);
-        fileAttach.setReferenceId(0);
+        fileAttach.setReferenceId(referenceId);
         fileAttach.setSecrets(1);
         fileAttach = fileAttachService.create(fileAttach);
         FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
