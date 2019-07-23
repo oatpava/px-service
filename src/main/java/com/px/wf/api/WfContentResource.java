@@ -699,11 +699,9 @@ public class WfContentResource {
 
             WfContentModel_groupContentNoAndBookNo wfContentModel_groupContentNoAndBookNo = wfContentService.tranformToModelGroupContentNoAndBookNo(tmpContentNo, wfContentContentNumber, wfContentContentPoint, yearToday, wfFolderPreContentNo);
 
-            if (wfContentModel_groupContentNoAndBookNo != null) {
-                status = Response.Status.OK;
-                responseData.put("data", wfContentModel_groupContentNoAndBookNo);
-                responseData.put("message", "");
-            }
+            status = Response.Status.OK;
+            responseData.put("data", wfContentModel_groupContentNoAndBookNo);
+            responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
             ex.printStackTrace();

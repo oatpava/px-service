@@ -21,58 +21,59 @@ import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.hibernate.type.Type;
 
 /**
- * Provide generic common implementation of GenericDao interface persistence methods.
- * Extend this abstract class to implement DAO for your specific needs.
- * 
+ * Provide generic common implementation of GenericDao interface persistence
+ * methods. Extend this abstract class to implement DAO for your specific needs.
+ *
  * @author OPAS
  * @param <T>
  * @param <PK>
- *  
+ *
  */
 @SuppressWarnings("unchecked")
 public abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK> {
+
     private static final Logger LOG = Logger.getLogger(GenericDaoImpl.class.getName());
-    
+
     private final Class<T> entityClass;
 
     @SuppressWarnings("unchecked")
     public GenericDaoImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
-    }        
-        
-    private Session getCurrentSession(){
+    }
+
+    private Session getCurrentSession() {
         return HibernateUtil.getSESSION_FACTORY().getCurrentSession();
     }
-    
+
     /**
      *
      * @param entity
      * @return
      */
     @Override
-    public T create(T entity) {          
+    public T create(T entity) {
         Transaction transaction = null;
         try {
             if (getCurrentSession().getTransaction() != null && getCurrentSession().getTransaction().isActive()) {
                 transaction = getCurrentSession().getTransaction();
             } else {
                 transaction = getCurrentSession().beginTransaction();
-            }            
+            }
             getCurrentSession().save(entity);
             transaction.commit();
-            
-        }catch(HibernateException e) {  
+
+        } catch (HibernateException e) {
             entity = null;
-            if (transaction!=null) {
+            if (transaction != null) {
                 transaction.rollback();
             }
-            LOG.error("HibernateException = "+e);
-        }finally{
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return entity;
     }
-        
+
     /**
      *
      * @param entityId
@@ -90,16 +91,16 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             }
             entity = (T) getCurrentSession().get(entityClass, entityId);
             getCurrentSession().flush();
-            transaction.commit();       
-        }catch (ObjectNotFoundException e) {
-            LOG.error("ObjectNotFoundException = "+e);
+            transaction.commit();
+        } catch (ObjectNotFoundException e) {
+            LOG.error("ObjectNotFoundException = " + e);
             entity = null;
-        }finally{
+        } finally {
             transaction = null;
         }
         return entity;
     }
-        
+
     /**
      *
      * @param criteria
@@ -119,9 +120,9 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             entity = (T) cr.uniqueResult();
             getCurrentSession().flush();
             transaction.commit();
-        }catch (HibernateException e) {
-            LOG.error("HibernateException = "+e);
-        }finally{
+        } catch (HibernateException e) {
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return entity;
@@ -144,13 +145,13 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             getCurrentSession().merge(entity);
             getCurrentSession().flush();
             transaction.commit();
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             entity = null;
-            if (transaction!=null) {
+            if (transaction != null) {
                 transaction.rollback();
             }
-            LOG.error("HibernateException = "+e);
-        }finally{
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return entity;
@@ -169,19 +170,19 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             } else {
                 transaction = getCurrentSession().beginTransaction();
             }
-            getCurrentSession().delete( entity );
+            getCurrentSession().delete(entity);
             getCurrentSession().flush();
             transaction.commit();
-        }catch (HibernateException e) {
-            if (transaction!=null) {
+        } catch (HibernateException e) {
+            if (transaction != null) {
                 transaction.rollback();
             }
-            LOG.error("HibernateException = "+e);
-        }finally{
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
     }
-    
+
     /**
      *
      * @param criteria
@@ -202,12 +203,12 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             listEntity = cr.list();
             getCurrentSession().flush();
             transaction.commit();
-        }catch (HibernateException e) {
-            if (transaction!=null) {
+        } catch (HibernateException e) {
+            if (transaction != null) {
                 transaction.rollback();
             }
-            LOG.error("HibernateException = "+e);
-        }finally{
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return listEntity;
@@ -237,9 +238,9 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             listEntity = cr.list();
             getCurrentSession().flush();
             transaction.commit();
-        }catch (HibernateException e) {
-            LOG.error("HibernateException = "+e);
-        }finally{
+        } catch (HibernateException e) {
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return listEntity;
@@ -260,18 +261,18 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             } else {
                 transaction = getCurrentSession().beginTransaction();
             }
-            Criteria cr = criteria.getExecutableCriteria(getCurrentSession());            
-            count = ((Number)cr.setProjection(Projections.rowCount()).uniqueResult()).longValue();
+            Criteria cr = criteria.getExecutableCriteria(getCurrentSession());
+            count = ((Number) cr.setProjection(Projections.rowCount()).uniqueResult()).longValue();
             transaction.commit();
-        }catch (HibernateException e) {
-            LOG.error("HibernateException = "+e);
-        }finally{
+        } catch (HibernateException e) {
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return Ints.checkedCast(count);
     }
-    
-    public Integer sum(DetachedCriteria criteria){
+
+    public Integer sum(DetachedCriteria criteria) {
         long sum = 0;
         Transaction transaction = null;
         try {
@@ -280,12 +281,12 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             } else {
                 transaction = getCurrentSession().beginTransaction();
             }
-            Criteria cr = criteria.getExecutableCriteria(getCurrentSession());            
-            sum = ((Number)cr.uniqueResult()).longValue();
+            Criteria cr = criteria.getExecutableCriteria(getCurrentSession());
+            sum = ((Number) cr.uniqueResult()).longValue();
             transaction.commit();
-        }catch (HibernateException e) {
-            LOG.error("HibernateException = "+e);
-        }finally{
+        } catch (HibernateException e) {
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return Ints.checkedCast(sum);
@@ -317,9 +318,9 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
                         type_name = "int";
                     } else if ((type_name).equalsIgnoreCase("timestamp")) {
                         type_name = "datetime";
-                    } else if ((type_name).equalsIgnoreCase("float") ||  (type_name).equalsIgnoreCase("double") ) {
+                    } else if ((type_name).equalsIgnoreCase("float") || (type_name).equalsIgnoreCase("double")) {
                         type_name = "decimal";
-                    } 
+                    }
                     try {
                         column_length = abstractEntity.getMappedClass().getDeclaredField(properties[nameIndex]).getAnnotation(Column.class).length();
                     } catch (NoSuchFieldException | SecurityException e) {
@@ -340,12 +341,12 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
         } catch (HibernateException e) {
             LOG.error("HibernateException getColumnName = " + e);
         } finally {
-            
+
         }
         return list;
     }
-    
-    public Integer max(DetachedCriteria criteria,String fieldName){
+
+    public Integer max(DetachedCriteria criteria, String fieldName) {//oat-edit
         Integer max = 0;
         Transaction transaction = null;
         try {
@@ -354,27 +355,33 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             } else {
                 transaction = getCurrentSession().beginTransaction();
             }
-            Criteria cr = criteria.getExecutableCriteria(getCurrentSession()); 
-            max = (Integer)(cr.setProjection(Projections.max(fieldName))).uniqueResult();
-            transaction.commit();
-        }catch (HibernateException e) {
-            LOG.error("HibernateException = "+e);
-            throw new NullPointerException("max null value");
-        }finally{
-            if (transaction!=null) {
-                transaction.rollback();
+            Criteria cr = criteria.getExecutableCriteria(getCurrentSession());
+            //max = (Integer) (cr.setProjection(Projections.max(fieldName))).uniqueResult();
+            Object tmp = (cr.setProjection(Projections.max(fieldName))).uniqueResult();
+            if (tmp != null) {
+                max = (Integer) (cr.setProjection(Projections.max(fieldName))).uniqueResult();
             }
+            System.out.println("dao max " + max);
+            transaction.commit();
+        } catch (HibernateException e) {
+            LOG.error("HibernateException = " + e);
+            //throw new NullPointerException("max null value");
+        } finally {
+//            if (transaction!=null) {
+//                transaction.rollback();
+//            }
+            transaction = null;
         }
         return Ints.checkedCast(max);
     }
-    
+
     /**
      *
      * @param entityName
      * @param id
      * @return
      */
-    public int restoreEntity(String entityName,int id) {
+    public int restoreEntity(String entityName, int id) {
         Transaction transaction = null;
         try {
             if (getCurrentSession().getTransaction() != null && getCurrentSession().getTransaction().isActive()) {
@@ -382,21 +389,20 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             } else {
                 transaction = getCurrentSession().beginTransaction();
             }
-            Query query = getCurrentSession().createQuery("update "+entityName+" set removedBy = 0 where id = :id");
+            Query query = getCurrentSession().createQuery("update " + entityName + " set removedBy = 0 where id = :id");
             query.setParameter("id", id);
             int result = query.executeUpdate();
             getCurrentSession().flush();
             transaction.commit();
-        }catch (HibernateException e) {
-            if (transaction!=null) {
+        } catch (HibernateException e) {
+            if (transaction != null) {
                 transaction.rollback();
             }
-            LOG.error("HibernateException = "+e);
-        }finally{
+            LOG.error("HibernateException = " + e);
+        } finally {
             transaction = null;
         }
         return id;
     }
-    
-   
+
 }
