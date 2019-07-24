@@ -361,7 +361,6 @@ public abstract class GenericDaoImpl<T, PK extends Serializable> implements Gene
             if (tmp != null) {
                 max = (Integer) (cr.setProjection(Projections.max(fieldName))).uniqueResult();
             }
-            System.out.println("dao max " + max);
             transaction.commit();
         } catch (HibernateException e) {
             LOG.error("HibernateException = " + e);

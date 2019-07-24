@@ -1675,4 +1675,22 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
     public int countBookNo(String bookNo, int folderId, int year) {
         return WfContentDaoImpl.countBookNo(bookNo, folderId, year);
     }
+
+    public HashMap<String, String> checkMaxBookNoSharedFolder(int wfFolderAutorun, int folderId, String wfContentBookPre, int year, int wfContentBookPoint, int wfFolderBookNoType) {
+        ParamService paramservice = new ParamService();
+        //String bookNoEqualConNo = paramservice.getByParamName("BOOKNOEQUALCONNO").getParamValue();
+        int bookNoFormat = Integer.parseInt(paramservice.getByParamName("BOOKNOFORMAT").getParamValue());
+
+        //int chkRepeatBookNoMsg = 0;
+        int wfBookNumber = getMaxContentNo(null, folderId, year) -1;//cause created shared
+        String wfContentBookNo = convertBookNo(year, wfBookNumber, wfContentBookPoint, wfContentBookPre, bookNoFormat, wfFolderBookNoType, wfFolderAutorun);
+        
+        HashMap<String, String> checkMaxBookNo = new HashMap<String, String>();
+        //checkMaxBookNo.put("chkRepeatBookNoMsg", String.valueOf(chkRepeatBookNoMsg));
+        checkMaxBookNo.put("wfContentBookNo", wfContentBookNo);
+        checkMaxBookNo.put("wfBookNumber", String.valueOf(wfBookNumber));
+
+        return checkMaxBookNo;
+    }
+
 }
