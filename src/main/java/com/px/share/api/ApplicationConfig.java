@@ -39,7 +39,7 @@ public class ApplicationConfig extends Application {
             beanConfig.setVersion(version);
             beanConfig.setSchemes(new String[]{"http"});
     //        beanConfig.setHost("localhost:81"); 
-            beanConfig.setBasePath("/pxservice-ghb/api");
+            beanConfig.setBasePath("/pxservice-dpim/api");
             beanConfig.setResourcePackage("com.px.share.api,com.px.admin.api,com.px.authority.api,com.px.dms.api,com.px.documentfile.api,com.px.menu.api,com.px.wf.api,com.px.mwp.api");
 //            beanConfig.setResourcePackage("com.px.share.api,com.px.admin.api,com.px.authority.api,com.px.menu.api,com.px.wf.api,com.px.mwp.api");
             beanConfig.setScan(true);
