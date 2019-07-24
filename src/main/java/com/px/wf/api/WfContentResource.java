@@ -92,7 +92,9 @@ public class WfContentResource {
     public Response create(
             WfContentModel wfContentPostModel,
             @ApiParam(name = "preBookNoIndex", value = "preBookNoIndex", required = true)
-            @QueryParam("preBookNoIndex") int preBookNoIndex
+            @QueryParam("preBookNoIndex") int preBookNoIndex,
+            @ApiParam(name = "sharedFolderId", value = "sharedFolderId", required = true)
+            @QueryParam("sharedFolderId") int sharedFolderId
     ) {
         LOG.info("create...");
         Gson gs = new GsonBuilder()
@@ -165,7 +167,6 @@ public class WfContentResource {
                 int wfContentYear = Integer.parseInt(hashMapContentNo1.get("wfContentYear"));
 
                 //spilt bookNo
-                //[GHB]
                 HashMap<String, String> hashMapBookNo1 = new HashMap<String, String>();
                 hashMapBookNo1 = wfContentService.splitDataBookNo(wfBookNo, wfFolder, preBookNoIndex);
                 wfBookNo = hashMapBookNo1.get("wfContentBookNo");
@@ -186,15 +187,22 @@ public class WfContentResource {
                 }
 
                 //check repeat bookNo
-                if (wfBookNumber > 0) {
-                    HashMap<String, String> hashMapBookNo = wfContentService.checkMaxBookNo(wfFolderAutorun, wfBookNo, wfContentPostModel.getWfContentFolderId(), wfBookPre, wfBookYear, wfBookPoint, wfFolderBookNoType, wfContentNumber);
+                if (sharedFolderId == 0) {
+                    if (wfBookNumber > 0) {
+                        HashMap<String, String> hashMapBookNo = wfContentService.checkMaxBookNo(wfFolderAutorun, wfBookNo, wfContentPostModel.getWfContentFolderId(), wfBookPre, wfBookYear, wfBookPoint, wfFolderBookNoType, wfContentNumber);
 
-                    chkRepeatBookNoMsg = Integer.parseInt(hashMapBookNo.get("chkRepeatBookNoMsg"));
-                    wfBookNo = hashMapBookNo.get("wfContentBookNo");
-                    if (!hashMapBookNo.get("wfBookNumber").equals("0")) {
-                        wfBookNumber = Integer.parseInt(hashMapBookNo.get("wfBookNumber"));
+                        chkRepeatBookNoMsg = Integer.parseInt(hashMapBookNo.get("chkRepeatBookNoMsg"));
+                        wfBookNo = hashMapBookNo.get("wfContentBookNo");
+                        if (!hashMapBookNo.get("wfBookNumber").equals("0")) {
+                            wfBookNumber = Integer.parseInt(hashMapBookNo.get("wfBookNumber"));
+                        }
                     }
+                } else {
+                    HashMap<String, String> hashMapBookNo = wfContentService.checkMaxBookNoSharedFolder(wfFolderAutorun, sharedFolderId, wfBookPre, wfBookYear, wfBookPoint, wfFolderBookNoType);
+                    wfBookNo = hashMapBookNo.get("wfContentBookNo");
+                    wfBookNumber = Integer.parseInt(hashMapBookNo.get("wfBookNumber"));
                 }
+
                 //=======create WFContent ======================
                 wfContentCreate.setOrderNo(wfContentCreate.getId());
                 wfContentCreate.setInboxId(wfContentPostModel.getInboxId());
@@ -699,11 +707,9 @@ public class WfContentResource {
 
             WfContentModel_groupContentNoAndBookNo wfContentModel_groupContentNoAndBookNo = wfContentService.tranformToModelGroupContentNoAndBookNo(tmpContentNo, wfContentContentNumber, wfContentContentPoint, yearToday, wfFolderPreContentNo);
 
-            if (wfContentModel_groupContentNoAndBookNo != null) {
-                status = Response.Status.OK;
-                responseData.put("data", wfContentModel_groupContentNoAndBookNo);
-                responseData.put("message", "");
-            }
+            status = Response.Status.OK;
+            responseData.put("data", wfContentModel_groupContentNoAndBookNo);
+            responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1818,7 +1824,7 @@ public class WfContentResource {
                 listWfContentModel.trimToSize();
                 /////
                 String header = "";
-                String tableHeader = "";        
+                String tableHeader = "";
                 if (folderId > 0) {//else report_16
                     WfFolderService folderService = new WfFolderService();
                     WfFolder folder = folderService.getByIdNotRemoved(folderId);
