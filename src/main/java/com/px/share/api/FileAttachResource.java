@@ -935,16 +935,20 @@ public class FileAttachResource {
                 String thumbnailUrl = "";
 //                ArrayList<FileAttachModel2> listFileAttachModel = new ArrayList<>();
                 for (FileAttach fileAttach : listFileAttach) {
-                    fileAttachModel = fileAttachService.tranformToModel2(fileAttach);
-                    String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
-                    url = pathDocumentHttp + "Temp/" + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+                    if (fileAttach.getFileAttachType().equalsIgnoreCase(".TTT")) {
+                        fileAttachService.delete(fileAttach);
+                    } else {
+                        fileAttachModel = fileAttachService.tranformToModel2(fileAttach);
+                        String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
+                        url = pathDocumentHttp + "Temp/" + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
 //                    url = pathDocumentHttp+fileAttachService.buildHtmlPathExt(fileAttach.getId())+fileAttach.getFileAttachType();
-                    thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
-                    urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName2(fileAttach.getId());
-                    fileAttachModel.setUrl(url);
-                    fileAttachModel.setThumbnailUrl(thumbnailUrl);
-                    fileAttachModel.setUrlNoName(urlNoName);
-                    listFileAttachModel.add(fileAttachModel);
+                        thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
+                        urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName2(fileAttach.getId());
+                        fileAttachModel.setUrl(url);
+                        fileAttachModel.setThumbnailUrl(thumbnailUrl);
+                        fileAttachModel.setUrlNoName(urlNoName);
+                        listFileAttachModel.add(fileAttachModel);
+                    }
                 }
                 listFileAttachModel.trimToSize();
                 status = Response.Status.OK;
@@ -2263,13 +2267,15 @@ public class FileAttachResource {
     })
     @Consumes(MediaType.APPLICATION_JSON)
     @GET
-    @Path(value = "/createEmptyData/{linkType}/{linkId}")
+    @Path(value = "/createEmptyData/{linkType}/{linkId}/{referenceId}")
     public Response createEmptyData(
             @BeanParam VersionModel versionModel,
             @ApiParam(name = "linkType", value = "linkType", required = true)
             @PathParam("linkType") String linkType,
             @ApiParam(name = "linkId", value = "linkId", required = true)
-            @PathParam("linkId") int linkId
+            @PathParam("linkId") int linkId,
+            @ApiParam(name = "referenceId", value = "referenceId", required = true)
+            @PathParam("referenceId") int referenceId
     ) throws UnsupportedEncodingException {
         LOG.debug("createEmptyData...");
 
@@ -2291,7 +2297,7 @@ public class FileAttachResource {
         fileAttach.setFileAttachType(".TTT");
         fileAttach.setLinkType(linkType);
         fileAttach.setLinkId(linkId);
-        fileAttach.setReferenceId(0);
+        fileAttach.setReferenceId(referenceId);
         fileAttach.setSecrets(1);
         fileAttach = fileAttachService.create(fileAttach);
         FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
