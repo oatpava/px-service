@@ -42,9 +42,9 @@ public class PxInit implements ServletContextListener {
     public static final String KEY = "42444678902180239428358646519815165132078951561321646432131696998878616";
     public static final String HEADER = "ATENCODE01";
     public static final String DEFAULT_PASSWORD = "12345678";
-    public static String PathDocument = "/dbPraxticol/Data/Document/";
-    public static String PathDocumentTemp = "/dbPraxticol/Data/Document/Temp/";
-    public static String PathWatermark = "/dbPraxticol/Data/Document/Watermark/";
+    public static String PathDocument = "/Users/Oat/dbPraxticol/Data/Document/";
+    public static String PathDocumentTemp = "/Users/Oat/dbPraxticol/Data/Document/Temp/";
+    public static String PathWatermark = "/Users/Oat/dbPraxticol/Data/Document/Watermark/";
     public static String PathMasterFile = "masterFile/";
     public static String MasterFileSplitBy = "\\|";
     public static String PathLog = "logs\\";
