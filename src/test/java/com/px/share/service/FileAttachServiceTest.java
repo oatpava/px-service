@@ -558,7 +558,7 @@ public class FileAttachServiceTest {
     }
     @Ignore
     @Test
-    public boolean checkHaveFile(){
+    public void checkHaveFile(){
         
         int attachId = 2;
         
@@ -571,7 +571,7 @@ public class FileAttachServiceTest {
          System.out.println("pathFile =  "+pathFile);
          
         
-    return true;
+    //return true;
     }
     
 }

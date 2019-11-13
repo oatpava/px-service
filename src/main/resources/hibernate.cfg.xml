@@ -3,11 +3,11 @@
 <hibernate-configuration>
     <session-factory>
         <!-- Database connection settings -->
-        <property name="hibernate.dialect">org.hibernate.dialect.SQLServer2012Dialect</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServer2008Dialect</property>
         <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>     
-        <property name="hibernate.connection.url">jdbc:sqlserver://10.10.59.25;databaseName=PRAXTICOL_PAWN</property>
+        <property name="hibernate.connection.url">jdbc:sqlserver://127.0.0.1;databaseName=px8</property>
         <property name="hibernate.connection.username">sa</property>
-        <property name="hibernate.connection.password">PAWNP@ssw0rd</property>
+        <property name="hibernate.connection.password">P@ssw0rd</property>
        
         <property name="hibernate.show_sql">false</property>
         <property name="hibernate.generate_statistics">false</property>

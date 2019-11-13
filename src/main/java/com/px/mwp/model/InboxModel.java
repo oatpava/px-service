@@ -280,6 +280,10 @@ public class InboxModel extends VersionModel {
     @Expose
     private int inboxSpeed;//oat-add
 
+    @XmlElement(name = "openDAteDefineStatus")
+    @Expose
+    private int openDateDefineStatus;
+
     public InboxModel() {
     }
 
@@ -670,6 +674,14 @@ public class InboxModel extends VersionModel {
 
     public void setInboxSpeed(int inboxSpeed) {
         this.inboxSpeed = inboxSpeed;
+    }
+
+    public int getOpenDateDefineStatus() {
+        return openDateDefineStatus;
+    }
+
+    public void setOpenDateDefineStatus(int openDateDefineStatus) {
+        this.openDateDefineStatus = openDateDefineStatus;
     }
 
 }
