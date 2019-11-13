@@ -2819,5 +2819,47 @@ public class WfContentResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
+    
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "updateSendFlag by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/updateSendFlag")
+    public Response updateSendFlag(
+            WfContentModel contentModel
+    ) {
+        LOG.debug("updateSendFlag...");
+        Gson gs = new GsonBuilder()
+                .setVersion(contentModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "WfContent by id not found in the database.");
+        try {
+            WfContentService contentService = new WfContentService();
+            WfContent content = contentService.getById(contentModel.getId());
+            if (content != null) {
+                content.setWfContentInt03(1);
+                contentService.update(content);
+                status = Response.Status.OK;
+                responseData.put("data", "");
+                responseData.put("message", "");
+            }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
 
 }
