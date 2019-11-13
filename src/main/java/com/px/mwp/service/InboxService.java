@@ -147,7 +147,8 @@ public class InboxService implements GenericService<Inbox, InboxModel> {
         inboxModel.setInboxReceiveDateDefine(Common.localDateTimeToString(inbox.getInboxReceiveDateDefine()));
         inboxModel.setInboxReceiveFlag(inbox.getInboxReceiveFlag());
         inboxModel.setInboxOpenDate(Common.localDateTimeToString2(inbox.getInboxOpenDate()));////
-        inboxModel.setInboxOpenDateDefine(Common.localDateTimeToString(inbox.getInboxOpenDateDefine()));
+        String openDateDefine = Common.localDateTimeToString(inbox.getInboxOpenDateDefine());
+        inboxModel.setInboxOpenDateDefine(openDateDefine);
         inboxModel.setInboxOpenFlag(inbox.getInboxOpenFlag());
         inboxModel.setInboxActionDate(Common.localDateTimeToString(inbox.getInboxActionDate()));
         inboxModel.setInboxActionDateDefine(Common.localDateTimeToString(inbox.getInboxActionDateDefine()));
@@ -203,6 +204,14 @@ public class InboxService implements GenericService<Inbox, InboxModel> {
         }
 
         inboxModel.setInboxSpeed(inbox.getInboxSpeed());
+        inboxModel.setOpenDateDefineStatus(0);
+        if (inbox.getInboxOpenDateDefine() != null) {
+            if (LocalDateTime.now().isBefore(inbox.getInboxOpenDateDefine())) {
+                inboxModel.setOpenDateDefineStatus(1);
+            } else {
+                inboxModel.setOpenDateDefineStatus(2);
+            }
+        }
         return inboxModel;
     }
 
