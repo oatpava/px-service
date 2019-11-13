@@ -1730,11 +1730,11 @@ public class WfContentResource {
                     break;
 
                 case 1:
-                    bookNo = pre + no.substring(no.length() - bookFormat) + point;//praxis00001
+                    bookNo = pre + "/" + no.substring(no.length() - bookFormat) + point;
                     break;
 
                 case 2:
-                    bookNo = pre + no.substring(no.length() - bookFormat) + point + "/" + Integer.toString(year);//praxis00001/2560
+                    bookNo = pre + "/" + no.substring(no.length() - bookFormat) + point + "/" + Integer.toString(year);
                     break;
 
             }
