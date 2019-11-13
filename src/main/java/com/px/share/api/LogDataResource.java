@@ -362,14 +362,14 @@ public class LogDataResource {
 
             logTypeModel = new LogTypeModel();
             logTypeModel.setModule(LogData.MODULE_MWP);
-            logTypeModel.setModuleName("กล่องข้อมูลเข้า");
-            logTypeModel.setSubModule("ข้อมูลเข้า");
+            logTypeModel.setModuleName("กล่องหนังสือเข้า");
+            logTypeModel.setSubModule("หนังสือเข้า");
             listLogTypeModel.add(logTypeModel);
 
             logTypeModel = new LogTypeModel();
             logTypeModel.setModule(LogData.MODULE_MWP);
-            logTypeModel.setModuleName("กล่องข้อมูลออก");
-            logTypeModel.setSubModule("ข้อมูลออก");
+            logTypeModel.setModuleName("กล่องหนังสือออก");
+            logTypeModel.setSubModule("หนังสือออก");
             listLogTypeModel.add(logTypeModel);
 
             logTypeModel = new LogTypeModel();

@@ -401,12 +401,12 @@ public class UserProfileResource {
                     UserProfileFolderService userProfileFolderService = new UserProfileFolderService();
                     UserProfileFolder inbox = userProfileFolderService.getByUserProfileId(id, "I");
                     if (inbox != null) {
-                        inbox.setUserProfileFolderDetail("ข้อมูลเข้าของ " + newUserProfile.getUserProfileFullName());
+                        inbox.setUserProfileFolderDetail("หนังสือเข้าของ " + newUserProfile.getUserProfileFullName());
                         userProfileFolderService.update(inbox);
                     }
                     UserProfileFolder outbox = userProfileFolderService.getByUserProfileId(id, "O");
                     if (outbox != null) {
-                        outbox.setUserProfileFolderDetail("ข้อมูลออกของ " + newUserProfile.getUserProfileFullName());
+                        outbox.setUserProfileFolderDetail("หนังสือออกของ " + newUserProfile.getUserProfileFullName());
                         userProfileFolderService.update(outbox);
                     }
                     UserProfileFolder recycleBin = userProfileFolderService.getByUserProfileId(id, "Z");
@@ -1839,9 +1839,9 @@ public class UserProfileResource {
                     //genInbox
                     UserProfileFolder userProfileFolder = new UserProfileFolder();
                     userProfileFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    userProfileFolder.setUserProfileFolderDetail("ข้อมูลเข้าของ " + userProfile.getUserProfileFullName());
+                    userProfileFolder.setUserProfileFolderDetail("หนังสือเข้าของ " + userProfile.getUserProfileFullName());
                     userProfileFolder.setUserProfileFolderLinkId(0);
-                    userProfileFolder.setUserProfileFolderName("กล่องข้อมูลเข้า");
+                    userProfileFolder.setUserProfileFolderName("กล่องหนังสือเข้า");
                     userProfileFolder.setUserProfileFolderType("I");
                     userProfileFolder.setUserProfileId(userProfile.getId());
                     if (userProfileFolder != null) {
@@ -1850,9 +1850,9 @@ public class UserProfileResource {
                     //genOutbox
                     userProfileFolder = new UserProfileFolder();
                     userProfileFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    userProfileFolder.setUserProfileFolderDetail("ข้อมูลออกของ " + userProfile.getUserProfileFullName());
+                    userProfileFolder.setUserProfileFolderDetail("หนังสือออกของ " + userProfile.getUserProfileFullName());
                     userProfileFolder.setUserProfileFolderLinkId(0);
-                    userProfileFolder.setUserProfileFolderName("กล่องข้อมูลออก");
+                    userProfileFolder.setUserProfileFolderName("กล่องหนังสือออก");
                     userProfileFolder.setUserProfileFolderType("O");
                     userProfileFolder.setUserProfileId(userProfile.getId());
                     if (userProfileFolder != null) {
@@ -1942,14 +1942,14 @@ public class UserProfileResource {
                     //updateInbox
                     UserProfileFolder userProfileFolder = userProfileFolderService.getByUserProfileId(userProfile.getId(), "I");
                     if (userProfileFolder != null) {
-                        userProfileFolder.setUserProfileFolderDetail("ข้อมูลเข้าของ " + userProfile.getUserProfileFullName());
+                        userProfileFolder.setUserProfileFolderDetail("หนังสือเข้าของ " + userProfile.getUserProfileFullName());
                         userProfileFolder.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                         userProfileFolder = userProfileFolderService.update(userProfileFolder);
                     }
                     //updateOutbox
                     userProfileFolder = userProfileFolderService.getByUserProfileId(userProfile.getId(), "O");
                     if (userProfileFolder != null) {
-                        userProfileFolder.setUserProfileFolderDetail("ข้อมูลออกของ " + userProfile.getUserProfileFullName());
+                        userProfileFolder.setUserProfileFolderDetail("หนังสือออกของ " + userProfile.getUserProfileFullName());
                         userProfileFolder.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                         userProfileFolder = userProfileFolderService.update(userProfileFolder);
                     }

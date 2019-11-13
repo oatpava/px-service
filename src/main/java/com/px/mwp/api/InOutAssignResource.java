@@ -44,7 +44,7 @@ import javax.ws.rs.core.HttpHeaders;
  *
  * @author Mali
  */
-@Api(value = "InOutAssign กำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก")
+@Api(value = "InOutAssign กำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก")
 @Path("v1/inOutAssigns")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class InOutAssignResource {
@@ -55,8 +55,8 @@ public class InOutAssignResource {
     HttpHeaders httpHeaders;
 
     @ApiOperation(
-            value = "สร้างข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "สร้างข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "สร้างข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "สร้างข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
             response = InOutAssignModel.class
     )
     @ApiResponses({
@@ -117,8 +117,8 @@ public class InOutAssignResource {
     }
 
     @ApiOperation(
-            value = "ลบข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "ลบข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "ลบข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "ลบข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
             response = InOutAssignModel.class
     )
     @ApiResponses({
@@ -133,7 +133,7 @@ public class InOutAssignResource {
     @Path(value = "/{id}")
     public Response remove(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+            @ApiParam(name = "id", value = "รหัสกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
             @PathParam("id") int id
     ) {
         LOG.info("remove...");
@@ -167,8 +167,8 @@ public class InOutAssignResource {
     }
 
     @ApiOperation(
-            value = "ลบข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "ลบข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "ลบข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "ลบข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
             response = InOutAssignModel.class
     )
     @ApiResponses({
@@ -183,7 +183,7 @@ public class InOutAssignResource {
     @Path(value = "/delete/{id}")
     public Response delete(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+            @ApiParam(name = "id", value = "รหัสกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
             @PathParam("id") int id
     ) {
         LOG.info("delete...");
@@ -219,8 +219,8 @@ public class InOutAssignResource {
     }
 
     @ApiOperation(
-            value = "รายการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "รายการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "รายการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "รายการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
             responseContainer = "List",
             response = InOutAssignModel_groupUserStructure.class
     )
@@ -329,8 +329,8 @@ public class InOutAssignResource {
     }
 
 //    @ApiOperation(
-//            value = "รายการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-//            notes = "รายการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+//            value = "รายการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
+//            notes = "รายการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
 //            responseContainer = "List",
 //            response = InOutAssignModel.class
 //    )
@@ -346,7 +346,7 @@ public class InOutAssignResource {
 //    @Path(value = "/listByAssignId/{assignId}")
 //    public Response listByAssignId(
 //            @BeanParam ListOptionModel listOptionModel,
-//            @ApiParam(name = "assignId", value = "รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+//            @ApiParam(name = "assignId", value = "รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
 //            @PathParam("assignId") int assignId
 //    ) {
 //        LOG.info("listByAssignId...");
@@ -440,8 +440,8 @@ public class InOutAssignResource {
 //                .entity(gs.toJson(responseData)).build();
 //    }
 //    @ApiOperation(
-//            value = "รายการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-//            notes = "รายการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+//            value = "รายการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก",
+//            notes = "รายการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก",
 //            responseContainer = "List",
 //            response = InOutAssignModel_groupInOutAssignAndUserName.class
 //    )
@@ -455,9 +455,9 @@ public class InOutAssignResource {
 //    @Path(value = "/listByOwnerId/{ownerId}/ownerType/{ownerType}")
 //    public Response listByOwnerId(
 //            @BeanParam ListOptionModel listOptionModel,
-//            @ApiParam(name = "ownerId", value = "รหัสเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+//            @ApiParam(name = "ownerId", value = "รหัสเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
 //            @PathParam("ownerId") int ownerId,
-//            @ApiParam(name = "ownerType", value = "ประเภทเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก 0=User 1=Structure", required = true)
+//            @ApiParam(name = "ownerType", value = "ประเภทเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก 0=User 1=Structure", required = true)
 //            @PathParam("ownerType") int ownerType
 //    ) {
 //        LOG.info("listByOwnerId...");
@@ -532,8 +532,8 @@ public class InOutAssignResource {
 //                .entity(gs.toJson(responseData)).build();
 //    }
     @ApiOperation(
-            value = "ลบข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออกที่เกินกำหนดเวลา",
-            notes = "ลบข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออกที่เกินกำหนดเวลา",
+            value = "ลบข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออกที่เกินกำหนดเวลา",
+            notes = "ลบข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออกที่เกินกำหนดเวลา",
             response = InOutAssignModel.class
     )
     @ApiResponses({
@@ -592,8 +592,8 @@ public class InOutAssignResource {
     }
 
     @ApiOperation(
-            value = "แก้ไขข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "แก้ไขข้อมูลกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "แก้ไขข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "แก้ไขข้อมูลกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก",
             response = InOutAssignModel.class
     )
     @ApiResponses({

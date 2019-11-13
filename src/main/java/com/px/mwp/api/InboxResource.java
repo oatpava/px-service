@@ -47,7 +47,7 @@ import javax.ws.rs.core.HttpHeaders;
  *
  * @author Oat
  */
-@Api(value = "Inbox กล่องข้อมูลเข้า")
+@Api(value = "Inbox กล่องหนังสือเข้า")
 @Path("v1/inboxs")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class InboxResource {
@@ -58,8 +58,8 @@ public class InboxResource {
     HttpHeaders httpHeaders;
 
     @ApiOperation(
-            value = "สร้างข้อมูลกล่องข้อมูลเข้า",
-            notes = "สร้างข้อมูลกล่องข้อมูลเข้า",
+            value = "สร้างข้อมูลกล่องหนังสือเข้า",
+            notes = "สร้างข้อมูลกล่องหนังสือเข้า",
             response = InboxModel.class
     )
     @ApiResponses({
@@ -90,7 +90,7 @@ public class InboxResource {
             int inboxApprove = 0;
 //            Param param = new Param();
 //            ParamService paramservice = new ParamService();
-//            param = paramservice.getByParamName("INBOXAFTERSEND"); //0=ลบจากขอ้มูลเข้า  1=ไม่ลบจากข้อมูลเข้า  2=ลบออกจากฐานข้อมูล
+//            param = paramservice.getByParamName("INBOXAFTERSEND"); //0=ลบจากขอ้มูลเข้า  1=ไม่ลบจากหนังสือเข้า  2=ลบออกจากฐานข้อมูล
 //            String inboxAfterAction = param.getParamValue();
 
             //get current
@@ -165,8 +165,8 @@ public class InboxResource {
     }
 
     @ApiOperation(
-            value = "ขอข้อมูลกล่องข้อมูลเข้า ด้วย รหัสกล่องข้อมูลเข้า",
-            notes = "ขอข้อมูลกล่องข้อมูลเข้า ด้วย รหัสกล่องข้อมูลเข้า",
+            value = "ขอข้อมูลกล่องหนังสือเข้า ด้วย รหัสกล่องหนังสือเข้า",
+            notes = "ขอข้อมูลกล่องหนังสือเข้า ด้วย รหัสกล่องหนังสือเข้า",
             response = InboxModel.class
     )
     @ApiResponses({
@@ -181,7 +181,7 @@ public class InboxResource {
     @Path(value = "/{id}")
     public Response getById(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสกล่องข้อมูลเข้า", required = true)
+            @ApiParam(name = "id", value = "รหัสกล่องหนังสือเข้า", required = true)
             @PathParam("id") int id
     ) {
         LOG.debug("getById...");
@@ -242,8 +242,8 @@ public class InboxResource {
     }
 
     @ApiOperation(
-            value = "ลบข้อมูลกล่องข้อมูลเข้า",
-            notes = "ลบข้อมูลกล่องข้อมูลเข้า",
+            value = "ลบข้อมูลกล่องหนังสือเข้า",
+            notes = "ลบข้อมูลกล่องหนังสือเข้า",
             response = InboxModel.class
     )
     @ApiResponses({
@@ -258,7 +258,7 @@ public class InboxResource {
     @Path(value = "/{id}")
     public Response remove(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสกล่องข้อมูลเข้า", required = true)
+            @ApiParam(name = "id", value = "รหัสกล่องหนังสือเข้า", required = true)
             @PathParam("id") int id
     ) {
         LOG.debug("remove...");
@@ -295,8 +295,8 @@ public class InboxResource {
     }
 
     @ApiOperation(
-            value = "รายการกล่องข้อมูลเข้าโดยรหัสหน่วยงาน",
-            notes = "รายการกล่องข้อมูลเข้าโดยรหัสหน่วยงาน",
+            value = "รายการกล่องหนังสือเข้าโดยรหัสหน่วยงาน",
+            notes = "รายการกล่องหนังสือเข้าโดยรหัสหน่วยงาน",
             responseContainer = "List",
             response = InboxModel.class
     )
@@ -681,8 +681,8 @@ public class InboxResource {
     }
 
     @ApiOperation(
-            value = "รายการกล่องข้อมูลเข้าโดยรหัสผู้ใช้งาน",
-            notes = "รายการกล่องข้อมูลเข้าโดยรหัสผู้ใช้งาน",
+            value = "รายการกล่องหนังสือเข้าโดยรหัสผู้ใช้งาน",
+            notes = "รายการกล่องหนังสือเข้าโดยรหัสผู้ใช้งาน",
             responseContainer = "List",
             response = InboxModel.class
     )
@@ -760,8 +760,8 @@ public class InboxResource {
     }
 
     @ApiOperation(
-            value = "ลบข้อมูลกล่องข้อมูลเข้า ไม่สร้างถังขยะ",
-            notes = "ลบข้อมูลกล่องข้อมูลเข้า ไม่สร้างถังขย",
+            value = "ลบข้อมูลกล่องหนังสือเข้า ไม่สร้างถังขยะ",
+            notes = "ลบข้อมูลกล่องหนังสือเข้า ไม่สร้างถังขย",
             response = InboxModel.class
     )
     @ApiResponses({
@@ -776,7 +776,7 @@ public class InboxResource {
     @Path(value = "/removeNoRecyc/{id}")
     public Response removeNoRecyc(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสกล่องข้อมูลเข้า", required = true)
+            @ApiParam(name = "id", value = "รหัสกล่องหนังสือเข้า", required = true)
             @PathParam("id") int id
     ) {
         LOG.debug("removeNoRecyc...");

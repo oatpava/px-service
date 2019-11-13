@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "Inbox")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "กล่องข้อมูลเข้า")
+@ApiModel(description = "กล่องหนังสือเข้า")
 public class InboxModel extends VersionModel {
 
     private static final long serialVersionUID = -2443067835898627821L;
@@ -250,7 +250,7 @@ public class InboxModel extends VersionModel {
     private String inboxNote;
 
     @XmlElement(name = "inboxKey")
-    @ApiParam(name = "inboxKey", value = "คีย์ของข้อมูลเข้า", required = false)
+    @ApiParam(name = "inboxKey", value = "คีย์ของหนังสือเข้า", required = false)
     @Size(max = 255)
     @Expose
     @Since(1.0)
@@ -291,7 +291,7 @@ public class InboxModel extends VersionModel {
         return id;
     }
 
-    @ApiModelProperty(position = 1, name = "id", value = "รหัสกล่องข้อมูลเข้า", required = true)
+    @ApiModelProperty(position = 1, name = "id", value = "รหัสกล่องหนังสือเข้า", required = true)
     public void setId(int id) {
         this.id = id;
     }

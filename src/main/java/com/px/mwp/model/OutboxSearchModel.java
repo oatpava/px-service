@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "Outbox Search")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "ค้นหากล่องข้อมูลเข้า")
+@ApiModel(description = "ค้นหากล่องหนังสือเข้า")
 public class OutboxSearchModel extends VersionModel {
 
     private static final long serialVersionUID = 8490492522941937546L;

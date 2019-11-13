@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "inOutField")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "ชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก")
+@ApiModel(description = "ชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก")
 public class InOutFieldModel extends VersionModel {
     
     private static final long serialVersionUID = -2443067835898627821L;
@@ -34,28 +34,28 @@ public class InOutFieldModel extends VersionModel {
     @Expose @Since(1.0) private String updatedDate;
 
     @XmlElement(name = "inoutFieldName")
-    @ApiParam(name = "inoutFieldName", value = "ชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = false)
+    @ApiParam(name = "inoutFieldName", value = "ชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก", required = false)
     @Size(max = 255)
     @Expose 
     @Since(1.0)
     private String inoutFieldName;
     
     @XmlElement(name = "inoutFieldDescription")
-    @ApiParam(name = "inoutFieldDescription", value = "คำอธิบายชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+    @ApiParam(name = "inoutFieldDescription", value = "คำอธิบายชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
     @Size(max = 50)
     @Expose 
     @Since(1.0)
     private String inoutFieldDescription;
      
     @XmlElement(name = "inoutFieldType")
-    @ApiParam(name = "inoutFieldType", value = "ประเภทของชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = false)
+    @ApiParam(name = "inoutFieldType", value = "ประเภทของชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก", required = false)
     @Size(max = 50)
     @Expose 
     @Since(1.0)
     private String inoutFieldType;
     
     @XmlElement(name = "inoutFieldLength")
-    @ApiParam(name = "inoutFieldLength", value = "ความยาวของชื่อฟิลด์ขอกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = false)
+    @ApiParam(name = "inoutFieldLength", value = "ความยาวของชื่อฟิลด์ขอกล่องหนังสือเข้า/กล่องหนังสือออก", required = false)
     @Expose 
     @Since(1.0)
     private int inoutFieldLength;

@@ -94,9 +94,9 @@ public class RecycleBinService implements GenericService<RecycleBin, RecycleBinM
             recycleBinModel.setIpAddress(recycleBin.getIpAddress());
             recycleBinModel.setModuleName(moduleName);
             if (moduleName.equalsIgnoreCase(LogData.MODULE_MWP)) {
-                if (recycleBin.getDescription().contains("ข้อมูลเข้า")) {
+                if (recycleBin.getDescription().contains("หนังสือเข้า")) {
                     moduleIcon = "icon_inbox_o.png";
-                } else if (recycleBin.getDescription().contains("ข้อมูลออก")) {
+                } else if (recycleBin.getDescription().contains("หนังสือออก")) {
                     moduleIcon = "icon_outbox_o.png";
                 } else if (recycleBin.getDescription().contains("แฟ้มส่วนตัว")) {
                     moduleIcon = "icon_folder_o.png";

@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "Outbox")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "กล่องข้อมูลออก")
+@ApiModel(description = "กล่องหนังสือออก")
 public class OutboxModel extends VersionModel {
 
     private static final long serialVersionUID = -2443067835898627821L;
@@ -281,7 +281,7 @@ public class OutboxModel extends VersionModel {
         return id;
     }
 
-    @ApiModelProperty(position = 1, name = "id", value = "รหัสกล่องข้อมูลเข้า", required = true)
+    @ApiModelProperty(position = 1, name = "id", value = "รหัสกล่องหนังสือเข้า", required = true)
     public void setId(int id) {
         this.id = id;
     }

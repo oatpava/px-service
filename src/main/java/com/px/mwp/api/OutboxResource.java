@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  *
  * @author Oat
  */
-@Api(value = "Outbox กล่องข้อมูลออก")
+@Api(value = "Outbox กล่องหนังสือออก")
 @Path("v1/outboxs")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class OutboxResource {
@@ -54,8 +54,8 @@ public class OutboxResource {
     HttpHeaders httpHeaders;
 
     @ApiOperation(
-            value = "สร้างข้อมูลกล่องข้อมูลออก",
-            notes = "สร้างข้อมูลกล่องข้อมูลออก",
+            value = "สร้างข้อมูลกล่องหนังสือออก",
+            notes = "สร้างข้อมูลกล่องหนังสือออก",
             response = OutboxModel.class
     )
     @ApiResponses({
@@ -137,8 +137,8 @@ public class OutboxResource {
     }
 
     @ApiOperation(
-            value = "ลบข้อมูลกล่องข้อมูลออก",
-            notes = "ลบข้อมูลกล่องข้อมูลออก",
+            value = "ลบข้อมูลกล่องหนังสือออก",
+            notes = "ลบข้อมูลกล่องหนังสือออก",
             response = OutboxModel.class
     )
     @ApiResponses({
@@ -153,7 +153,7 @@ public class OutboxResource {
     @Path(value = "/{id}")
     public Response remove(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสกล่องข้อมูลออก", required = true)
+            @ApiParam(name = "id", value = "รหัสกล่องหนังสือออก", required = true)
             @PathParam("id") int id
     ) {
         LOG.info("remove...");
@@ -190,8 +190,8 @@ public class OutboxResource {
     }
 
     @ApiOperation(
-            value = "รายการกล่องข้อมูลออกโดยรหัสผู้ใช้งาน",
-            notes = "รายการกล่องข้อมูลออกโดยรหัสผู้ใช้งาน",
+            value = "รายการกล่องหนังสือออกโดยรหัสผู้ใช้งาน",
+            notes = "รายการกล่องหนังสือออกโดยรหัสผู้ใช้งาน",
             responseContainer = "List",
             response = OutboxModel.class
     )
