@@ -216,7 +216,9 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             case ('R'): {
                 int folderId = new WfContentService().getById(workflow.getLinkId2()).getWfContentFolderId();
                 String folderType = new WfFolderService().getById(folderId).getWfContentType().getContentTypeName();
-                detail = name + " [ลง" + folderType + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
+                String str01 = workflow.getWorkflowStr01();
+                String registerAgain = (str01 != null && str01.equals("1")) ? "(รับเรื่องอีกครั้ง)" : "";
+                detail = name + " [ลง" + folderType + registerAgain + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
             case ('S'): {
@@ -557,7 +559,8 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 action = "สร้างหนังสือ";
                 break;
             case 'R':
-                action = "ลงทะเบียน";
+                String str01 = workflow.getWorkflowStr01();
+                action = (str01 != null && str01.equals("1")) ? "ลงทะเบียน" + "\r\n" + "(รับเรื่องอีกครั้ง)" : "ลงทะเบียน";
                 break;
             case 'S':
                 action = "ส่งหนังสือให้";
