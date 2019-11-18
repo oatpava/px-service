@@ -1,4 +1,3 @@
-
 package com.px.mwp.model;
 
 import com.google.gson.annotations.Expose;
@@ -20,18 +19,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class WorkflowModel_groupLinkFlow implements Serializable {
 
     private static final long serialVersionUID = -4931945062268641120L;
-    
+
     @XmlElement(name = "from")
-    @Expose @Since(1.0) private String from;
+    @Expose
+    @Since(1.0)
+    private String from;
     @XmlElement(name = "to")
-    @Expose @Since(1.0) private String to;
+    @Expose
+    @Since(1.0)
+    private String to;
     @XmlElement(name = "category")
-    @Expose @Since(1.0) private String category;
+    @Expose
+    @Since(1.0)
+    private String category;
     @XmlElement(name = "caption")
-    @Expose @Since(1.0) private String caption;
+    @Expose
+    @Since(1.0)
+    private String caption;
     @XmlElement(name = "text")
-    @Expose @Since(1.0) private String text;
-    
+    @Expose
+    @Since(1.0)
+    private String text;
+    @XmlElement(name = "keyForMap")//oat-add
+    @Expose
+    @Since(1.0)
+    private String keyForMap;
+
     public WorkflowModel_groupLinkFlow() {
     }
 
@@ -74,5 +87,13 @@ public class WorkflowModel_groupLinkFlow implements Serializable {
     public void setText(String text) {
         this.text = text;
     }
-    
+
+    public String getKeyForMap() {
+        return keyForMap;
+    }
+
+    public void setKeyForMap(String keyForMap) {
+        this.keyForMap = keyForMap;
+    }
+
 }

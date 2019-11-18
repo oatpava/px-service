@@ -216,7 +216,9 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             case ('R'): {
                 int folderId = new WfContentService().getById(workflow.getLinkId2()).getWfContentFolderId();
                 String folderType = new WfFolderService().getById(folderId).getWfContentType().getContentTypeName();
-                detail = name + " [ลง" + folderType + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
+                String str01 = workflow.getWorkflowStr01();
+                String registerAgain = (str01 != null && str01.equals("1")) ? "(รับเรื่องอีกครั้ง)" : "";
+                detail = name + " [ลง" + folderType + registerAgain + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
             case ('S'): {
@@ -393,6 +395,9 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
         String br = "\r\n";
 
         if (!listWorkflow.isEmpty()) {
+            List<WorkflowModel_groupNodeFlow> listNodeSBeforeD = new ArrayList<WorkflowModel_groupNodeFlow>();
+            List<WorkflowModel_groupLinkFlow> listLinkSBeforeD = new ArrayList<WorkflowModel_groupLinkFlow>();
+
             List<Workflow> listAdded = new ArrayList();
             int num = 0;
             for (Workflow workflow : listWorkflow) {
@@ -422,7 +427,7 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
 
                 if (actionType.equals("N") || actionType.equals("R")
                         || actionType.equals("F") || actionType.equals("C")
-                        || actionType.equals("D") || actionType.equals("E") || actionType.equals("B")) {
+                        || actionType.equals("E") || actionType.equals("B")) {
 
                     String key = String.valueOf(workflow.getLinkId2()) + "+" + String.valueOf(workflow.getWorkflowActionId()) + ",0";
                     keyAddedNode = (String) hashAddedNode.get(key);
@@ -442,7 +447,6 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                     node = new WorkflowModel_groupNodeFlow();
                     node.setCategory("Comment");
                     node.setKey(key_comment);
-//                    node.setName(Integer.toString(num) + ". " + getAction(actionType.charAt(0)));
                     node.setName(num + ". " + getAction(workflow));
                     node.setText(caption);
                     node.setSource((String) hashImg.get(actionType));
@@ -455,51 +459,74 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                     link.setText(dateTime);
                     link.setCaption("");
                     listLink.add(link);
+                } else if (actionType.equals("D")) {
+                    List<String> keySendNode = new ArrayList();
+                    String[] listName = workflow.getWorkflowStr01().split(", ");
+                    for (String name : listName) {
+                        keySendNode.add(workflow.getLinkId3() + "-" + name);
+                    }
+//                    WorkflowModel_groupNodeFlow nodeD = new WorkflowModel_groupNodeFlow();
+                    for (WorkflowModel_groupNodeFlow n : listNodeSBeforeD) {
+                        for (String ksn : keySendNode) {
+                            String keyForMap = n.getKeyForMap();
+                            if (keyForMap != null && keyForMap.equalsIgnoreCase(ksn)) {
+                                n.setKey(n.getKey() + "D");
+                                n.setIsStrikethrough(true);
+                                n.setName(n.getName() + br + "(ยกเลิกการส่ง:" + createdDate + ")");
+                                n.setKeyForMap(null);
+                                listLinkSBeforeD.forEach(l -> {
+                                    String keyForMap2 = l.getKeyForMap();
+                                    if (keyForMap2 != null && keyForMap2.equalsIgnoreCase(ksn)) {
+                                        l.setTo(n.getKey());
+                                        l.setKeyForMap(null);
+                                    }
+                                });
 
-                } else if (actionType.equals("S") || actionType.equals("A")) {
-                    String action = (actionType.equals("S")) ? "ส่งหนังสือ" : "ตอบกลับ";
-                    //String tmpKey2 = "";//*******
-                    List<String> listCanceledName = new ArrayList();
-                    List<Workflow> listWorkFlowD = listByLinkIdAndLinkId3(workflow.getLinkId(), workflow.getId(), "D");
-                    if (!listWorkFlowD.isEmpty()) {
-                        for (Workflow workflowD : listWorkFlowD) {
-                            String[] tmp = workflowD.getWorkflowStr01().split(", ");
-                            for (int i = 0; i < tmp.length; i++) {
-                                listCanceledName.add(tmp[i]);
+//                                String keyD = num + actionType;                               
+//                                nodeD.setCategory("Comment");
+//                                nodeD.setKey(keyD);
+//                                nodeD.setName(num + ". " + getAction(workflow));
+//                                nodeD.setText(caption);
+//                                nodeD.setSource((String) hashImg.get(actionType));
+//
+//                                link = new WorkflowModel_groupLinkFlow();
+//                                link.setCategory("Comment");
+//                                link.setFrom(keyD);
+//                                link.setTo(n.getKey());
+//                                link.setText("");
+//                                link.setCaption("");
+//                                listLink.add(link);
                             }
                         }
                     }
+//                    listNode.add(nodeD);
 
+                } else if (actionType.equals("S") || actionType.equals("A")) {
+                    String action = (actionType.equals("S")) ? "ส่งหนังสือ" : "ตอบกลับ";
                     List<WorkflowTo> listWorkflowTo = workflowToService.listByWorkflowId(workflow.getId());
                     if (!listWorkflowTo.isEmpty()) {
                         int sendCount = 0;
                         for (WorkflowTo workflowTo : listWorkflowTo) {
                             sendCount++;
-                            String key = String.valueOf(workflow.getLinkId2()) + "+" + String.valueOf(workflowTo.getUserProfileId()) + "," + String.valueOf(workflowTo.getStructureId());
+                            String key = "t" + String.valueOf(workflow.getId()) + "+" + String.valueOf(workflowTo.getUserProfileId()) + "," + String.valueOf(workflowTo.getStructureId());
                             int linkId2 = workflowTo.getWorkflow().getLinkId2();
                             int workflowId = workflowTo.getWorkflow().getId();
                             String key_from = String.valueOf(linkId2) + "+" + String.valueOf(findActionId(listAdded, workflowId)) + ",0";
                             keyAddedNode = (String) hashAddedNode.get(key);
-                            boolean isCanceled = false;
-                            if (!listCanceledName.isEmpty()) {
-                                for (String canceledName : listCanceledName) {
-                                    if (canceledName.equalsIgnoreCase(workflowTo.getUserProfileFullName())) {
-                                        isCanceled = true;
-                                    }
-                                }
+                            String keyForMap = workflow.getId() + "-" + workflowTo.getUserProfileFullName();
 
-                            }
-                            if (keyAddedNode == null) {
+                            
                                 node = new WorkflowModel_groupNodeFlow();
                                 node.setCategory("");
                                 node.setKey(key);
                                 node.setName(workflowTo.getUserProfileFullName());
                                 node.setText("");
                                 node.setSource((String) hashImg.get("0"));
-                                node.setIsStrikethrough(isCanceled);
+                                node.setKeyForMap(keyForMap);
                                 listNode.add(node);
                                 hashAddedNode.put(key, "0");
-                            }
+                                listNodeSBeforeD.add(node);
+                            
 
                             link = new WorkflowModel_groupLinkFlow();
                             link.setCategory("");
@@ -507,35 +534,44 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                             link.setTo(key);
                             link.setText(num + "." + sendCount + " " + action + br + date);
                             link.setCaption("");
+                            link.setKeyForMap(keyForMap);
                             listLink.add(link);
+                            listLinkSBeforeD.add(link);
                         }
 
                         List<WorkflowCc> listWorkflowCc = workflowCcService.listByWorkflowId(workflow.getId());
                         if (!listWorkflowCc.isEmpty()) {
                             for (WorkflowCc workflowCc : listWorkflowCc) {
-                                String key = String.valueOf(workflow.getLinkId2()) + "+" + String.valueOf(workflowCc.getUserProfileId()) + "," + String.valueOf(workflowCc.getStructureId());
+                                sendCount++;
+                                String key = "cc" + String.valueOf(workflow.getId()) + "+" + String.valueOf(workflowCc.getUserProfileId()) + "," + String.valueOf(workflowCc.getStructureId());
                                 int linkId2 = workflowCc.getWorkflow().getLinkId2();
                                 int workflowId = workflowCc.getWorkflow().getId();
                                 String key_from = String.valueOf(linkId2) + "+" + String.valueOf(findActionId(listAdded, workflowId)) + ",0";
                                 keyAddedNode = (String) hashAddedNode.get(key);
-                                if (keyAddedNode == null) {
+                                String keyForMap = workflow.getId() + "-" + workflowCc.getUserProfileFullName();
+
+                               
                                     node = new WorkflowModel_groupNodeFlow();
                                     node.setCategory("");
                                     node.setKey(key);
                                     node.setName(workflowCc.getUserProfileFullName());
                                     node.setText("");
                                     node.setSource((String) hashImg.get("0"));
+                                    node.setKeyForMap(workflow.getId() + "-" + workflowCc.getUserProfileFullName());
                                     listNode.add(node);
                                     hashAddedNode.put(key, "0");
-                                }
+                                    listNodeSBeforeD.add(node);
+                                
 
                                 link = new WorkflowModel_groupLinkFlow();
                                 link.setCategory("");
                                 link.setFrom(key_from);
                                 link.setTo(key);
-                                link.setText(dateTime);
+                                link.setText(num + "." + sendCount + " " + action + " (สำเนา)" + br + date);
                                 link.setCaption("");
+                                link.setKeyForMap(keyForMap);
                                 listLink.add(link);
+                                listLinkSBeforeD.add(link);
                             }
                         }
                     }
@@ -557,7 +593,8 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 action = "สร้างหนังสือ";
                 break;
             case 'R':
-                action = "ลงทะเบียน";
+                String str01 = workflow.getWorkflowStr01();
+                action = (str01 != null && str01.equals("1")) ? "ลงทะเบียน" + "\r\n" + "(รับเรื่องอีกครั้ง)" : "ลงทะเบียน";
                 break;
             case 'S':
                 action = "ส่งหนังสือให้";

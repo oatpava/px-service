@@ -83,8 +83,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "WfContent created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "WfContent created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -304,10 +303,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -354,10 +351,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent updeted by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -614,10 +609,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent deleted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent deleted by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -666,10 +659,8 @@ public class WfContentResource {
             response = WfContentModel_groupContentNoAndBookNo.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "max ContentNo of WfContent by id success.")
-        ,
-        @ApiResponse(code = 404, message = "max ContentNo of WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "max ContentNo of WfContent by id success."),
+        @ApiResponse(code = 404, message = "max ContentNo of WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -728,10 +719,8 @@ public class WfContentResource {
             response = WfContentModel_groupContentNoAndBookNo.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "max BookNo of WfContent by id success.")
-        ,
-        @ApiResponse(code = 404, message = "max BookNo of WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "max BookNo of WfContent by id success."),
+        @ApiResponse(code = 404, message = "max BookNo of WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -792,8 +781,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Cancel WfContent finish in Workflow success.")
-        ,
+        @ApiResponse(code = 200, message = "Cancel WfContent finish in Workflow success."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -846,8 +834,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Cancel WfContent finish in Workflow success.")
-        ,
+        @ApiResponse(code = 200, message = "Cancel WfContent finish in Workflow success."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -894,10 +881,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent delete by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent delete by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -977,10 +962,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "max ContentNo of WfContent by id success.")
-        ,
-        @ApiResponse(code = 404, message = "max ContentNo of WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "max ContentNo of WfContent by id success."),
+        @ApiResponse(code = 404, message = "max ContentNo of WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1054,10 +1037,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent list success."),
+        @ApiResponse(code = 404, message = "WfContent list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1131,10 +1112,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "content list success.")
-        ,
-        @ApiResponse(code = 404, message = "content list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "content list success."),
+        @ApiResponse(code = 404, message = "content list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1197,10 +1176,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent updeted by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -1233,6 +1210,7 @@ public class WfContentResource {
                 responseData.put("success", true);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
@@ -1247,10 +1225,8 @@ public class WfContentResource {
             response = EmailModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Send email success.")
-        ,
-        @ApiResponse(code = 404, message = "Error!.")
-        ,
+        @ApiResponse(code = 200, message = "Send email success."),
+        @ApiResponse(code = 404, message = "Error!."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1305,10 +1281,8 @@ public class WfContentResource {
             response = WfLastNumberModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "max ContentNo of WfContent by id success.")
-        ,
-        @ApiResponse(code = 404, message = "max ContentNo of WfContent by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "max ContentNo of WfContent by id success."),
+        @ApiResponse(code = 404, message = "max ContentNo of WfContent by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1419,8 +1393,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "WfContent created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "WfContent created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1587,10 +1560,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "checkTitle success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "checkTitle success."),
+        @ApiResponse(code = 404, message = "WfContent not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1636,10 +1607,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "content/book NoPoint by id success.")
-        ,
-        @ApiResponse(code = 404, message = "content/book NoPoint by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "content/book NoPoint by id success."),
+        @ApiResponse(code = 404, message = "content/book NoPoint by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1730,11 +1699,11 @@ public class WfContentResource {
                     break;
 
                 case 1:
-                    bookNo = pre + no.substring(no.length() - bookFormat) + point;//praxis00001
+                    bookNo = pre + "/" + no.substring(no.length() - bookFormat) + point;
                     break;
 
                 case 2:
-                    bookNo = pre + no.substring(no.length() - bookFormat) + point + "/" + Integer.toString(year);//praxis00001/2560
+                    bookNo = pre + "/" + no.substring(no.length() - bookFormat) + point + "/" + Integer.toString(year);
                     break;
 
             }
@@ -1772,10 +1741,8 @@ public class WfContentResource {
             response = WfContent.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "report success.")
-        ,
-        @ApiResponse(code = 404, message = "reportt not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "report success."),
+        @ApiResponse(code = 404, message = "reportt not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1924,10 +1891,8 @@ public class WfContentResource {
             response = WfContent.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "report success.")
-        ,
-        @ApiResponse(code = 404, message = "reportt not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "report success."),
+        @ApiResponse(code = 404, message = "reportt not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2061,10 +2026,8 @@ public class WfContentResource {
             response = WfContent.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "temptable success.")
-        ,
-        @ApiResponse(code = 404, message = "temptable not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "temptable success."),
+        @ApiResponse(code = 404, message = "temptable not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -2112,10 +2075,8 @@ public class WfContentResource {
             response = WfContent.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "report success.")
-        ,
-        @ApiResponse(code = 404, message = "reportt not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "report success."),
+        @ApiResponse(code = 404, message = "reportt not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2270,10 +2231,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "MyWork list success.")
-        ,
-        @ApiResponse(code = 404, message = "MyWork list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "MyWork list success."),
+        @ApiResponse(code = 404, message = "MyWork list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2321,8 +2280,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "MyWork created success.")
-        ,
+        @ApiResponse(code = 200, message = "MyWork created success."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2406,10 +2364,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "MyWork updated success.")
-        ,
-        @ApiResponse(code = 404, message = "MyWork not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "MyWork updated success."),
+        @ApiResponse(code = 404, message = "MyWork not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -2457,10 +2413,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "MyWork removeed success.")
-        ,
-        @ApiResponse(code = 404, message = "MyWork not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "MyWork removeed success."),
+        @ApiResponse(code = 404, message = "MyWork not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -2510,8 +2464,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "CircularNotice created success.")
-        ,
+        @ApiResponse(code = 200, message = "CircularNotice created success."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2617,10 +2570,8 @@ public class WfContentResource {
             response = Structure.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "ShopDetail list success.")
-        ,
-        @ApiResponse(code = 404, message = "ShopDetail list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "ShopDetail list success."),
+        @ApiResponse(code = 404, message = "ShopDetail list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2732,10 +2683,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "get param success.")
-        ,
-        @ApiResponse(code = 404, message = "param not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "get param success."),
+        @ApiResponse(code = 404, message = "param not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2780,10 +2729,8 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "checkBookNo success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "checkBookNo success."),
+        @ApiResponse(code = 404, message = "WfContent not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2815,6 +2762,165 @@ public class WfContentResource {
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "updateSendFlag by id success."),
+        @ApiResponse(code = 404, message = "WfContent by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/updateSendFlag")
+    public Response updateSendFlag(
+            WfContentModel contentModel
+    ) {
+        LOG.debug("updateSendFlag...");
+        Gson gs = new GsonBuilder()
+                .setVersion(contentModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "WfContent by id not found in the database.");
+        try {
+            WfContentService contentService = new WfContentService();
+            WfContent content = contentService.getById(contentModel.getId());
+            if (content != null) {
+                content.setWfContentInt03(1);
+                contentService.update(content);
+                status = Response.Status.OK;
+                responseData.put("data", "");
+                responseData.put("message", "");
+            }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "สร้างข้อมูลหนังสือ copy",
+            notes = "สร้างข้อมูลหนังสือ copy",
+            response = WfContentModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "WfContent created successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/createCopy")
+    public Response createCopy(
+            WfContentModel contentModel
+    ) {
+        LOG.info("createCopy...");
+        Gson gs = new GsonBuilder()
+                .setVersion(contentModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            WfContentService contentService = new WfContentService();
+            WfContent content = new WfContent();
+            content.setCreatedBy(contentModel.getCreatedBy());
+            content.setWfContentContentDate(dateThaiToLocalDateTime(contentModel.getWfContentContentDate()));
+            content.setWfContentBookDate((contentModel.getWfContentBookDate() == null) ? null : dateThaiToLocalDateTime(contentModel.getWfContentBookDate()));
+            content.setWfContentExpireDate((contentModel.getWfContentExpireDate() == null) ? null : dateThaiToLocalDateTime(contentModel.getWfContentExpireDate()));
+            content.setInboxId(contentModel.getInboxId());
+            content.setWfDocumentId(contentModel.getWfDocumentId());
+            content.setWfContentFolderId(contentModel.getWfContentFolderId());
+            content.setWorkflowId(contentModel.getWorkflowId());
+            content.setWfContentContentPre(contentModel.getWfContentContentPre());
+            content.setWfContentYear(contentModel.getWfContentContentYear());
+            content.setWfContentContentNumber(contentModel.getWfContentContentNumber());
+            content.setWfContentContentPoint(contentModel.getWfContentContentPoint());
+            content.setWfContentContentTime(contentModel.getWfContentContentTime());
+            content.setWfContentContentNo(contentModel.getWfContentContentNo());
+            content.setWfContentBookYear(contentModel.getWfContentBookYear());
+            content.setWfContentBookPre(contentModel.getWfContentBookPre());
+            content.setWfContentBookNo(contentModel.getWfContentBookNo());
+            content.setWfContentBookNumber(contentModel.getWfContentBookNumber());
+            content.setWfContentBookPoint(contentModel.getWfContentBookPoint());
+            content.setWfContentFrom(contentModel.getWfContentFrom());
+            content.setWfContentTo(contentModel.getWfContentTo());
+            content.setWfContentTitle(contentModel.getWfContentTitle());
+            content.setWfContentSpeed(contentModel.getWfContentSpeed());
+            content.setWfContentSecret(contentModel.getWfContentSecret());
+            content.setWfContentDescription(contentModel.getWfContentDescription());
+            content.setWfContentReference(contentModel.getWfContentReference());
+            content.setWfContentAttachment(contentModel.getWfContentAttachment());
+            content.setWfContentOwnername(contentModel.getWfContentOwnername());
+            content.setWfContentStr01(contentModel.getWfContentStr01());
+            content.setWfContentStr02(contentModel.getWfContentStr02());
+            content.setWfContentStr03(contentModel.getWfContentStr03());
+            content.setWfContentStr04(contentModel.getWfContentStr04());
+            content.setWfContentStr05(contentModel.getWfContentStr05());
+            content.setWfContentStr06(contentModel.getWfContentStr06());
+            content.setWfContentStr07(contentModel.getWfContentStr07());
+            content.setWfContentStr08(contentModel.getWfContentStr08());
+            content.setWfContentStr09(contentModel.getWfContentStr09());
+            content.setWfContentStr10(contentModel.getWfContentStr10());
+            content.setWfContentText01(contentModel.getWfContentText01());
+            content.setWfContentText02(contentModel.getWfContentText02());
+            content.setWfContentText03(contentModel.getWfContentText03());
+            content.setWfContentText04(contentModel.getWfContentText04());
+            content.setWfContentText05(contentModel.getWfContentText05());
+            content.setWfContentText06(contentModel.getWfContentText06());
+            content.setWfContentText07(contentModel.getWfContentText07());
+            content.setWfContentText08(contentModel.getWfContentText08());
+            content.setWfContentText09(contentModel.getWfContentText09());
+            content.setWfContentText10(contentModel.getWfContentText10());
+            content.setWfContentInt01(contentModel.getWfContentInt01());
+            content.setWfContentInt02(contentModel.getWfContentInt02());
+            content.setWfContentInt03(contentModel.getWfContentInt03());
+            content.setWfContentInt04(contentModel.getWfContentInt04());
+            content.setWfContentInt05(contentModel.getWfContentInt05());
+            content.setWfContentInt06(contentModel.getWfContentInt06());
+            content.setWfContentInt07(contentModel.getWfContentInt07());
+            content.setWfContentInt08(contentModel.getWfContentInt08());
+            content.setWfContentInt09(contentModel.getWfContentInt09());
+            content.setWfContentInt10(contentModel.getWfContentInt10());
+            content.setWfContentDate01(dateThaiToLocalDateTime(contentModel.getWfContentDate01()));
+            content.setWfContentDate02(dateThaiToLocalDateTime(contentModel.getWfContentDate02()));
+            content.setWfContentDate03(dateThaiToLocalDateTime(contentModel.getWfContentDate03()));
+            content.setWfContentDate04(dateThaiToLocalDateTime(contentModel.getWfContentDate04()));
+            content.setWfContentDate05(dateThaiToLocalDateTime(contentModel.getWfContentDate05()));
+            content.setWfContentDate06(dateThaiToLocalDateTime(contentModel.getWfContentDate06()));
+            content.setWfContentDate07(dateThaiToLocalDateTime(contentModel.getWfContentDate07()));
+            content.setWfContentDate08(dateThaiToLocalDateTime(contentModel.getWfContentDate08()));
+            content.setWfContentDate09(dateThaiToLocalDateTime(contentModel.getWfContentDate09()));
+            content.setWfContentDate10(dateThaiToLocalDateTime(contentModel.getWfContentDate10()));
+            content.setConvertId(contentModel.getConvertId());
+            content.setfOrgId(0);
+            content.setfTransMainId(0);
+            content.setfType(0);
+            content = contentService.create(content);
+            content.setOrderNo(content.getId());
+            content = contentService.update(content);
+            contentService.saveLogForCreate(content, httpHeaders.getHeaderString("clientIp"));
+            status = Response.Status.CREATED;
+            responseData.put("data", contentService.tranformToModel(content));
+            responseData.put("success", true);
+            responseData.put("message", "WfContent created successfully.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            LOG.error("Exception = " + ex.getMessage());
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
