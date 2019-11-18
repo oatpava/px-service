@@ -44,6 +44,10 @@ public class WorkflowModel_groupNodeFlow implements Serializable {
     @Expose
     @Since(1.0)
     private boolean isStrikethrough;
+    @XmlElement(name = "keyForMap")//oat-add
+    @Expose
+    @Since(1.0)
+    private String keyForMap;
 
     public WorkflowModel_groupNodeFlow() {
     }
@@ -94,6 +98,14 @@ public class WorkflowModel_groupNodeFlow implements Serializable {
 
     public void setIsStrikethrough(boolean isStrikethrough) {
         this.isStrikethrough = isStrikethrough;
+    }
+
+    public String getKeyForMap() {
+        return keyForMap;
+    }
+
+    public void setKeyForMap(String keyForMap) {
+        this.keyForMap = keyForMap;
     }
 
 }
