@@ -403,6 +403,7 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         String userName = wfContentSearchModel.getUserName();
         String wfContentDescription = wfContentSearchModel.getWfContentDescription();
         String wfContentStr03 = wfContentSearchModel.getWfContentStr03();
+        int contentTimeRange = wfContentSearchModel.getContentTimeRange();
 
         conjunction.add(Restrictions.eq("this.removedBy", 0));
         if (folderId > 0) {
@@ -462,6 +463,11 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         if (wfContentStr03 != null && wfContentStr03 != "") {
             conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentStr03", wfContentStr03, null, "&", "|", "!", "^", null));
         }
+//        if (contentTimeRange > 0) {
+//            switch (contentTimeRange) {
+//                case 1: 
+//            }
+//        }
         return conjunction;
     }
 
