@@ -2754,9 +2754,16 @@ public class WfContentResource {
         responseData.put("message", "checkBookNo not found in the database.");
         try {
             WfContentService contentService = new WfContentService();
+            WfContentModel model = null;
             int tmp = contentService.countBookNo(contentModel.getWfContentBookNo(), contentModel.getWfContentFolderId(), contentModel.getWfContentContentYear());
+            if (tmp > 0) {
+                List<WfContent> listContent = contentService.listByBookNo(contentModel.getWfContentBookNo(), contentModel.getWfContentFolderId(), contentModel.getWfContentContentYear());
+                if (listContent != null) {
+                     model = contentService.tranformToModel(listContent.get(0));
+                }
+            }
             status = Response.Status.OK;
-            responseData.put("data", tmp > 0);
+            responseData.put("data", model);
             responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {

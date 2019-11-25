@@ -514,4 +514,16 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
+
+    public List<WfContent> listByBookNo(String bookNo, int folderId, int year) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("wfContentFolderId", folderId));
+        conjunction.add(Restrictions.eq("wfContentContentYear", year));
+        conjunction.add(Restrictions.eq("wfContentBookNo", bookNo));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfContent.class);
+        criteria.add(conjunction);
+        criteria.addOrder(Order.desc("orderNo"));
+        return this.listByCriteria(criteria, 0, 1);
+    }
 }
