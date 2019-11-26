@@ -76,8 +76,7 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "WfFolder created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "WfFolder created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -189,10 +188,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder by id success."),
+        @ApiResponse(code = 404, message = "WfFolder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -239,10 +236,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder updeted by id success."),
+        @ApiResponse(code = 404, message = "WfFolder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -357,10 +352,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder deleted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder deleted by id success."),
+        @ApiResponse(code = 404, message = "WfFolder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -412,10 +405,8 @@ public class WfFolderResource {
             response = WfFolderModel_groupWfFolderAndShortcut.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder list success."),
+        @ApiResponse(code = 404, message = "WfFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1115,10 +1106,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder list Shortcut success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder list Shortcut not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder list Shortcut success."),
+        @ApiResponse(code = 404, message = "WfFolder list Shortcut not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1178,10 +1167,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder list Shortcut success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder list Shortcut not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder list Shortcut success."),
+        @ApiResponse(code = 404, message = "WfFolder list Shortcut not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1209,20 +1196,19 @@ public class WfFolderResource {
         try {
             WfFolderService wfFolderService = new WfFolderService();
             List<WfFolder> listWfFolder = wfFolderService.listShortcutByUserProfileId(userProfileId);
+            List<WfFolderModel> listWffolderModel = new ArrayList<>();
             if (!listWfFolder.isEmpty()) {
-                List<WfFolderModel> listWffolderModel = new ArrayList<>();
                 for (WfFolder wfFolder : listWfFolder) {
-//                    WfFolder mainWfFolder = wfFolderService.getById(wfFolder.getWfFolderLinkFolderId());
-//                    listWffolderModel.add(wfFolderService.tranformToModel(wfFolder, mainWfFolder));
                     WfFolder mainWfFolder = wfFolderService.getByIdNotRemoved(wfFolder.getWfFolderLinkFolderId());
                     if (mainWfFolder != null) {
                         listWffolderModel.add(wfFolderService.tranformToModel(wfFolder, mainWfFolder));
                     }
                 }
-                status = Response.Status.OK;
-                responseData.put("data", listWffolderModel);
-                responseData.put("message", "");
             }
+            status = Response.Status.OK;
+            responseData.put("data", listWffolderModel);
+            responseData.put("message", "");
+            responseData.put("success", true);
             responseData.put("success", true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1238,10 +1224,8 @@ public class WfFolderResource {
             notes = "ลบข้อมูลทะเบียนออกจากฐานข้อมูล"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder delete by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder delete by id success."),
+        @ApiResponse(code = 404, message = "WfFolder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -1292,10 +1276,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "List WfFolder by ContentTypeId success.")
-        ,
-        @ApiResponse(code = 404, message = "List WfFolder by ContentTypeId not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "List WfFolder by ContentTypeId success."),
+        @ApiResponse(code = 404, message = "List WfFolder by ContentTypeId not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1382,8 +1364,7 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Shortcut WfFolder created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Shortcut WfFolder created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1448,10 +1429,8 @@ public class WfFolderResource {
             response = WfFolderContentAuthModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent Auth by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent Auth by id success."),
+        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1527,10 +1506,8 @@ public class WfFolderResource {
             response = WfFolderContentAuthModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent Auth by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent Auth by id success."),
+        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1597,10 +1574,8 @@ public class WfFolderResource {
             response = WfFolderContentAuthModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent Auth by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent Auth by id success."),
+        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1677,10 +1652,8 @@ public class WfFolderResource {
             response = WfFolderContentAuthModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfContent Auth by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfContent Auth by id success."),
+        @ApiResponse(code = 404, message = "WfContent Auth by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1753,10 +1726,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder list success."),
+        @ApiResponse(code = 404, message = "WfFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1827,10 +1798,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder by id success."),
+        @ApiResponse(code = 404, message = "WfFolder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1888,10 +1857,8 @@ public class WfFolderResource {
             response = WfFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder updeted by id success."),
+        @ApiResponse(code = 404, message = "WfFolder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -1940,10 +1907,8 @@ public class WfFolderResource {
             response = WfFolderModel_groupWfFolderAndShortcut.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfFolder list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfFolder list success."),
+        @ApiResponse(code = 404, message = "WfFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
