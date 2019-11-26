@@ -147,6 +147,12 @@ public class WfContentSearchModel extends VersionModel {
     @Expose
     private String wfContentStr03;
 
+    @XmlElement(name = "contentTimeRange")
+    @ApiParam(name = "contentTimeRange", value = "contentTimeRange", required = true)
+    @Since(1.0)
+    @Expose
+    private int contentTimeRange;
+
     public int getWfContentFolderId() {
         return wfContentFolderId;
     }
@@ -306,6 +312,14 @@ public class WfContentSearchModel extends VersionModel {
 
     public void setWfContentStr03(String wfContentStr03) {
         this.wfContentStr03 = wfContentStr03;
+    }
+
+    public int getContentTimeRange() {
+        return contentTimeRange;
+    }
+
+    public void seContentTimeRange(int contentTimeRange) {
+        this.contentTimeRange = contentTimeRange;
     }
 
 }

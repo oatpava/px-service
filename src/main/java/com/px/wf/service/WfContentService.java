@@ -1692,5 +1692,9 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
 
         return checkMaxBookNo;
     }
+    
+    public List<WfContent> listByBookNo(String bookNo, int folderId, int year) {
+        return WfContentDaoImpl.listByBookNo(bookNo, folderId, year);
+    }
 
 }
