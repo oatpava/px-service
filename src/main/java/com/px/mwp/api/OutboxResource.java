@@ -29,6 +29,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -59,8 +60,7 @@ public class OutboxResource {
             response = OutboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Outbox created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Outbox created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -142,10 +142,8 @@ public class OutboxResource {
             response = OutboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Outbox deleted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Outbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Outbox deleted by id success."),
+        @ApiResponse(code = 404, message = "Outbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -196,10 +194,8 @@ public class OutboxResource {
             response = OutboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Outbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Outbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Outbox list success."),
+        @ApiResponse(code = 404, message = "Outbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -239,7 +235,7 @@ public class OutboxResource {
             if (!listOutbox.isEmpty()) {
                 for (Outbox outbox : listOutbox) {
                     listOutboxModel.add(outboxService.tranformToModel_cc(outbox));
-                }                               
+                }
                 int count = listOutbox.size() + listOptionModel.getOffset();
                 int countAll = outboxService.countListByUserProfileFolderId(userProfileFolder.getId());
                 int next = 0;
@@ -272,10 +268,8 @@ public class OutboxResource {
             response = OutboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Outbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Outbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Outbox list success."),
+        @ApiResponse(code = 404, message = "Outbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -326,10 +320,8 @@ public class OutboxResource {
             response = OutboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Outbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Outbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Outbox list success."),
+        @ApiResponse(code = 404, message = "Outbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -389,10 +381,8 @@ public class OutboxResource {
             response = OutboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Outbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Outbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Outbox list success."),
+        @ApiResponse(code = 404, message = "Outbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -470,6 +460,49 @@ public class OutboxResource {
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "updateข้อมูลการส่งกล่องข้อมูลออก",
+            notes = "uodateข้อมูลการส่งกล่องข้อมูลออก",
+            response = OutboxModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Outbox created successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response updateSendNote(
+            OutboxModel outboxPostModel
+    ) {
+        LOG.info("update...");
+        Gson gs = new GsonBuilder()
+                .setVersion(outboxPostModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            OutboxService outboxService = new OutboxService();
+            Outbox outbox = outboxService.getById(outboxPostModel.getId());
+            if (outbox != null) {
+                outbox.setOutboxNote(outboxPostModel.getOutboxNote());
+            }
+            outboxService.update(outbox);
+            status = Response.Status.CREATED;
+            responseData.put("data", outboxService.tranformToModel(outbox));
+            responseData.put("message", "outbox updated successfully.");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();

@@ -68,8 +68,8 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Users created successfully.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 201, message = "Users created successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -125,9 +125,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -174,9 +174,9 @@ public class UserResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User deleted by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User deleted by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -227,9 +227,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User list success.")
-        ,@ApiResponse(code = 404, message = "User list not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User list success."),
+        @ApiResponse(code = 404, message = "User list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -290,9 +290,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -323,14 +323,12 @@ public class UserResource {
         try {
             UserService userService = new UserService();
             boolean result = userService.authenticationUser(userModel.getName(), userModel.getPasswords());
-//            LOG.debug("result = " +result);
-//            LOG.debug(result);
             if (result) {
                 User user = userService.getUserByUserName(userModel.getName());
-//                LOG.debug(user);
                 if (user != null) {
                     UserProfileService userProfileService = new UserProfileService();
-                    UserProfile userProfile = userProfileService.getByUserId(user.getId());
+                    List<UserProfile> listUserProfile = userProfileService.listByUserId(user.getId(), null, null);
+                    UserProfile userProfile = listUserProfile.get(0);
                     if (userProfile.getUserProfileStatus() != null && userProfile.getUserProfileStatus().getId() != 1) {
                         if (userProfile.getUserProfileStatus().getId() == 3) {
                             result = false;
@@ -341,7 +339,11 @@ public class UserResource {
                     } else {
                         final String token = userService.genToken(user, userProfile);
                         response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
-                        responseData.put("message", "");
+                        List<UserProfileModel> listUserProfileModel = new ArrayList<>();
+                        listUserProfile.forEach(u -> {
+                            listUserProfileModel.add(userProfileService.tranformToModel(u));
+                        });
+                        responseData.put("message", listUserProfileModel);
                     }
 
 //                    UserProfileService userProfileService = new UserProfileService();
@@ -376,9 +378,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User Password updeted by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User Password updeted by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -458,9 +460,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Reset Password id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Reset Password id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -520,9 +522,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -570,9 +572,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -633,9 +635,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Expire by ActiveDate success.")
-        ,@ApiResponse(code = 404, message = "Expire by ActiveDate not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Expire by ActiveDate success."),
+        @ApiResponse(code = 404, message = "Expire by ActiveDate not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -681,9 +683,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -735,9 +737,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -807,9 +809,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -862,9 +864,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User updeted by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User updeted by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -923,9 +925,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User updeted by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User updeted by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -982,9 +984,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User updeted by id success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User updeted by id success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1052,9 +1054,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Path(value = "/checkEmail/{userName}/email/{email}")
@@ -1116,10 +1118,8 @@ public class UserResource {
     //                response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "send email user success.", response = AuthenticationModel.class)
-        ,
-        @ApiResponse(code = 404, message = "user's email not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "send email user success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "user's email not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1198,10 +1198,8 @@ public class UserResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "recentPassword success.")
-        ,
-        @ApiResponse(code = 404, message = "recentPasswordnot found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "recentPassword success."),
+        @ApiResponse(code = 404, message = "recentPasswordnot found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1265,9 +1263,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.")
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success."),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1316,9 +1314,9 @@ public class UserResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Authentication fail.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1365,9 +1363,9 @@ public class UserResource {
             response = UserModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "User updeted by id success.")
-        ,@ApiResponse(code = 404, message = "User by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "User updeted by id success."),
+        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})

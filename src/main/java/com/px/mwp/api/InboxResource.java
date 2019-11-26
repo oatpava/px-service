@@ -63,8 +63,7 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Inbox created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Inbox created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -170,10 +169,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox by id success."),
+        @ApiResponse(code = 404, message = "Inbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -247,10 +244,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox removed by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox removed by id success."),
+        @ApiResponse(code = 404, message = "Inbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -301,10 +296,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox list success."),
+        @ApiResponse(code = 404, message = "Inbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -404,10 +397,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox by id success."),
+        @ApiResponse(code = 404, message = "Inbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -455,10 +446,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox by id success."),
+        @ApiResponse(code = 404, message = "Inbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -508,10 +497,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox by id success."),
+        @ApiResponse(code = 404, message = "Inbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -561,10 +548,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox list success."),
+        @ApiResponse(code = 404, message = "Inbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -629,10 +614,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox list success."),
+        @ApiResponse(code = 404, message = "Inbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -687,10 +670,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox list success."),
+        @ApiResponse(code = 404, message = "Inbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -765,10 +746,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox removed by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox removed by id success."),
+        @ApiResponse(code = 404, message = "Inbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -815,10 +794,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfileFolder by userID success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfileFolder by userID not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfileFolder by userID success."),
+        @ApiResponse(code = 404, message = "UserProfileFolder by userID not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -878,10 +855,8 @@ public class InboxResource {
             response = InboxModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Inbox list success.")
-        ,
-        @ApiResponse(code = 404, message = "Inbox list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Inbox list success."),
+        @ApiResponse(code = 404, message = "Inbox list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -970,6 +945,49 @@ public class InboxResource {
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+    
+    @ApiOperation(
+            value = "updateข้อมูลการส่งกล่องข้อมูลเข้า",
+            notes = "uodateข้อมูลการส่งกล่องข้อมูลเข้า",
+            response = InboxModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Inbox created successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response updateSendNote(
+            InboxModel inboxPostModel
+    ) {
+        LOG.info("update...");
+        Gson gs = new GsonBuilder()
+                .setVersion(inboxPostModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            InboxService inboxService = new InboxService();
+            Inbox inbox = inboxService.getById(inboxPostModel.getId());
+            if (inbox != null) {
+                inbox.setInboxNote(inboxPostModel.getInboxNote());
+            }
+            inboxService.update(inbox);
+            status = Response.Status.CREATED;
+            responseData.put("data", inboxService.tranformToModel(inbox));
+            responseData.put("message", "Inbox updated successfully.");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
