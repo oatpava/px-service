@@ -14,5 +14,5 @@ import java.util.List;
  * @author Oat
  */
 public interface PrivateGroupDao extends GenericDao<PrivateGroup, Integer> {
-     List<PrivateGroup> listByOwnerIdAndType(int ownerId, int type);
+     List<PrivateGroup> listByOwnerIdAndType(int ownerId, int groupType);
 }

@@ -99,7 +99,7 @@ public class PrivateGroupService implements GenericService<PrivateGroup, Private
         //privateGroupModel.setCreatedDate(privateGroup.getCreatedDate());
         privateGroupModel.setOwnerId(privateGroup.getOwnerId());
         privateGroupModel.setGroupName(privateGroup.getGroupName());
-        privateGroupModel.setType(privateGroup.getType());
+        privateGroupModel.setGroupType(privateGroup.getGroupType());
         return privateGroupModel;
     }
 
@@ -108,15 +108,15 @@ public class PrivateGroupService implements GenericService<PrivateGroup, Private
         privateGroupModel.setId(privateGroup.getId());
         privateGroupModel.setOwnerId(privateGroup.getOwnerId());
         privateGroupModel.setGroupName(privateGroup.getGroupName());
-        privateGroupModel.setType(privateGroup.getType());
+        privateGroupModel.setGroupType(privateGroup.getGroupType());
         privateGroupModel.setListUser(listUser);
         return privateGroupModel;
     }
 
-    public List<PrivateGroup> listByOwnerIdAndType(int ownerId, int type) {
+    public List<PrivateGroup> listByOwnerIdAndType(int ownerId, int groupType) {
         checkNotNull(ownerId, "ownerId must not be null");
-        checkNotNull(type, "type must not be null");
-        return privateGroupDaoImpl.listByOwnerIdAndType(ownerId, type);
+        checkNotNull(groupType, "groupType must not be null");
+        return privateGroupDaoImpl.listByOwnerIdAndType(ownerId, groupType);
     }
 
     public void delete(PrivateGroup privateGroup) {

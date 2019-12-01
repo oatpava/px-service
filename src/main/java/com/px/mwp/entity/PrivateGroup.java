@@ -31,8 +31,8 @@ public class PrivateGroup extends BaseEntity {
     @Column(name = "GROUP_NAME", nullable = false, length = 1000)
     private String groupName;
 
-    @Column(name = "TYPE", columnDefinition = "int default '0'")
-    private int type;
+    @Column(name = "GROUP_TYPE", columnDefinition = "int default '0'")
+    private int groupType;
 
     public int getOwnerId() {
         return ownerId;
@@ -50,11 +50,11 @@ public class PrivateGroup extends BaseEntity {
         this.groupName = groupName;
     }
 
-    public int getType() {
-        return type;
+    public int getGroupType() {
+        return groupType;
     }
 
-    public void setTYpe(int type) {
-        this.type = type;
+    public void setGroupType(int groupType) {
+        this.groupType = groupType;
     }
 }
