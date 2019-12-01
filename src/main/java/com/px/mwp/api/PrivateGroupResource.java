@@ -88,8 +88,7 @@ public class PrivateGroupResource {
             //privateGroup.setCreatedBy(userID);
             privateGroup.setOwnerId(privateGroupModel.getOwnerId());
             privateGroup.setGroupName(privateGroupModel.getGroupName());
-            privateGroup.setTYpe(privateGroupModel.getType());
-
+            privateGroup.setGroupType(privateGroupModel.getGroupType());
             PrivateGroupService privateGroupService = new PrivateGroupService();
             privateGroup = privateGroupService.create(privateGroup);
             privateGroup.setOrderNo(privateGroup.getId());
@@ -451,10 +450,10 @@ public class PrivateGroupResource {
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/list/{type}")
+    @Path(value = "/list/{groupType}")
     public Response listAll( //@BeanParam ListOptionModel listOptionModel
-            @ApiParam(name = "type", value = "ประเถท (0=privategroup, 1=favourite)", required = true)
-            @PathParam("type") int type
+            @ApiParam(name = "groupType", value = "ประเถท (0=privategroup, 1=favourite)", required = true)
+            @PathParam("groupType") int groupType
     ) {
         LOG.info("listByOwnerId...");
         Gson gs = new GsonBuilder()
@@ -473,7 +472,7 @@ public class PrivateGroupResource {
         try {
             PrivateGroupService privateGroupService = new PrivateGroupService();
 //            List<PrivateGroup> listPrivateGroup = privateGroupService.listByOwnerId(userID, listOptionModel.getSort(), listOptionModel.getDir());
-            List<PrivateGroup> listPrivateGroup = privateGroupService.listByOwnerIdAndType(Integer.parseInt(httpHeaders.getHeaderString("userID")), type);
+            List<PrivateGroup> listPrivateGroup = privateGroupService.listByOwnerIdAndType(Integer.parseInt(httpHeaders.getHeaderString("userID")), groupType);
             ArrayList<PrivateGroupModel> listPrivateGroupModel = new ArrayList();
             if (!listPrivateGroup.isEmpty()) {
                 PrivateGroupUserService pguService = new PrivateGroupUserService();

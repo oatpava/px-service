@@ -34,11 +34,11 @@ public class PrivateGroupDaoImpl extends GenericDaoImpl<PrivateGroup, Integer> i
     }
 
     @Override
-    public List<PrivateGroup> listByOwnerIdAndType(int ownerId, int type) {
+    public List<PrivateGroup> listByOwnerIdAndType(int ownerId, int groupType) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("ownerId", ownerId));
-        conjunction.add(Restrictions.eq("type", type));
+        conjunction.add(Restrictions.eq("groupType", groupType));
         DetachedCriteria criteria = DetachedCriteria.forClass(PrivateGroup.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
