@@ -141,11 +141,6 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         return this.listByCriteria(criteria);
     }
 
-
-
-
-
-
     @Override
     public Inbox getByIdNotRemoved(Integer id
     ) {
@@ -201,6 +196,7 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         String inboxNote = inboxsearchModel.getInboxNote();
         String inboxDescription = inboxsearchModel.getInboxDescription();
         String inboxStr04 = inboxsearchModel.getInboxStr04();
+        String inboxStr03 = inboxsearchModel.getInboxStr03();
 
         conjunction.add(Restrictions.eq("this.removedBy", 0));
         conjunction.add(Restrictions.in(search, folderId));
@@ -226,6 +222,9 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         }
         if (inboxStr04 != null && inboxStr04 != "") {
             conjunction.add(Restrictions.like("this.inboxStr04", inboxStr04, MatchMode.ANYWHERE));
+        }
+        if (inboxStr03 != null && inboxStr03 != "") {
+            conjunction.add(Restrictions.like("this.inboxStr03", inboxStr03, MatchMode.ANYWHERE));
         }
         return conjunction;
     }

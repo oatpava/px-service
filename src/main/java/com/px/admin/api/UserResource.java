@@ -1431,4 +1431,53 @@ public class UserResource {
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "swap userProfile",
+            notes = "swap userProfile",
+            response = AuthenticationModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Authentication fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/swapUserProfile")
+    public Response swapUserProfile(
+            UserProfileModel userProfileModel
+    ) {
+        LOG.debug("swapUserProfile...");
+        Gson gs = new GsonBuilder()
+                .setVersion(userProfileModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            System.out.println("swap to " + userProfileModel.getFullName() + " : " + userProfileModel.getId());
+            System.out.println("before " + httpHeaders.getHeaderString("userID"));
+            UserService userService = new UserService();
+            User user = userService.getByIdNotRemoved(userProfileModel.getUser().getId());
+            UserProfile userProfile = new UserProfileService().getByIdNotRemoved(userProfileModel.getId());
+            if (user != null && userProfile != null) {
+                userProfile.setUserProfileDefaultSelect(0);
+                final String token = userService.genToken(user, userProfile);
+                response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
+                System.out.println("after " + httpHeaders.getHeaderString("userID"));
+            }
+            status = Response.Status.OK;
+            responseData.put("success", true);
+            responseData.put("message", "");
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 }

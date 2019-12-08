@@ -83,6 +83,13 @@ public class OutboxSearchModel extends VersionModel {
     @Since(1.0)
     private String outboxStr04;
 
+    @XmlElement(name = "outboxStr03")
+    @ApiParam(name = "outboxStr03", value = "เลขทะเบียน", required = false)
+    @Size(max = 1000)
+    @Expose
+    @Since(1.0)
+    private String outboxStr03;
+
     public String getOutboxFrom() {
         return outboxFrom;
     }
@@ -145,5 +152,13 @@ public class OutboxSearchModel extends VersionModel {
 
     public void setOutboxStr04(String outboxStr04) {
         this.outboxStr04 = outboxStr04;
+    }
+
+    public String getOutboxStr03() {
+        return outboxStr03;
+    }
+
+    public void setOutboxStr03(String outboxStr03) {
+        this.outboxStr03 = outboxStr03;
     }
 }

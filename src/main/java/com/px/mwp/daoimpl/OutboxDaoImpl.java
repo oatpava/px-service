@@ -487,10 +487,11 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
         String outboxNote = outboxsearchModel.getOutboxNote();
         String outboxDescription = outboxsearchModel.getOutboxDescription();
         String outboxStr04 = outboxsearchModel.getOutboxStr04();
+        String outboxStr03 = outboxsearchModel.getOutboxStr03();
 
         conjunction.add(Restrictions.eq("this.removedBy", 0));
         conjunction.add(Restrictions.in("this.userProfileFolderId", UserProfileFolderId));
-        
+
         if (outboxTo != null && outboxTo != "") {
             conjunction.add(Restrictions.like("this.outboxTo", outboxTo, MatchMode.ANYWHERE));
         }
@@ -515,6 +516,9 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
         }
         if (outboxStr04 != null && outboxStr04 != "") {
             conjunction.add(Restrictions.like("this.outboxStr04", outboxStr04, MatchMode.ANYWHERE));
+        }
+        if (outboxStr03 != null && outboxStr03 != "") {
+            conjunction.add(Restrictions.like("this.outboxStr03", outboxStr04, MatchMode.ANYWHERE));
         }
         return conjunction;
     }

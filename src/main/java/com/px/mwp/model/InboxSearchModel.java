@@ -88,6 +88,13 @@ public class InboxSearchModel extends VersionModel {
     @Since(1.0)
     private String inboxStr04;
 
+    @XmlElement(name = "inboxStr03")
+    @ApiParam(name = "inboxStr03", value = "เลขทะเบียน", required = false)
+    @Size(max = 1000)
+    @Expose
+    @Since(1.0)
+    private String inboxStr03;
+
     public int getUserId() {
         return userId;
     }
@@ -158,5 +165,13 @@ public class InboxSearchModel extends VersionModel {
 
     public void setInboxStr04(String inboxStr04) {
         this.inboxStr04 = inboxStr04;
+    }
+
+    public String getInboxStr03() {
+        return inboxStr03;
+    }
+
+    public void setInboxStr03(String inboxStr03) {
+        this.inboxStr04 = inboxStr03;
     }
 }
