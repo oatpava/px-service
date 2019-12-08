@@ -65,11 +65,11 @@ public class PrivateGroupModel extends VersionModel {
     @Expose
     private String groupName;
 
-    @XmlElement(name = "type")
-    @ApiParam(name = "type", value = "ประเภท (pg/fav)", required = false)
+    @XmlElement(name = "groupType")
+    @ApiParam(name = "groupType", value = "ประเภท (pg/fav)", required = false)
     @Since(1.0)
     @Expose
-    private int type;
+    private int groupType;
 
     @XmlElement(name = "listUser")
     @Expose
@@ -159,12 +159,12 @@ public class PrivateGroupModel extends VersionModel {
         this.groupName = groupName;
     }
 
-    public int getType() {
-        return type;
+    public int getGroupType() {
+        return groupType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setGroupType(int groupType) {
+        this.groupType = groupType;
     }
 
     public List<PrivateGroupUserModel> getListUser() {
