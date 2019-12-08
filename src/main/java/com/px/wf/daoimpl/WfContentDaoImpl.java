@@ -170,7 +170,7 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
     }
 
     //oat
-    public List<WfContent> listByFolderIdDateRange(int folderid, String start, String end) {
+    public List<WfContent> listByFolderIdDateRange(int folderid, String start, String end, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("wfContentFolderId", folderid));
@@ -179,11 +179,20 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         conjunction.add(Restrictions.le("createdDate", dateThaiToLocalDateTime(end).plusHours(23).plusMinutes(59)));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfContent.class);
         criteria.add(conjunction);
+        if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
+            criteria.addOrder(Order.asc("wfContentContentYear"));
+            criteria.addOrder(Order.asc("wfContentContentNumber"));
+            criteria.addOrder(Order.asc("wfContentContentPoint"));
+        } else {
+            criteria.addOrder(Order.desc("wfContentContentYear"));
+            criteria.addOrder(Order.desc("wfContentContentNumber"));
+            criteria.addOrder(Order.desc("wfContentContentPoint"));
+        }
         return this.listByCriteria(criteria);
     }
 
     //oat
-    public List<WfContent> listByFolderIdDateRangeUser(int folderid, String start, String end, int userId) {
+    public List<WfContent> listByFolderIdDateRangeUser(int folderid, String start, String end, int userId, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("wfContentFolderId", folderid));
@@ -192,6 +201,15 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         conjunction.add(Restrictions.le("createdDate", dateThaiToLocalDateTime(end).plusHours(23).plusMinutes(59)));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfContent.class);
         criteria.add(conjunction);
+        if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
+            criteria.addOrder(Order.asc("wfContentContentYear"));
+            criteria.addOrder(Order.asc("wfContentContentNumber"));
+            criteria.addOrder(Order.asc("wfContentContentPoint"));
+        } else {
+            criteria.addOrder(Order.desc("wfContentContentYear"));
+            criteria.addOrder(Order.desc("wfContentContentNumber"));
+            criteria.addOrder(Order.desc("wfContentContentPoint"));
+        }
         return this.listByCriteria(criteria);
     }
 
@@ -354,9 +372,15 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
             Conjunction conjunction = createConjunction(folderId, wfContentSearchModel, listContentNumber);
             DetachedCriteria criteria = DetachedCriteria.forClass(WfContent.class);
             criteria.add(conjunction);
-            criteria.addOrder(Order.desc("wfContentContentYear"));
-            criteria.addOrder(Order.desc("wfContentContentNumber"));
-            criteria.addOrder(Order.desc("wfContentContentPoint"));
+            if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
+                criteria.addOrder(Order.asc("wfContentContentYear"));
+                criteria.addOrder(Order.asc("wfContentContentNumber"));
+                criteria.addOrder(Order.asc("wfContentContentPoint"));
+            } else {
+                criteria.addOrder(Order.desc("wfContentContentYear"));
+                criteria.addOrder(Order.desc("wfContentContentNumber"));
+                criteria.addOrder(Order.desc("wfContentContentPoint"));
+            }
             //criteria = createOrder(criteria, sort, dir);
             List<WfContent> listResult = this.listByCriteria(criteria);
 //GHB no ES
