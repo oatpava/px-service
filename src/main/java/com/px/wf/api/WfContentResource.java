@@ -1084,8 +1084,9 @@ public class WfContentResource {
                     }
                 }
                 listReturnModel = new ListReturnModel(countAll, count, next);
-                boolean getNumFileAttach = (listWfContent.get(0).getWorkflowId() == 0);//circularNotice workflowd == 0
-                boolean getStatus = !getNumFileAttach;
+                boolean isCN = (listWfContent.get(0).getWorkflowId() == 0);//circularNotice workflowd == 0
+                boolean getNumFileAttach = true;
+                boolean getStatus = !(isCN);
                 //circularNotice(true,false) or content(false,true)
                 for (WfContent wfContent : listWfContent) {
                     listWfContentModel.add(wfContentService.tranformToModelGroupWfContentAndWorkflowfinish(wfContent, getNumFileAttach, getStatus));
@@ -2159,7 +2160,7 @@ public class WfContentResource {
                             contentSearchModel.getWfContentContentEndDate(), userId, listOptionModel.getDir());
                     //System.out.println("report6: " + folder.getWfFolderName() + " ***** num content: " + listContent.size());
                 } else {
-                    listContent = contentService.listByFolderIdDateRange(id, contentSearchModel.getWfContentContentStartDate(), 
+                    listContent = contentService.listByFolderIdDateRange(id, contentSearchModel.getWfContentContentStartDate(),
                             contentSearchModel.getWfContentContentEndDate(), listOptionModel.getDir());
                     //System.out.println("report5: " + folder.getWfFolderName() + " ***** num content: " + listContent.size());
                 }
