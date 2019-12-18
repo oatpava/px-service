@@ -442,14 +442,14 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         return WfContentDaoImpl.countAllListByFolderId(folderid, wfContentYear);
     }
 
-    public List<WfContent> listByFolderIdDateRange(int folderid, String start, String end) {
+    public List<WfContent> listByFolderIdDateRange(int folderid, String start, String end, String dir) {
         checkNotNull(folderid, "folderid must not be null");
-        return WfContentDaoImpl.listByFolderIdDateRange(folderid, start, end);
+        return WfContentDaoImpl.listByFolderIdDateRange(folderid, start, end, dir);
     }
 
-    public List<WfContent> listByFolderIdDateRangeUser(int folderid, String start, String end, int userId) {
+    public List<WfContent> listByFolderIdDateRangeUser(int folderid, String start, String end, int userId, String dir) {
         checkNotNull(folderid, "folderid must not be null");
-        return WfContentDaoImpl.listByFolderIdDateRangeUser(folderid, start, end, userId);
+        return WfContentDaoImpl.listByFolderIdDateRangeUser(folderid, start, end, userId, dir);
     }
 
     public TempTable changeDataToContentReport(WfContent wfContent, int userID, int countNum, String clientIp) {

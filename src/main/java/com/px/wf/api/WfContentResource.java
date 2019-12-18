@@ -1084,8 +1084,9 @@ public class WfContentResource {
                     }
                 }
                 listReturnModel = new ListReturnModel(countAll, count, next);
-                boolean getNumFileAttach = (listWfContent.get(0).getWorkflowId() == 0);//circularNotice workflowd == 0
-                boolean getStatus = !getNumFileAttach;
+                boolean isCN = (listWfContent.get(0).getWorkflowId() == 0);//circularNotice workflowd == 0
+                boolean getNumFileAttach = true;
+                boolean getStatus = !(isCN);
                 //circularNotice(true,false) or content(false,true)
                 for (WfContent wfContent : listWfContent) {
                     listWfContentModel.add(wfContentService.tranformToModelGroupWfContentAndWorkflowfinish(wfContent, getNumFileAttach, getStatus));
@@ -1749,6 +1750,7 @@ public class WfContentResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/report1_2/{jobType}/{folderId}")
     public Response report1_2(
+            @BeanParam ListOptionModel listOptionModel,
             @ApiParam(name = "jobType", value = "jobType", required = true)
             @PathParam("jobType") String jobType,
             @ApiParam(name = "folderId", value = "folderId", required = true)
@@ -1774,7 +1776,7 @@ public class WfContentResource {
             List<WfContent> listWfContent = new ArrayList<>();
             ArrayList<WfContentModel> listWfContentModel = new ArrayList<>();
 
-            listWfContent = contentService.searchByModel(folderId, contentSearchModel, "orderNo", "desc");
+            listWfContent = contentService.searchByModel(folderId, contentSearchModel, null, listOptionModel.getDir());
 
             if (!listWfContent.isEmpty()) {
                 /////
@@ -1899,6 +1901,7 @@ public class WfContentResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/report101314/{jobType}/{folderId}/{actionType}")
     public Response report101314(
+            @BeanParam ListOptionModel listOptionModel,
             @ApiParam(name = "jobType", value = "jobType", required = true)
             @PathParam("jobType") String jobType,
             @ApiParam(name = "folderId", value = "folderId", required = true)
@@ -1926,7 +1929,7 @@ public class WfContentResource {
             List<WfContent> listWfContent = new ArrayList<>();
             //ArrayList<WfContentModel> listWfContentModel = new ArrayList<>();
 
-            listWfContent = contentService.searchByModel(folderId, contentSearchModel, "orderNo", "desc");
+            listWfContent = contentService.searchByModel(folderId, contentSearchModel, null, listOptionModel.getDir());
 
             if (!listWfContent.isEmpty()) {
 //                /////
@@ -2083,6 +2086,7 @@ public class WfContentResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/report56/{jobType}/{folderId}/{userId}")
     public Response report56(
+            @BeanParam ListOptionModel listOptionModel,
             @ApiParam(name = "jobType", value = "jobType", required = true)
             @PathParam("jobType") String jobType,
             @ApiParam(name = "folderId", value = "folderId", required = true)
@@ -2152,10 +2156,12 @@ public class WfContentResource {
                 int count = 0;
                 List<WfContent> listContent = new ArrayList<WfContent>();
                 if (userId != 0) {
-                    listContent = contentService.listByFolderIdDateRangeUser(id, contentSearchModel.getWfContentContentStartDate(), contentSearchModel.getWfContentContentEndDate(), userId);
+                    listContent = contentService.listByFolderIdDateRangeUser(id, contentSearchModel.getWfContentContentStartDate(),
+                            contentSearchModel.getWfContentContentEndDate(), userId, listOptionModel.getDir());
                     //System.out.println("report6: " + folder.getWfFolderName() + " ***** num content: " + listContent.size());
                 } else {
-                    listContent = contentService.listByFolderIdDateRange(id, contentSearchModel.getWfContentContentStartDate(), contentSearchModel.getWfContentContentEndDate());
+                    listContent = contentService.listByFolderIdDateRange(id, contentSearchModel.getWfContentContentStartDate(),
+                            contentSearchModel.getWfContentContentEndDate(), listOptionModel.getDir());
                     //System.out.println("report5: " + folder.getWfFolderName() + " ***** num content: " + listContent.size());
                 }
                 if (!listContent.isEmpty()) {
@@ -2759,7 +2765,7 @@ public class WfContentResource {
             if (tmp > 0) {
                 List<WfContent> listContent = contentService.listByBookNo(contentModel.getWfContentBookNo(), contentModel.getWfContentFolderId(), contentModel.getWfContentContentYear());
                 if (listContent != null) {
-                     model = contentService.tranformToModel(listContent.get(0));
+                    model = contentService.tranformToModel(listContent.get(0));
                 }
             }
             status = Response.Status.OK;
