@@ -169,7 +169,7 @@ public class WfReserveContentNoService implements GenericService<WfReserveConten
         checkNotNull(dir, "dir contentNo must not be null");
         return reserveContentNoDaoImpl.list(folderId, sort, dir);
     }
-    
+
     //oat-add
     public List<WfReserveContentNo> listByUser(int folderId, int userId, String sort, String dir) {
         checkNotNull(folderId, "folderId folderId must not be null");
@@ -177,13 +177,19 @@ public class WfReserveContentNoService implements GenericService<WfReserveConten
         checkNotNull(dir, "dir contentNo must not be null");
         return reserveContentNoDaoImpl.listByUser(folderId, userId, sort, dir);
     }
-    
-        //oat-add
+
+    //oat-add
     public List<WfReserveContentNo> listCanceled(int folderId, String sort, String dir) {
         checkNotNull(folderId, "folderId folderId must not be null");
         checkNotNull(sort, "sort contentNo must not be null");
         checkNotNull(dir, "dir contentNo must not be null");
         return reserveContentNoDaoImpl.listCanceled(folderId, sort, dir);
+    }
+
+    public List<WfReserveContentNo> listByFolderId(int folderId, int year, String contentStartdate, String contentEndDate) {
+        checkNotNull(folderId, "folderId folderId must not be null");
+        checkNotNull(year, "year contentNo must not be null");
+        return reserveContentNoDaoImpl.listByFolderId(folderId, year, contentStartdate, contentEndDate);
     }
 
 }
