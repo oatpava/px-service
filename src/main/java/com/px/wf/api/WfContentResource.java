@@ -1867,11 +1867,7 @@ public class WfContentResource {
                     tempTable.setText05(tableHeader);
                     //tempTable.setDate01(content.getCreatedDate());
                     tempTable.setText06(dateBegin + dateEnd);
-                    tempTable = tempTableService.create(tempTable);
-
-                    tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    tempTable.setOrderNo(tempTable.getId());
-                    tempTable = tempTableService.update(tempTable);
+                    tempTableService.create(tempTable);
                 }
             }
             status = Response.Status.OK;
@@ -1880,7 +1876,6 @@ public class WfContentResource {
             responseData.put("success", true);
 
         } catch (Exception ex) {
-            //ex.printStackTrace();
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
@@ -2000,14 +1995,8 @@ public class WfContentResource {
                         tempTable.setText05(tableHeader);
                         //tempTable.setDate01(content.getCreatedDate());
                         tempTable.setText06(dateBegin + dateEnd);
-
-                        tempTable = tempTableService.create(tempTable);
-
-                        tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                        tempTable.setOrderNo(tempTable.getId());
-                        tempTable = tempTableService.update(tempTable);
+                        tempTableService.create(tempTable);
                     }
-
                 }
             }
             status = Response.Status.OK;
@@ -2016,7 +2005,6 @@ public class WfContentResource {
             responseData.put("success", true);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
@@ -2211,17 +2199,12 @@ public class WfContentResource {
             tempTable.setText02(name);
             tempTable.setText05(tableHeader);
             tempTable.setText06(dateBegin + dateEnd);
-            tempTable = tempTableService.create(tempTable);
-
-            tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-            tempTable.setOrderNo(tempTable.getId());
-            tempTableService.update(tempTable);
+            tempTableService.create(tempTable);
             status = Response.Status.OK;
             responseData.put("data", null);
             responseData.put("message", "report success.");
             responseData.put("success", true);
         } catch (Exception ex) {
-            //ex.printStackTrace();
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
