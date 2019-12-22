@@ -440,6 +440,7 @@ public class OutboxResource {
                     tempTable.setComputerName(httpHeaders.getHeaderString("clientIp"));
                     tempTable.setJobType(jobType);
 
+                    tempTable.setStr02(outboxModel.getOutboxStr03());
                     tempTable.setText01(outboxModel.getOutboxTo());
                     tempTable.setText02(outboxModel.getOutboxTitle());
                     tempTable.setStr01(outboxModel.getOutboxSendDate());
@@ -447,10 +448,7 @@ public class OutboxResource {
                     tempTable.setText04(outboxModel.getOutboxDescription());
                     tempTable.setText05(colHeader);
                     tempTable.setText06(dateBegin + dateEnd);
-                    tempTable = tempTableService.create(tempTable);
-//                    tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-//                    tempTable.setOrderNo(tempTable.getId());
-//                    tempTable = tempTableService.update(tempTable);
+                    tempTableService.create(tempTable);
                 }
             }
             status = Response.Status.OK;

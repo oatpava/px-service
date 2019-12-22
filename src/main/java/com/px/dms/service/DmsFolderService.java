@@ -548,11 +548,11 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
             DmsFolderModel.setDmsEmailUserPreExpire(t.getDmsEmailUserPreExpire());
 
             if (t.getCreatedBy() != 0 && t.getCreatedBy() == -1) {
-                userProfile = userProfileService.getByUserId(t.getCreatedBy());
+                userProfile = userProfileService.getById(t.getCreatedBy());
                 DmsFolderModel.setUserProfileCreate(userProfileService.tranformToModel(userProfile));
             }
             if (t.getUpdatedBy() != 0 && t.getUpdatedBy() == -1) {
-                userProfile = userProfileService.getByUserId(t.getUpdatedBy());
+                userProfile = userProfileService.getById(t.getUpdatedBy());
                 DmsFolderModel.setUserProfileUpdate(userProfileService.tranformToModel(userProfile));
 
             }
@@ -563,7 +563,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
             }
 
             if (t.getDmsUserPreExpire() != 0) {
-                userProfile = userProfileService.getByUserId(t.getDmsUserPreExpire());
+                userProfile = userProfileService.getById(t.getDmsUserPreExpire());
                 DmsFolderModel.setDmsUserProfilePreExpire(userProfileService.tranformToModel(userProfile));
 
             }

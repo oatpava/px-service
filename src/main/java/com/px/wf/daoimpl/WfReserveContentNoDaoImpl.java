@@ -170,4 +170,21 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
         }
         return criteria;
     }
+
+    public List<WfReserveContentNo> listByFolderId(int folderId, int year, String contentStartdate, String contentEndDate) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
+        conjunction.add(Restrictions.eq("reserveContentNoContentYear", year));
+        conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        if (contentStartdate != null && contentStartdate != "") {
+            conjunction.add(Restrictions.ge("this.reserveContentNoContentDate", dateThaiToLocalDateTime(contentStartdate)));
+        }
+        if (contentEndDate != null && contentEndDate != "") {
+            conjunction.add(Restrictions.le("this.reserveContentNoContentDate", dateThaiToLocalDateTime(contentEndDate).plusHours(23).plusMinutes(59)));
+        }
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
+        criteria.add(conjunction);
+        return this.listByCriteria(criteria);
+    }
 }

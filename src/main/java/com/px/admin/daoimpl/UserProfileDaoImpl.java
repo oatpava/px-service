@@ -142,16 +142,16 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
         return this.countAll(criteria);
     }
 
-    public UserProfile getByUserId(int userId) {
-        Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-//        conjunction.add(Restrictions.eq("this.userProfileDefaultSelect", 0));
-        conjunction.add(Restrictions.eq("u.id", userId));
-        DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
-        criteria.createCriteria("user", "u", JoinType.INNER_JOIN);
-        criteria.add(conjunction);
-        return this.getOneByCriteria(criteria);
-    }
+//    public UserProfile getByUserId(int userId) {
+//        Conjunction conjunction = Restrictions.conjunction();
+//        conjunction.add(Restrictions.eq("this.removedBy", 0));
+////        conjunction.add(Restrictions.eq("this.userProfileDefaultSelect", 0));
+//        conjunction.add(Restrictions.eq("u.id", userId));
+//        DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
+//        criteria.createCriteria("user", "u", JoinType.INNER_JOIN);
+//        criteria.add(conjunction);
+//        return this.getOneByCriteria(criteria);
+//    }
 
     public UserProfile getByUsername(String username) {
         Conjunction conjunction = Restrictions.conjunction();
