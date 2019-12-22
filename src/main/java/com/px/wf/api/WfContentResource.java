@@ -60,6 +60,8 @@ import com.px.wf.model.EmailModel;
 import com.px.wf.model.WfContentModel_groupWfContentAndWorkflowfinish;
 import com.px.wf.model.WfContentSearchModel;
 import com.px.wf.model.WfLastNumberModel;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
@@ -1867,11 +1869,7 @@ public class WfContentResource {
                     tempTable.setText05(tableHeader);
                     //tempTable.setDate01(content.getCreatedDate());
                     tempTable.setText06(dateBegin + dateEnd);
-                    tempTable = tempTableService.create(tempTable);
-
-                    tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    tempTable.setOrderNo(tempTable.getId());
-                    tempTable = tempTableService.update(tempTable);
+                    tempTableService.create(tempTable);
                 }
             }
             status = Response.Status.OK;
@@ -1880,7 +1878,6 @@ public class WfContentResource {
             responseData.put("success", true);
 
         } catch (Exception ex) {
-            //ex.printStackTrace();
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
@@ -2000,14 +1997,8 @@ public class WfContentResource {
                         tempTable.setText05(tableHeader);
                         //tempTable.setDate01(content.getCreatedDate());
                         tempTable.setText06(dateBegin + dateEnd);
-
-                        tempTable = tempTableService.create(tempTable);
-
-                        tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                        tempTable.setOrderNo(tempTable.getId());
-                        tempTable = tempTableService.update(tempTable);
+                        tempTableService.create(tempTable);
                     }
-
                 }
             }
             status = Response.Status.OK;
@@ -2016,7 +2007,6 @@ public class WfContentResource {
             responseData.put("success", true);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
@@ -2211,17 +2201,12 @@ public class WfContentResource {
             tempTable.setText02(name);
             tempTable.setText05(tableHeader);
             tempTable.setText06(dateBegin + dateEnd);
-            tempTable = tempTableService.create(tempTable);
-
-            tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-            tempTable.setOrderNo(tempTable.getId());
-            tempTableService.update(tempTable);
+            tempTableService.create(tempTable);
             status = Response.Status.OK;
             responseData.put("data", null);
             responseData.put("message", "report success.");
             responseData.put("success", true);
         } catch (Exception ex) {
-            //ex.printStackTrace();
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
@@ -2934,6 +2919,145 @@ public class WfContentResource {
         } catch (Exception ex) {
             ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "Method for search report",
+            notes = "Method for search report",
+            response = WfContent.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "report success."),
+        @ApiResponse(code = 404, message = "reportt not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/report17/{jobType}/{folderId}")
+    public Response report17(
+            @BeanParam ListOptionModel listOptionModel,
+            @ApiParam(name = "jobType", value = "jobType", required = true)
+            @PathParam("jobType") String jobType,
+            @ApiParam(name = "folderId", value = "folderId", required = true)
+            @PathParam("folderId") int folderId,
+            WfContentSearchModel contentSearchModel
+    ) {
+        Gson gs = new GsonBuilder()
+                //.setVersion(listOptionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("data", null);
+        responseData.put("success", false);
+        responseData.put("message", "inbox list not found in the database.");
+        responseData.put("errorMessage", "");
+        try {
+            WfContentService contentService = new WfContentService();
+            ArrayList<WfContentModel_groupWfContentAndWorkflowfinish> listContentModel = new ArrayList<>();
+            List<WfContent> listContent = contentService.searchByModel(folderId, contentSearchModel, null, listOptionModel.getDir());
+            List<WfReserveContentNo> listReserve = new WfReserveContentNoService().listByFolderId(
+                    folderId,
+                    contentSearchModel.getWfContentContentYear(),
+                    contentSearchModel.getWfContentContentStartDate(),
+                    contentSearchModel.getWfContentContentEndDate());
+            if (!listContent.isEmpty() || !listReserve.isEmpty()) {
+                String finishStr = "[เรื่องเสร็จ]";
+                String cancelStr = "[ถูกยกเลิก]";
+                String reserveStr = "[เลขจอง]";
+
+                listContent.forEach(content -> {
+                    WfContentModel_groupWfContentAndWorkflowfinish tmp = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, false, true);
+                    if (tmp.getStatus() == 2) {
+                        String des = tmp.getWfContentDescription();
+                        if (des == null) des = ""; 
+                        tmp.setWfContentDescription(des + finishStr);
+                    } else if (tmp.getStatus() == 3) {
+                        String des = tmp.getWfContentDescription();
+                        if (des == null) des = ""; 
+                        tmp.setWfContentDescription(des + cancelStr);
+                    }
+                    listContentModel.add(tmp);
+                });
+
+                listReserve.forEach(reserve -> {
+                    WfContentModel_groupWfContentAndWorkflowfinish tmp = new WfContentModel_groupWfContentAndWorkflowfinish();
+                    tmp.setWfContentContentNumber(reserve.getReserveContentNoContentNumber());
+                    tmp.setWfContentContentNo(reserve.getReserveContentNoContentNo());
+                    tmp.setWfContentContentDate(Common.localDateTimeToString4(reserve.getReserveContentNoContentDate()));
+                    tmp.setWfContentBookNo("");
+                    tmp.setWfContentBookNo(null);
+                    tmp.setWfContentFrom("");
+                    tmp.setWfContentTo("");
+                    tmp.setWfContentTitle("");
+                    tmp.setWfContentDescription(reserveStr);
+                    listContentModel.add(tmp);
+                });
+
+                Collections.sort(listContentModel, new Comparator<WfContentModel_groupWfContentAndWorkflowfinish>() {
+                    @Override
+                    public int compare(final WfContentModel_groupWfContentAndWorkflowfinish object1, final WfContentModel_groupWfContentAndWorkflowfinish object2) {
+                        return object1.getWfContentContentNumber().compareTo(object2.getWfContentContentNumber());
+                    }
+                });
+                if (listOptionModel.getDir().equalsIgnoreCase("desc")) Collections.reverse(listContentModel);
+
+                String header = "";
+                String tableHeader = "";
+
+                WfFolderService folderService = new WfFolderService();
+                WfFolder folder = folderService.getByIdNotRemoved(folderId);
+
+                header = "รายงานแฟ้มทะเบียนรวมทั้งหมด";
+                tableHeader = "ทะเบียน : " + folder.getWfFolderParentName() + " " + folder.getWfFolderName();
+                String dateBegin = "ตั้งแต่วันที่ ";
+                String start = contentSearchModel.getWfContentContentStartDate();
+                if (start != null && !"".equals(start)) {
+                    dateBegin += contentService.getDateRange(start);
+                } else {
+                    dateBegin += "-";
+                }
+                String dateEnd = " ถึงวันที่ ";
+                String end = contentSearchModel.getWfContentContentEndDate();
+                if (end != null && !"".equals(end)) {
+                    dateEnd += contentService.getDateRange(end);
+                } else {
+                    dateEnd += "-";
+                }
+
+                TempTableService tempTableService = new TempTableService();
+                for (WfContentModel content : listContentModel) {
+                    TempTable tempTable = new TempTable();
+                    tempTable.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                    tempTable.setComputerName(httpHeaders.getHeaderString("clientIp"));
+                    tempTable.setJobType(jobType);
+                    tempTable.setStr01(content.getWfContentContentNo());
+                    tempTable.setStr02(content.getWfContentContentDate());
+                    tempTable.setStr03(content.getWfContentBookNo());
+                    tempTable.setStr04(content.getWfContentBookDate());
+                    tempTable.setText01(content.getWfContentFrom());
+                    tempTable.setText02(content.getWfContentTo());
+                    tempTable.setText03(content.getWfContentTitle());
+                    tempTable.setText04(content.getWfContentDescription());
+                    tempTable.setStr05(header);
+                    tempTable.setText05(tableHeader);
+                    tempTable.setText06(dateBegin + dateEnd);
+                    tempTableService.create(tempTable);
+                }
+            }
+            status = Response.Status.OK;
+            responseData.put("data", null);
+            responseData.put("message", "report success.");
+            responseData.put("success", true);
+
+        } catch (Exception ex) {
+            status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
