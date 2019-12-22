@@ -116,17 +116,17 @@ public class borrowService implements GenericService<borrow, borrowModel> {
 //            
 
             if (t.getUserHandlerId() != 0 && t.getUserHandlerId() != -1) {
-                userProfile = userProfileService.getByUserId(t.getCreatedBy());
+                userProfile = userProfileService.getById(t.getCreatedBy());
                 borrowModel.setUserProfileHandler(userProfileService.tranformToModel(userProfile));
             }
 
             if (t.getUserLentId() != 0 && t.getUserLentId() != -1) {
-                userProfile = userProfileService.getByUserId(t.getCreatedBy());
+                userProfile = userProfileService.getById(t.getCreatedBy());
                 borrowModel.setUserProfileLent(userProfileService.tranformToModel(userProfile));
             }
 
             if (t.getUserReturnId() != 0 && t.getUserReturnId() != -1) {
-                userProfile = userProfileService.getByUserId(t.getCreatedBy());
+                userProfile = userProfileService.getById(t.getCreatedBy());
                 borrowModel.setUserProfileReturn(userProfileService.tranformToModel(userProfile));
             }
 

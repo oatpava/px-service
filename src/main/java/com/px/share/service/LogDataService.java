@@ -92,13 +92,13 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
             if(userCreated <= 0) {
                 userCreated = 1;
             }
-//            logDataModel.setUserProfileName(userProfileService.getByUserId(userCreated).getUserProfileFullName());
-            if(logData.getType() == 4){
-                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
-            }else{
-                userName = userProfileService.getById(userCreated).getUserProfileFullName();
-            }
-            logDataModel.setUserProfileName(userName);
+            logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+//            if(logData.getType() == 4){
+//                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
+//            }else{
+//                userName = userProfileService.getById(userCreated).getUserProfileFullName();
+//            }
+//            logDataModel.setUserProfileName(userName);
         }
         return logDataModel;
     }

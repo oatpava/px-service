@@ -565,69 +565,69 @@ public class UserResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
-    @ApiOperation(
-            value = "Method for get tokenby user name",
-            notes = "ยืนยันการเข้าใช้งานระบบด้วยชื่อผู้ใช้งาน",
-            response = AuthenticationModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
-        @ApiResponse(code = 404, message = "Authentication fail."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/token")
-    public Response checkAuthenticationByUserName(
-            UserModel userModel
-    ) {
-        LOG.debug("checkAuthenticationByUserName...");
-        LOG.debug("name = " + userModel.getName());
-        LOG.debug("userId = " + httpHeaders.getHeaderString("userID"));
-        LOG.debug("clientIp = " + httpHeaders.getHeaderString("clientIp"));
-        Gson gs = new GsonBuilder()
-                .setVersion(userModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Status status = Response.Status.NOT_FOUND;
-        responseData.put("success", false);
-        responseData.put("message", "Authentication fail.");
-        responseData.put("errorMessage", "");
-        AuthenticationModel authenticationModel = new AuthenticationModel(false);
-        responseData.put("data", authenticationModel);
-        try {
-            UserService userService = new UserService();
-            User user = userService.getUserByUserName(userModel.getName());
-            if (user != null) {
-                UserProfileService userProfileService = new UserProfileService();
-                UserProfile userProfile = userProfileService.getByUserId(user.getId());
-
-                final String token = userService.genToken(user, userProfile);
-//                    LOG.debug("token = "+token);
-                response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
-                responseData.put("message", "");
-                authenticationModel = new AuthenticationModel(true);
-                responseData.put("data", authenticationModel);
-
-                //LogData For Login
-                userService.saveLogForLogin(user, httpHeaders.getHeaderString("clientIp"));
-            }
-            status = Response.Status.OK;
-            responseData.put("success", true);
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            status = Response.Status.OK;
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
-
-    ;
+//oat-edit
+//    @ApiOperation(
+//            value = "Method for get tokenby user name",
+//            notes = "ยืนยันการเข้าใช้งานระบบด้วยชื่อผู้ใช้งาน",
+//            response = AuthenticationModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
+//        @ApiResponse(code = 404, message = "Authentication fail."),
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @POST
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Path(value = "/token")
+//    public Response checkAuthenticationByUserName(
+//            UserModel userModel
+//    ) {
+//        LOG.debug("checkAuthenticationByUserName...");
+//        LOG.debug("name = " + userModel.getName());
+//        LOG.debug("userId = " + httpHeaders.getHeaderString("userID"));
+//        LOG.debug("clientIp = " + httpHeaders.getHeaderString("clientIp"));
+//        Gson gs = new GsonBuilder()
+//                .setVersion(userModel.getVersion())
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Status status = Response.Status.NOT_FOUND;
+//        responseData.put("success", false);
+//        responseData.put("message", "Authentication fail.");
+//        responseData.put("errorMessage", "");
+//        AuthenticationModel authenticationModel = new AuthenticationModel(false);
+//        responseData.put("data", authenticationModel);
+//        try {
+//            UserService userService = new UserService();
+//            User user = userService.getUserByUserName(userModel.getName());
+//            if (user != null) {
+//                UserProfileService userProfileService = new UserProfileService();
+//                UserProfile userProfile = userProfileService.getByUserId(user.getId());
+//
+//                final String token = userService.genToken(user, userProfile);
+////                    LOG.debug("token = "+token);
+//                response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
+//                responseData.put("message", "");
+//                authenticationModel = new AuthenticationModel(true);
+//                responseData.put("data", authenticationModel);
+//
+//                //LogData For Login
+//                userService.saveLogForLogin(user, httpHeaders.getHeaderString("clientIp"));
+//            }
+//            status = Response.Status.OK;
+//            responseData.put("success", true);
+//        } catch (Exception ex) {
+//            LOG.error("Exception = " + ex.getMessage());
+//            status = Response.Status.OK;
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
+//
+//    ;
 
     @ApiOperation(
             value = "ขอวันที่หมดอายุ ด้วย วันที่เริ่มใช้งาน",
@@ -1341,7 +1341,7 @@ public class UserResource {
             User user = userService.getUserByUserName("admin");
             if (user != null) {
                 UserProfileService userProfileService = new UserProfileService();
-                UserProfile userProfile = userProfileService.getByUserId(user.getId());
+                UserProfile userProfile = userProfileService.getDefaultProfile(user.getId());
                 final String token = userService.genToken(user, userProfile);
                 response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
                 responseData.put("result", true);
@@ -1400,7 +1400,8 @@ public class UserResource {
 //            User user = userService.getByIdNotRemoved(id);
             User user = userService.getUserByUserName(userModel.getName());
             if (user != null) {
-                UserProfile userProfile = new UserProfileService().getByUserId(user.getId());
+//                UserProfile userProfile = new UserProfileService().getByUserId(user.getId());//oat-edit
+                UserProfile userProfile = new UserProfileService().getDefaultProfile(user.getId());
                 user.setUpdatedBy(user.getId());
                 userProfile.setUpdatedBy(userProfile.getId());
 //                user.setUserPassword(userModel.getPasswords());

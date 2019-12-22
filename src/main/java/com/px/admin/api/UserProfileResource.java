@@ -162,95 +162,95 @@ public class UserProfileResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
-    @ApiOperation(
-            value = "Method for create UserProfile",
-            notes = "สร้างผู้ใช้งานระบบ",
-            response = UserProfileModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "UserProfile created successfully.")
-        ,
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/{userId}/userProfile")
-    public Response createUserProfile(
-            @ApiParam(name = "userId", value = "รหัสผู้ใช้งานระบบ", required = true)
-            @PathParam("userId") int userId,
-            UserProfileModel userProfileModel
-    ) {
-        LOG.debug("createUserProfile...");
-        LOG.debug("userId = " + userId);
-        Gson gs = new GsonBuilder()
-                .setVersion(userProfileModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
-        responseData.put("success", false);
-        responseData.put("message", "Internal Server Error!");
-        responseData.put("errorMessage", "");
-        try {
-            StructureService structureService = new StructureService();
-            TitleService titleService = new TitleService();
-            UserProfileTypeService userProfileTypeService = new UserProfileTypeService();
-            UserTypeOrderService userTypeOrderService = new UserTypeOrderService();
-            PositionService positionService = new PositionService();
-            PositionTypeService positionTypeService = new PositionTypeService();
-            UserProfileService userProfileService = new UserProfileService();
-            UserStatusService userProfileStatusService = new UserStatusService();
-
-            UserService userService = new UserService();
-            User user = userService.getByIdNotRemoved(userId);
-            UserProfile oldUserProfile = userProfileService.getByUserId(userId);
-//            oldUserProfile.setUserProfileDefaultSelect(1);
-            oldUserProfile = userProfileService.update(oldUserProfile);
-
-            UserProfile userProfile = new UserProfile();
-            userProfile.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-            userProfile.setStructure(structureService.getByIdNotRemoved(userProfileModel.getStructure().getId()));
-            userProfile.setTitle(titleService.getById(userProfileModel.getTitle().getId()));
-            userProfile.setUser(user);
-            userProfile.setUserProfileDefaultSelect(1);
-            userProfile.setUserProfileEmail(userProfileModel.getEmail());
-            userProfile.setUserProfileFirstName(userProfileModel.getFirstName());
-            userProfile.setUserProfileFirstNameEng(userProfileModel.getFirstNameEng());
-            userProfile.setUserProfileFullName(userProfileModel.getFirstName() + " " + userProfileModel.getLastName());
-            userProfile.setUserProfileFullNameEng(userProfileModel.getFirstNameEng() + " " + userProfileModel.getLastNameEng());
-            userProfile.setUserProfileLastName(userProfileModel.getLastName());
-            userProfile.setUserProfileLastNameEng(userProfileModel.getLastNameEng());
-            userProfile.setUserProfileTel(userProfileModel.getTel());
-            userProfile.setUserProfileVersion(1);
-            userProfile.setUserProfileStatus(userProfileStatusService.getByIdNotRemoved(1));
-            userProfile.setUserProfileType(userProfileTypeService.getByIdNotRemoved(userProfileModel.getUserProfileType().getId()));
-//            userProfile.setUserProfileTypeOrder(userTypeOrderService.getByIdNotRemoved(userProfileModel.getUserTypeOrder().getId()));
-            userProfile.setUserProfileCardId(userProfileModel.getIdCard());
-            userProfile.setUserProfileCode(userProfileModel.getCode());
-            userProfile.setUserProfileAddress(userProfileModel.getAddress());
-            userProfile.setPosition(positionService.getByIdNotRemoved(userProfileModel.getPosition().getId()));
-//            userProfile.setPositionType(positionTypeService.getByIdNotRemoved(userProfileModel.getPositionType().getId()));
-            userProfile.setDigitalKey(userProfileModel.getDigitalKey());
-
-            userProfile = userProfileService.create(userProfile);
-
-            responseData.put("data", userProfileService.tranformToModel(userProfile));
-            responseData.put("message", "UserProfile created successfully.");
-            status = Response.Status.CREATED;
-            responseData.put("success", true);
-
-            //LogData For create userProfile
-            userProfileService.saveLogForCreate(userProfile, httpHeaders.getHeaderString("clientIp"));
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
+//oat-edit
+//    @ApiOperation(
+//            value = "Method for create UserProfile",
+//            notes = "สร้างผู้ใช้งานระบบ",
+//            response = UserProfileModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 201, message = "UserProfile created successfully.")
+//        ,
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @POST
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Path(value = "/{userId}/userProfile")
+//    public Response createUserProfile(
+//            @ApiParam(name = "userId", value = "รหัสผู้ใช้งานระบบ", required = true)
+//            @PathParam("userId") int userId,
+//            UserProfileModel userProfileModel
+//    ) {
+//        LOG.debug("createUserProfile...");
+//        LOG.debug("userId = " + userId);
+//        Gson gs = new GsonBuilder()
+//                .setVersion(userProfileModel.getVersion())
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+//        responseData.put("success", false);
+//        responseData.put("message", "Internal Server Error!");
+//        responseData.put("errorMessage", "");
+//        try {
+//            StructureService structureService = new StructureService();
+//            TitleService titleService = new TitleService();
+//            UserProfileTypeService userProfileTypeService = new UserProfileTypeService();
+//            UserTypeOrderService userTypeOrderService = new UserTypeOrderService();
+//            PositionService positionService = new PositionService();
+//            PositionTypeService positionTypeService = new PositionTypeService();
+//            UserProfileService userProfileService = new UserProfileService();
+//            UserStatusService userProfileStatusService = new UserStatusService();
+//
+//            UserService userService = new UserService();
+//            User user = userService.getByIdNotRemoved(userId);
+//            UserProfile oldUserProfile = userProfileService.getByUserId(userId);
+////            oldUserProfile.setUserProfileDefaultSelect(1);
+//            oldUserProfile = userProfileService.update(oldUserProfile);
+//
+//            UserProfile userProfile = new UserProfile();
+//            userProfile.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+//            userProfile.setStructure(structureService.getByIdNotRemoved(userProfileModel.getStructure().getId()));
+//            userProfile.setTitle(titleService.getById(userProfileModel.getTitle().getId()));
+//            userProfile.setUser(user);
+//            userProfile.setUserProfileDefaultSelect(1);
+//            userProfile.setUserProfileEmail(userProfileModel.getEmail());
+//            userProfile.setUserProfileFirstName(userProfileModel.getFirstName());
+//            userProfile.setUserProfileFirstNameEng(userProfileModel.getFirstNameEng());
+//            userProfile.setUserProfileFullName(userProfileModel.getFirstName() + " " + userProfileModel.getLastName());
+//            userProfile.setUserProfileFullNameEng(userProfileModel.getFirstNameEng() + " " + userProfileModel.getLastNameEng());
+//            userProfile.setUserProfileLastName(userProfileModel.getLastName());
+//            userProfile.setUserProfileLastNameEng(userProfileModel.getLastNameEng());
+//            userProfile.setUserProfileTel(userProfileModel.getTel());
+//            userProfile.setUserProfileVersion(1);
+//            userProfile.setUserProfileStatus(userProfileStatusService.getByIdNotRemoved(1));
+//            userProfile.setUserProfileType(userProfileTypeService.getByIdNotRemoved(userProfileModel.getUserProfileType().getId()));
+////            userProfile.setUserProfileTypeOrder(userTypeOrderService.getByIdNotRemoved(userProfileModel.getUserTypeOrder().getId()));
+//            userProfile.setUserProfileCardId(userProfileModel.getIdCard());
+//            userProfile.setUserProfileCode(userProfileModel.getCode());
+//            userProfile.setUserProfileAddress(userProfileModel.getAddress());
+//            userProfile.setPosition(positionService.getByIdNotRemoved(userProfileModel.getPosition().getId()));
+////            userProfile.setPositionType(positionTypeService.getByIdNotRemoved(userProfileModel.getPositionType().getId()));
+//            userProfile.setDigitalKey(userProfileModel.getDigitalKey());
+//
+//            userProfile = userProfileService.create(userProfile);
+//
+//            responseData.put("data", userProfileService.tranformToModel(userProfile));
+//            responseData.put("message", "UserProfile created successfully.");
+//            status = Response.Status.CREATED;
+//            responseData.put("success", true);
+//
+//            //LogData For create userProfile
+//            userProfileService.saveLogForCreate(userProfile, httpHeaders.getHeaderString("clientIp"));
+//        } catch (Exception ex) {
+//            LOG.error("Exception = " + ex.getMessage());
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
 
     @ApiOperation(
             value = "Method for get UserProfile by id",
@@ -820,58 +820,58 @@ public class UserProfileResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
-    @ApiOperation(
-            value = "Method for get UserProfile by userId.",
-            notes = "ข้อมูลผู้ใช้งานระบบ ด้วยรหัสเข้าใช้งานระบบ",
-            response = UserProfileModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile not found in the database.")
-        ,
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @GET
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/user/{userId}")
-    public Response getProfileByUserId(
-            @BeanParam VersionModel versionModel,
-            @ApiParam(name = "userId", value = "รหัสผู้ใช้งานระบบ", required = true)
-            @PathParam("userId") int userId
-    ) {
-        LOG.debug("getProfilesByUserId...");
-        LOG.debug("userId = " + userId);
-        Gson gs = new GsonBuilder()
-                .setVersion(versionModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Response.Status status = Response.Status.NOT_FOUND;
-        responseData.put("success", false);
-        responseData.put("data", null);
-        responseData.put("message", "UserProfile not found in the database.");
-        responseData.put("errorMessage", "");
-        try {
-            UserProfileService userProfileService = new UserProfileService();
-            UserProfile userProfile = userProfileService.getByUserId(userId);
-            if (userProfile != null) {
-                responseData.put("data", userProfileService.tranformToModel(userProfile));
-                responseData.put("message", "");
-            }
-            status = Response.Status.OK;
-            responseData.put("success", true);
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            status = Response.Status.INTERNAL_SERVER_ERROR;
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
+//oat-edit
+//    @ApiOperation(
+//            value = "Method for get UserProfile by userId.",
+//            notes = "ข้อมูลผู้ใช้งานระบบ ด้วยรหัสเข้าใช้งานระบบ",
+//            response = UserProfileModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 200, message = "UserProfile success.")
+//        ,
+//        @ApiResponse(code = 404, message = "UserProfile not found in the database.")
+//        ,
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @GET
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Path(value = "/user/{userId}")
+//    public Response getProfileByUserId(
+//            @BeanParam VersionModel versionModel,
+//            @ApiParam(name = "userId", value = "รหัสผู้ใช้งานระบบ", required = true)
+//            @PathParam("userId") int userId
+//    ) {
+//        LOG.debug("getProfilesByUserId...");
+//        LOG.debug("userId = " + userId);
+//        Gson gs = new GsonBuilder()
+//                .setVersion(versionModel.getVersion())
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Response.Status status = Response.Status.NOT_FOUND;
+//        responseData.put("success", false);
+//        responseData.put("data", null);
+//        responseData.put("message", "UserProfile not found in the database.");
+//        responseData.put("errorMessage", "");
+//        try {
+//            UserProfileService userProfileService = new UserProfileService();
+//            UserProfile userProfile = userProfileService.getByUserId(userId);
+//            if (userProfile != null) {
+//                responseData.put("data", userProfileService.tranformToModel(userProfile));
+//                responseData.put("message", "");
+//            }
+//            status = Response.Status.OK;
+//            responseData.put("success", true);
+//        } catch (Exception ex) {
+//            LOG.error("Exception = " + ex.getMessage());
+//            status = Response.Status.INTERNAL_SERVER_ERROR;
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
 
     @ApiOperation(
             value = "Method for list UserProfile for Change.",

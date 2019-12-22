@@ -199,10 +199,10 @@ public class UserProfileService implements GenericService<UserProfile, UserProfi
         return userProfileDaoImpl.countAllByUserProfileStatusId(userProfileStatusId);
     }
 
-    public UserProfile getByUserId(int userId) {
-        checkNotNull(userId, "userId must not be null");
-        return userProfileDaoImpl.getByUserId(userId);
-    }
+//    public UserProfile getByUserId(int userId) {
+//        checkNotNull(userId, "userId must not be null");
+//        return userProfileDaoImpl.getByUserId(userId);
+//    }
 
     public UserProfile getByUsername(String username) {
         checkNotNull(username, "username must not be null");
