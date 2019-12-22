@@ -1445,7 +1445,7 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/swapUserProfile")
     public Response swapUserProfile(
-            UserProfileModel userProfileModel
+           UserProfileModel userProfileModel
     ) {
         LOG.debug("swapUserProfile...");
         Gson gs = new GsonBuilder()
@@ -1458,17 +1458,17 @@ public class UserResource {
         HashMap responseData = new HashMap();
         Status status = Response.Status.INTERNAL_SERVER_ERROR;
         responseData.put("success", false);
+        responseData.put("data", "");
+        String token = "";
         try {
-            System.out.println("swap to " + userProfileModel.getFullName() + " : " + userProfileModel.getId());
-            System.out.println("before " + httpHeaders.getHeaderString("userID"));
-            UserService userService = new UserService();
-            User user = userService.getByIdNotRemoved(userProfileModel.getUser().getId());
             UserProfile userProfile = new UserProfileService().getByIdNotRemoved(userProfileModel.getId());
-            if (user != null && userProfile != null) {
-                userProfile.setUserProfileDefaultSelect(0);
-                final String token = userService.genToken(user, userProfile);
-                response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
-                System.out.println("after " + httpHeaders.getHeaderString("userID"));
+            if (userProfile != null) {
+                UserService userService = new UserService();
+                User user = userService.getByIdNotRemoved(userProfile.getUser().getId());
+                //userProfile.setUserProfileDefaultSelect(0);
+                token = userService.genToken(user, userProfile);
+//                response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
+                responseData.put("data", token);
             }
             status = Response.Status.OK;
             responseData.put("success", true);
@@ -1477,7 +1477,8 @@ public class UserResource {
             LOG.error("Exception = " + ex.getMessage());
             responseData.put("errorMessage", ex.getMessage());
         }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+        return Response.status(status).header(HTTPHeaderNames.AUTH_TOKEN, token).entity(gs.toJson(responseData)).build();
     }
 
 }

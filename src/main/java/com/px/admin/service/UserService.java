@@ -250,9 +250,9 @@ public class UserService implements GenericService<User, UserModel> {
         final HashMap<String, Object> headerClaims = new HashMap<>();
 //        headerClaims.put("exp", exp);
 //        headerClaims.put("iat", iat);
-//        headerClaims.put("name", user.getUserName());
-//        headerClaims.put("pfid", userProfile.getId());
-//        headerClaims.put("pftyp", userProfile.getUserProfileType().getId());
+        headerClaims.put("name", user.getUserName());
+        headerClaims.put("pfid", userProfile.getId());
+        headerClaims.put("pftyp", userProfile.getUserProfileType().getId());
         try {
             Algorithm algorithm = Algorithm.HMAC256(PxInit.KEY);
             result = JWT.create()
@@ -270,6 +270,7 @@ public class UserService implements GenericService<User, UserModel> {
         //Invalid Signing configuration / Couldn't convert Claims.
         return result;
     }
+    
 
     public User saveLogForCreate(User user, String clientIp) {
         String logDescription = this.generateLogForCreateEntity(user);
