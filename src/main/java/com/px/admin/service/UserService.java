@@ -184,15 +184,9 @@ public class UserService implements GenericService<User, UserModel> {
             param = null;
         }
         if (param != null) {
-            if (param.getParamValue().equalsIgnoreCase("Y") && PxInit.ListAd.size() != 0) {
-                int indexAd = ((int) (System.currentTimeMillis() % PxInit.ListAd.size())) - 1;
-                if (indexAd < 0) {
-                    indexAd = 0;
-                }
-                Ad ad = (Ad) PxInit.ListAd.get(indexAd);
-//                ad.setAdUser(userName);
-//                ad.setAdPassword(userPassword);
-                result = authenticationUserByAd(ad,userName,userPassword);
+            if (param.getParamValue().equalsIgnoreCase("Y")) {
+                Ad ad = new Ad();
+                result = authenticationUserByAd(ad, userName, userPassword);
             } else {
                 userLogin = userDaoImpl.getUserByUserName(userName);
                 checkNotNull(userLogin, "userName login not found in database");
@@ -216,25 +210,9 @@ public class UserService implements GenericService<User, UserModel> {
         boolean result = false;
         LOG.debug(ad.getAdHost());
         LOG.debug(ad.getAdPort());
-        LOG.debug(ad.getAdPrefix() + ad.getAdUser());
-        LOG.debug(ad.getAdPassword());
-        if (ad != null) {
-            AdService adService = new AdService();
-            String userNameForCheckAd = ad.getAdPrefix() + ad.getAdUser() + ad.getAdSuffix() + ad.getAdBase();
-//            if (ad.getAdType().equalsIgnoreCase("ldap")) {
-//                userNameForCheckAd = userName + ad.getAdSuffix() + ad.getAdBase();
-//            }
-            if (ad.getAdPort().equalsIgnoreCase("389")) {
-                if(ad.getAdAttribute().equalsIgnoreCase("")){
-                    result = adService.simpleAuthenticationUser(ad.getAdHost(), ad.getAdPort(), userNameForCheckAd, userPassword);
-                }else{
-                    result = adService.simpleAuthenticationUserWithAttribute(ad.getAdHost(), ad.getAdPort(), ad.getAdUser(), ad.getAdPassword(), ad.getAdBase(), ad.getAdAttribute(), userName, userPassword);
-                }
-            } else {
-//                result = adService.sslAuthenticationUser(ad.getAdHost(), ad.getAdPort(), userName, ad.getAdPassword());
-                result = false;
-            }
-        }
+        AdService adService = new AdService();
+        String userNameForCheckAd = "uid=" + userName + ",jvd=dpim.go.th,dc=dpim,dc=go,dc=th";
+        result = adService.simpleAuthenticationUser("ldap.dpim.go.th", "389", userNameForCheckAd, userPassword);
         return result;
     }
 
@@ -258,12 +236,12 @@ public class UserService implements GenericService<User, UserModel> {
             Algorithm algorithm = Algorithm.HMAC256(PxInit.KEY);
             result = JWT.create()
                     .withIssuer(PxInit.ISSUER)
-//                    .withClaim("name", user.getUserName())
+                    //                    .withClaim("name", user.getUserName())
                     .withClaim("pfid", Common.encryptString(Integer.toString(userProfile.getId())))
                     .withClaim("pftyp", Common.encryptString(Integer.toString(userProfile.getUserProfileType().getId())))
                     .withHeader(headerClaims)
                     .sign(algorithm);
-            
+
         } catch (UnsupportedEncodingException | JWTCreationException ex) {
             //UTF-8 encoding not supported
             LOG.debug(ex);
@@ -271,7 +249,6 @@ public class UserService implements GenericService<User, UserModel> {
         //Invalid Signing configuration / Couldn't convert Claims.
         return result;
     }
-    
 
     public User saveLogForCreate(User user, String clientIp) {
         String logDescription = this.generateLogForCreateEntity(user);
