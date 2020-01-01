@@ -1148,7 +1148,7 @@ public class WfContentResource {
             listWfContent = contentService.searchByModel(contentSearchModel.getWfContentFolderId(), contentSearchModel, listOptionModel.getSort(), listOptionModel.getDir());
             if (!listWfContent.isEmpty()) {
                 for (WfContent content : listWfContent) {
-                    WfContentModel_groupWfContentAndWorkflowfinish tmp = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, false, true);
+                    WfContentModel_groupWfContentAndWorkflowfinish tmp = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, true, true);
                     if (contentSearchModel.getStatus() > 0) {
                         if (tmp.getStatus() == contentSearchModel.getStatus()) {
                             listWfContentModel.add(tmp);
