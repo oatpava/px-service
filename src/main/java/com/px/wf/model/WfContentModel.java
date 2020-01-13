@@ -168,7 +168,7 @@ public class WfContentModel extends VersionModel {
     private String wfContentTitle;
 
     @XmlElement(name = "wfContentSpeed")
-    @ApiParam(name = "wfContentSpeed", value = "ความเร่งด่วน", required = false)
+    @ApiParam(name = "wfContentSpeed", value = "ชั้นเร่งด่วน", required = false)
     @Since(1.0)
     @Expose
     private int wfContentSpeed;
@@ -738,7 +738,7 @@ public class WfContentModel extends VersionModel {
         return wfContentSpeed;
     }
 
-    @ApiModelProperty(name = "wfContentSpeed", example = "1", dataType = "int", value = "ความเร่งด่วน", required = true)
+    @ApiModelProperty(name = "wfContentSpeed", example = "1", dataType = "int", value = "ชั้นเร่งด่วน", required = true)
     public void setWfContentSpeed(int wfContentSpeed) {
         this.wfContentSpeed = wfContentSpeed;
     }

@@ -1215,7 +1215,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
             } else if (wfContentNew.getWfContentSpeed() == 4) {
                 wfContetnSpeedNew = "ด่วนที่สุด";
             }
-            descriptionLog.append(" ความเร่งด่วน : ");
+            descriptionLog.append(" ชั้นเร่งด่วน : ");
             descriptionLog.append(wfContetnSpeedOld);
             descriptionLog.append("เป็น");
             descriptionLog.append(wfContetnSpeedNew);
