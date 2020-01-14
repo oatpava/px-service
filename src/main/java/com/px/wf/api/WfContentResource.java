@@ -93,9 +93,7 @@ public class WfContentResource {
     public Response create(
             WfContentModel wfContentPostModel,
             @ApiParam(name = "preBookNoIndex", value = "preBookNoIndex", required = true)
-            @QueryParam("preBookNoIndex") int preBookNoIndex,
-            @ApiParam(name = "sharedFolderId", value = "sharedFolderId", required = true)
-            @QueryParam("sharedFolderId") int sharedFolderId
+            @QueryParam("preBookNoIndex") int preBookNoIndex
     ) {
         LOG.info("create...");
         Gson gs = new GsonBuilder()
@@ -109,29 +107,9 @@ public class WfContentResource {
         Status status = Response.Status.INTERNAL_SERVER_ERROR;
         responseData.put("success", false);
         try {
-
-            WfContent wfContent = new WfContent();
-            //get Data from WfContentPostModel
-            UserProfile userProfile = new UserProfile();
-            //get Data from UserProfile
-            WfFolder wfFolder = new WfFolder();
-            //get Data from WfFolder
-
-            //check length Data
             WfContentService wfContentService = new WfContentService();
             wfContentPostModel = wfContentService.checkLengthField(wfContentPostModel);
-
-            String wfContentNo = wfContentPostModel.getWfContentContentNo();
-            int wfContentNumber = wfContentPostModel.getWfContentContentNumber();
-            String wfBookNo = wfContentPostModel.getWfContentBookNo();
-            int wfBookNumber = 0;
-            if (wfContentPostModel.getWfContentBookNumber() != null) {
-                wfBookNumber = wfContentPostModel.getWfContentBookNumber();
-            }
-            int chkRepeatContentNoMsg = 0;
-            int chkRepeatBookNoMsg = 0;
-
-            //userID = 1;
+            WfContent wfContent = new WfContent();
             wfContent.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
             if (wfContentPostModel.getWfContentBookDate() != null) {
                 wfContent.setWfContentBookDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentBookDate()));
@@ -144,154 +122,83 @@ public class WfContentResource {
             } else {
                 wfContent.setWfContentExpireDate(null);
             }
-
-            if (wfContent != null) {
-                //==============userProfile ======================
-                UserProfileService userProfileService = new UserProfileService();
-                userProfile = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-
-                WfContent wfContentCreate = wfContentService.create(wfContent);
-
-                //==============wffolder=============================
-                WfFolderService wfFolderService = new WfFolderService();
-                wfFolder = wfFolderService.getByIdNotRemoved(wfContentPostModel.getWfContentFolderId());
-                int wfFolderBookNoType = wfFolder.getWfFolderBookNoType();
-                int wfFolderAutorun = wfFolder.getWfFolderAutorun();
-
-                //split ContentNo
-                HashMap<String, String> hashMapContentNo1 = new HashMap<String, String>();
-                hashMapContentNo1 = wfContentService.splitDataContentNo(wfContentNo, wfFolder);
-                wfContentNo = hashMapContentNo1.get("wfContentContentNo");
-                wfContentNumber = Integer.parseInt(hashMapContentNo1.get("wfContentNumber"));
-                int wfContentPoint = Integer.parseInt(hashMapContentNo1.get("wfContentPoint"));
-                String wfContentPre = hashMapContentNo1.get("wfContentPre");
-                int wfContentYear = Integer.parseInt(hashMapContentNo1.get("wfContentYear"));
-
-                //spilt bookNo
-                HashMap<String, String> hashMapBookNo1 = new HashMap<String, String>();
-                hashMapBookNo1 = wfContentService.splitDataBookNo(wfBookNo, wfFolder, preBookNoIndex);
-                wfBookNo = hashMapBookNo1.get("wfContentBookNo");
-                wfBookNumber = Integer.parseInt(hashMapBookNo1.get("wfBookNumber"));
-                int wfBookPoint = Integer.parseInt(hashMapBookNo1.get("wfBookPoint"));
-                String wfBookPre = hashMapBookNo1.get("wfBookPre");
-                int wfBookYear = Integer.parseInt(hashMapBookNo1.get("wfContentbookYear"));
-
-                //check repeat contentNo
-                HashMap<String, String> hashMapContentNo = wfContentService.checkMaxContentNo(wfContentNo, wfContentPostModel.getWfContentFolderId(), wfContentPre, wfContentYear, wfContentPoint, Integer.parseInt(httpHeaders.getHeaderString("userID")));
-
-                chkRepeatContentNoMsg = Integer.parseInt(hashMapContentNo.get("chkRepeatContentNoMsg"));
-                wfContentNo = hashMapContentNo.get("wfContentNo");
-                if (!hashMapContentNo.get("wfContentNumber").equals("0")) {
-                    wfContentNumber = Integer.parseInt(hashMapContentNo.get("wfContentNumber"));
-                    wfContentPoint = Integer.parseInt(hashMapContentNo.get("wfContentPoint"));
-                    wfContentYear = Integer.parseInt(hashMapContentNo.get("wfContentYear"));
-                }
-
-                //check repeat bookNo
-                if (sharedFolderId == 0) {
-                    if (wfBookNumber > 0) {
-                        HashMap<String, String> hashMapBookNo = wfContentService.checkMaxBookNo(wfFolderAutorun, wfBookNo, wfContentPostModel.getWfContentFolderId(), wfBookPre, wfBookYear, wfBookPoint, wfFolderBookNoType, wfContentNumber);
-
-                        chkRepeatBookNoMsg = Integer.parseInt(hashMapBookNo.get("chkRepeatBookNoMsg"));
-                        wfBookNo = hashMapBookNo.get("wfContentBookNo");
-                        if (!hashMapBookNo.get("wfBookNumber").equals("0")) {
-                            wfBookNumber = Integer.parseInt(hashMapBookNo.get("wfBookNumber"));
-                        }
-                    }
-                } else {
-                    HashMap<String, String> hashMapBookNo = wfContentService.checkMaxBookNoSharedFolder(wfFolderAutorun, sharedFolderId, wfBookPre, wfBookYear, wfBookPoint, wfFolderBookNoType);
-                    wfBookNo = hashMapBookNo.get("wfContentBookNo");
-                    wfBookNumber = Integer.parseInt(hashMapBookNo.get("wfBookNumber"));
-                }
-
-                //=======create WFContent ======================
-                wfContentCreate.setOrderNo(wfContentCreate.getId());
-                wfContentCreate.setInboxId(wfContentPostModel.getInboxId());
-                wfContentCreate.setWfDocumentId(wfContentPostModel.getWfDocumentId());
-                wfContentCreate.setWfContentFolderId(wfContentPostModel.getWfContentFolderId());
-                wfContentCreate.setWorkflowId(wfContentPostModel.getWorkflowId());
-                wfContentCreate.setWfContentContentPre(wfContentPre);
-                wfContentCreate.setWfContentYear(wfContentYear);
-                wfContentCreate.setWfContentContentNumber(wfContentNumber);
-                wfContentCreate.setWfContentContentPoint(wfContentPoint);
-                wfContentCreate.setWfContentContentTime(wfContentPostModel.getWfContentContentTime());
-                wfContentCreate.setWfContentContentNo(wfContentNo);
-                wfContentCreate.setWfContentBookYear(wfBookYear);
-                wfContentCreate.setWfContentBookPre(wfBookPre);
-                wfContentCreate.setWfContentBookNo(wfBookNo);
-                wfContentCreate.setWfContentBookNumber(wfBookNumber);
-                wfContentCreate.setWfContentBookPoint(wfBookPoint);
-                wfContentCreate.setWfContentFrom(wfContentPostModel.getWfContentFrom());
-                wfContentCreate.setWfContentTo(wfContentPostModel.getWfContentTo());
-                wfContentCreate.setWfContentTitle(wfContentPostModel.getWfContentTitle());
-                wfContentCreate.setWfContentSpeed(wfContentPostModel.getWfContentSpeed());
-                wfContentCreate.setWfContentSecret(wfContentPostModel.getWfContentSecret());
-                wfContentCreate.setWfContentDescription(wfContentPostModel.getWfContentDescription());
-                wfContentCreate.setWfContentReference(wfContentPostModel.getWfContentReference());
-                wfContentCreate.setWfContentAttachment(wfContentPostModel.getWfContentAttachment());
-                wfContentCreate.setWfContentOwnername(userProfile.getUserProfileFullName());
-                wfContentCreate.setWfContentStr01(wfContentPostModel.getWfContentStr01());
-                wfContentCreate.setWfContentStr02(wfContentPostModel.getWfContentStr02());//พ.ศ. 
-                wfContentCreate.setWfContentStr03(wfContentPostModel.getWfContentStr03());//ลงนาม   
-                wfContentCreate.setWfContentStr04(wfContentPostModel.getWfContentStr04());//ตำแหน่ง
-                wfContentCreate.setWfContentStr05(wfContentPostModel.getWfContentStr05());//หน่วยงานที่ออก 
-                wfContentCreate.setWfContentStr06(wfContentPostModel.getWfContentStr06());
-                wfContentCreate.setWfContentStr07(wfContentPostModel.getWfContentStr07());
-                wfContentCreate.setWfContentStr08(wfContentPostModel.getWfContentStr08());
-                wfContentCreate.setWfContentStr09(wfContentPostModel.getWfContentStr09());
-                wfContentCreate.setWfContentStr10(wfContentPostModel.getWfContentStr10());
-                wfContentCreate.setWfContentText01(wfContentPostModel.getWfContentText01());//ชื่อคำสั่ง/ประกาศ/อื่นๆ
-                wfContentCreate.setWfContentText02(wfContentPostModel.getWfContentText02());//หมายเหตุ
-                wfContentCreate.setWfContentText03(wfContentPostModel.getWfContentText03());
-                wfContentCreate.setWfContentText04(wfContentPostModel.getWfContentText04());
-                wfContentCreate.setWfContentText05(wfContentPostModel.getWfContentText05());
-                wfContentCreate.setWfContentText06(wfContentPostModel.getWfContentText06());
-                wfContentCreate.setWfContentText07(wfContentPostModel.getWfContentText07());
-                wfContentCreate.setWfContentText08(wfContentPostModel.getWfContentText08());
-                wfContentCreate.setWfContentText09(wfContentPostModel.getWfContentText09());
-                wfContentCreate.setWfContentText10(wfContentPostModel.getWfContentText10());
-                wfContentCreate.setWfContentInt01(wfContentPostModel.getWfContentInt01());//ประเภท 
-                wfContentCreate.setWfContentInt02(wfContentPostModel.getWfContentInt02());
-                wfContentCreate.setWfContentInt03(wfContentPostModel.getWfContentInt03());
-                wfContentCreate.setWfContentInt04(wfContentPostModel.getWfContentInt04());
-                wfContentCreate.setWfContentInt05(wfContentPostModel.getWfContentInt05());
-                wfContentCreate.setWfContentInt06(wfContentPostModel.getWfContentInt06());
-                wfContentCreate.setWfContentInt07(wfContentPostModel.getWfContentInt07());
-                wfContentCreate.setWfContentInt08(wfContentPostModel.getWfContentInt08());
-                wfContentCreate.setWfContentInt09(wfContentPostModel.getWfContentInt09());
-                wfContentCreate.setWfContentInt10(wfContentPostModel.getWfContentInt10());
-                wfContentCreate.setWfContentDate01(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate01()));
-                wfContentCreate.setWfContentDate02(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate02()));
-                wfContentCreate.setWfContentDate03(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate03()));
-                wfContentCreate.setWfContentDate04(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate04()));
-                wfContentCreate.setWfContentDate05(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate05()));
-                wfContentCreate.setWfContentDate06(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate06()));
-                wfContentCreate.setWfContentDate07(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate07()));
-                wfContentCreate.setWfContentDate08(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate08()));
-                wfContentCreate.setWfContentDate09(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate09()));
-                wfContentCreate.setWfContentDate10(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate10()));
-                wfContentCreate.setConvertId(0);
-                wfContentCreate.setfOrgId(0);
-                wfContentCreate.setfTransMainId(0);
-                wfContentCreate.setfType(0);
-
-                wfContentCreate = wfContentService.update(wfContentCreate);
-                responseData.put("data", wfContentService.tranformToModel(wfContentCreate));
-
-                //LogData For Create
-                wfContentService.saveLogForCreate(wfContentCreate, httpHeaders.getHeaderString("clientIp"));
-            }
+            wfContent.setInboxId(wfContentPostModel.getInboxId());
+            wfContent.setWfDocumentId(wfContentPostModel.getWfDocumentId());
+            wfContent.setWfContentFolderId(wfContentPostModel.getWfContentFolderId());
+            wfContent.setWorkflowId(wfContentPostModel.getWorkflowId());
+            wfContent.setWfContentContentPre(wfContentPostModel.getWfContentContentPre());
+            wfContent.setWfContentYear(wfContentPostModel.getWfContentContentYear());
+            wfContent.setWfContentContentNumber(wfContentPostModel.getWfContentContentNumber());
+            wfContent.setWfContentContentPoint(wfContentPostModel.getWfContentContentPoint());
+            wfContent.setWfContentContentTime(wfContentPostModel.getWfContentContentTime());
+            wfContent.setWfContentContentNo(wfContentPostModel.getWfContentContentNo());
+            wfContent.setWfContentBookYear(wfContentPostModel.getWfContentBookYear());
+            wfContent.setWfContentBookPre(wfContentPostModel.getWfContentBookPre());
+            wfContent.setWfContentBookNo(wfContentPostModel.getWfContentBookNo());
+            wfContent.setWfContentBookNumber(wfContentPostModel.getWfContentBookNumber());
+            wfContent.setWfContentBookPoint(wfContentPostModel.getWfContentBookPoint());
+            wfContent.setWfContentFrom(wfContentPostModel.getWfContentFrom());
+            wfContent.setWfContentTo(wfContentPostModel.getWfContentTo());
+            wfContent.setWfContentTitle(wfContentPostModel.getWfContentTitle());
+            wfContent.setWfContentSpeed(wfContentPostModel.getWfContentSpeed());
+            wfContent.setWfContentSecret(wfContentPostModel.getWfContentSecret());
+            wfContent.setWfContentDescription(wfContentPostModel.getWfContentDescription());
+            wfContent.setWfContentReference(wfContentPostModel.getWfContentReference());
+            wfContent.setWfContentAttachment(wfContentPostModel.getWfContentAttachment());
+            wfContent.setWfContentOwnername(wfContentPostModel.getWfContentOwnername());
+            wfContent.setWfContentStr01(wfContentPostModel.getWfContentStr01());
+            wfContent.setWfContentStr02(wfContentPostModel.getWfContentStr02());//พ.ศ. 
+            wfContent.setWfContentStr03(wfContentPostModel.getWfContentStr03());//ลงนาม   
+            wfContent.setWfContentStr04(wfContentPostModel.getWfContentStr04());//ตำแหน่ง
+            wfContent.setWfContentStr05(wfContentPostModel.getWfContentStr05());//หน่วยงานที่ออก 
+            wfContent.setWfContentStr06(wfContentPostModel.getWfContentStr06());
+            wfContent.setWfContentStr07(wfContentPostModel.getWfContentStr07());
+            wfContent.setWfContentStr08(wfContentPostModel.getWfContentStr08());
+            wfContent.setWfContentStr09(wfContentPostModel.getWfContentStr09());
+            wfContent.setWfContentStr10(wfContentPostModel.getWfContentStr10());
+            wfContent.setWfContentText01(wfContentPostModel.getWfContentText01());//ชื่อคำสั่ง/ประกาศ/อื่นๆ
+            wfContent.setWfContentText02(wfContentPostModel.getWfContentText02());//หมายเหตุ
+            wfContent.setWfContentText03(wfContentPostModel.getWfContentText03());
+            wfContent.setWfContentText04(wfContentPostModel.getWfContentText04());
+            wfContent.setWfContentText05(wfContentPostModel.getWfContentText05());
+            wfContent.setWfContentText06(wfContentPostModel.getWfContentText06());
+            wfContent.setWfContentText07(wfContentPostModel.getWfContentText07());
+            wfContent.setWfContentText08(wfContentPostModel.getWfContentText08());
+            wfContent.setWfContentText09(wfContentPostModel.getWfContentText09());
+            wfContent.setWfContentText10(wfContentPostModel.getWfContentText10());
+            wfContent.setWfContentInt01(wfContentPostModel.getWfContentInt01());//ประเภท 
+            wfContent.setWfContentInt02(wfContentPostModel.getWfContentInt02());
+            wfContent.setWfContentInt03(wfContentPostModel.getWfContentInt03());
+            wfContent.setWfContentInt04(wfContentPostModel.getWfContentInt04());
+            wfContent.setWfContentInt05(wfContentPostModel.getWfContentInt05());
+            wfContent.setWfContentInt06(wfContentPostModel.getWfContentInt06());
+            wfContent.setWfContentInt07(wfContentPostModel.getWfContentInt07());
+            wfContent.setWfContentInt08(wfContentPostModel.getWfContentInt08());
+            wfContent.setWfContentInt09(wfContentPostModel.getWfContentInt09());
+            wfContent.setWfContentInt10(wfContentPostModel.getWfContentInt10());
+            wfContent.setWfContentDate01(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate01()));
+            wfContent.setWfContentDate02(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate02()));
+            wfContent.setWfContentDate03(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate03()));
+            wfContent.setWfContentDate04(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate04()));
+            wfContent.setWfContentDate05(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate05()));
+            wfContent.setWfContentDate06(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate06()));
+            wfContent.setWfContentDate07(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate07()));
+            wfContent.setWfContentDate08(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate08()));
+            wfContent.setWfContentDate09(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate09()));
+            wfContent.setWfContentDate10(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate10()));
+            wfContent.setConvertId(0);
+            wfContent.setfOrgId(0);
+            wfContent.setfTransMainId(0);
+            wfContent.setfType(0);
+            wfContent = wfContentService.create(wfContent);
+            wfContent.setOrderNo(wfContent.getId());
+            wfContent = wfContentService.update(wfContent);
             status = Response.Status.CREATED;
+            responseData.put("data", wfContentService.tranformToModel(wfContent));
             responseData.put("success", true);
-            if (chkRepeatContentNoMsg == 0 && chkRepeatBookNoMsg == 0) {
-                responseData.put("message", "WfContent successfully.");
-            } else if (chkRepeatContentNoMsg == 1 && chkRepeatBookNoMsg == 0) {
-                responseData.put("message", "WfContent successfully. This ContentNo is used. New ContentNo = " + wfContentNo);
-            } else if (chkRepeatContentNoMsg == 0 && chkRepeatBookNoMsg == 1) {
-                responseData.put("message", "WfContent successfully. This BookNo is used. New BookNo = " + wfBookNo);
-            } else if (chkRepeatContentNoMsg == 1 && chkRepeatBookNoMsg == 1) {
-                responseData.put("message", "WfContent successfully. ContentNo and BookNo are used. New ContentNo = " + wfContentNo + " and New BookNo = " + wfBookNo);
-            }
+            responseData.put("message", "WfContent successfully.");
+            //LogData For Create
+            wfContentService.saveLogForCreate(wfContent, httpHeaders.getHeaderString("clientIp"));
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
             responseData.put("errorMessage", ex.getMessage());
@@ -384,48 +291,12 @@ public class WfContentResource {
             WfContent wfContentOld = wfContentService.getById(wfContentPostModel.getId());
             //check length Data
             //oat-edit//wfContentPostModel = wfContentService.checkLengthField(wfContentPostModel);
-            String wfBookNo = wfContentPostModel.getWfContentBookNo();
-
-            int wfBookNumber = 0;
-            //==============wffolder=============================
-            WfFolderService wfFolderService = new WfFolderService();
-            WfFolder wfFolder = wfFolderService.getById(wfContentPostModel.getWfContentFolderId());
-//            int wfFolderBookNoType = wfFolder.getWfFolderBookNoType();
-//            int wfFolderAutorun = wfFolder.getWfFolderAutorun();
-            int chkRepeatBookNo = 0;
-
-//            //check repeat bookNo
-//            if (wfFolderAutorun == 1) {
-//                WfContent bookNoInDb = wfContentService.getById(wfContentPostModel.getId());
-//                String strBookNoInDb = bookNoInDb.getWfContentBookNo();
-//                if (bookNoInDb != null && strBookNoInDb.equals(wfContentPostModel.getWfContentBookNo())) {
-//                    chkRepeatBookNo = 0;
-//                } else {
-//                    WfContent bookNoInDb2 = wfContentService.getByBookNo(wfContentPostModel.getWfContentBookNo(), wfContentPostModel.getWfContentFolderId());
-//                    if (bookNoInDb2 == null) {
-//                        chkRepeatBookNo = 0;
-//                    } else {
-//                        chkRepeatBookNo = 1;
-//                    }
-//                }
-//            }oat-edit
-            if (wfContent != null && chkRepeatBookNo == 0) {
-                //spilt bookNo
-                //[GHB]
-                HashMap<String, String> hashMapBookNo1 = new HashMap<String, String>();
-                hashMapBookNo1 = wfContentService.splitDataBookNo(wfBookNo, wfFolder, preBookNoIndex);
-                //wfBookNo = hashMapBookNo1.get("wfContentBookNo");
-                wfBookNumber = Integer.parseInt(hashMapBookNo1.get("wfBookNumber"));
-                int wfBookPoint = Integer.parseInt(hashMapBookNo1.get("wfBookPoint"));
-                //String wfBookPre = hashMapBookNo1.get("wfBookPre");
-                String wfBookPre = wfContentPostModel.getWfContentBookPre();
-                int wfBookYear = Integer.parseInt(hashMapBookNo1.get("wfContentbookYear"));
-
-                wfContent.setWfContentBookPre(wfBookPre);
-                wfContent.setWfContentBookYear(wfBookYear);
-                wfContent.setWfContentBookNo(wfBookNo);
-                wfContent.setWfContentBookNumber(wfBookNumber);
-                wfContent.setWfContentBookPoint(wfBookPoint);
+            if (wfContent != null) {
+                wfContent.setWfContentBookPre(wfContentPostModel.getWfContentBookPre());
+                wfContent.setWfContentBookYear(wfContentPostModel.getWfContentBookYear());
+                wfContent.setWfContentBookNo(wfContentPostModel.getWfContentBookNo());
+                wfContent.setWfContentBookNumber(wfContentPostModel.getWfContentBookNumber());
+                wfContent.setWfContentBookPoint(wfContentPostModel.getWfContentBookPoint());
                 if (wfContentPostModel.getWfContentBookDate() != null) {
                     wfContent.setWfContentBookDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentBookDate()));
                 } else {
@@ -484,10 +355,8 @@ public class WfContentResource {
                 wfContent.setWfContentDate09(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate09()));
                 wfContent.setWfContentDate10(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate10()));
                 wfContent.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-
                 //wfContentService.updateWorkflow(wfContentOld, wfContent, Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 wfContent = wfContentService.update(wfContent);
-
                 //oat-add GHB
                 if (wfContentOld.getWfContentDate01() == null && wfContentPostModel.getWfContentDate01() != null) {
                     WorkflowService workflowService = new WorkflowService();
@@ -498,22 +367,14 @@ public class WfContentResource {
                         workflowService.update(workflow);
                     }
                 }
-
                 status = Response.Status.OK;
                 responseData.put("data", wfContentService.tranformToModel(wfContent));
                 responseData.put("message", "");
                 responseData.put("success", true);
-
                 //LogData For Update
                 wfContentService.saveLogForUpdate(wfContentOld, wfContent, wfContentPostModel.getWfContentBookDate(), httpHeaders.getHeaderString("clientIp"));
-            } else if (wfContent != null && chkRepeatBookNo == 1) {
-                status = Response.Status.OK;
-                responseData.put("data", "");
-                responseData.put("message", "This BookNo is used. Please check BookNo again.");
-                responseData.put("success", true);
             }
         } catch (Exception ex) {
-            //ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
@@ -1391,173 +1252,6 @@ public class WfContentResource {
     }
 
     @ApiOperation(
-            value = "สร้างข้อมูลหนังสือ",
-            notes = "สร้างข้อมูลหนังสือ",
-            response = WfContentModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "WfContent created successfully."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/create2")
-    public Response create2(
-            WfContentModel wfContentPostModel
-    ) {
-        LOG.info("create...");
-        LOG.info("wfContentPostModel = " + Integer.parseInt(httpHeaders.getHeaderString("userID")));
-        Gson gs = new GsonBuilder()
-                .setVersion(wfContentPostModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Status status = Response.Status.INTERNAL_SERVER_ERROR;
-        responseData.put("success", false);
-        try {
-
-            WfContent wfContent = new WfContent();
-            UserProfile userProfile = new UserProfile();
-            WfFolder wfFolder = new WfFolder();
-
-            WfContentService wfContentService = new WfContentService();
-            wfContentPostModel = wfContentService.checkLengthField(wfContentPostModel);
-
-            String wfContentNo = wfContentPostModel.getWfContentContentNo();
-            int wfContentNumber = wfContentPostModel.getWfContentContentNumber();
-            String wfBookNo = wfContentPostModel.getWfContentBookNo();
-            int wfBookNumber = 0;
-            if (wfContentPostModel.getWfContentBookNumber() != null) {
-                wfBookNumber = wfContentPostModel.getWfContentBookNumber();
-            }
-            int chkRepeatContentNoMsg = 0;
-            int chkRepeatBookNoMsg = 0;
-
-            wfContent.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-            if (wfContentPostModel.getWfContentBookDate() != null) {
-                wfContent.setWfContentBookDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentBookDate()));
-            } else {
-                wfContent.setWfContentBookDate(null);
-            }
-            wfContent.setWfContentContentDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentContentDate()));
-            if (wfContentPostModel.getWfContentExpireDate() != null) {
-                wfContent.setWfContentExpireDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentExpireDate()));
-            } else {
-                wfContent.setWfContentExpireDate(null);
-            }
-
-            if (wfContent != null) {
-                //==============userProfile ======================
-                UserProfileService userProfileService = new UserProfileService();
-                userProfile = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-
-                WfContent wfContentCreate = wfContentService.create(wfContent);
-
-                //==============wffolder=============================
-                WfFolderService wfFolderService = new WfFolderService();
-                wfFolder = wfFolderService.getById(wfContentPostModel.getWfContentFolderId());
-                int wfFolderBookNoType = wfFolder.getWfFolderBookNoType();
-                int wfFolderAutorun = wfFolder.getWfFolderAutorun();
-
-                //=======create WFContent ======================
-                wfContentCreate.setOrderNo(wfContentCreate.getId());
-                wfContentCreate.setInboxId(wfContentPostModel.getInboxId());
-                wfContentCreate.setWfDocumentId(wfContentPostModel.getWfDocumentId());
-                wfContentCreate.setWfContentFolderId(wfContentPostModel.getWfContentFolderId());
-                wfContentCreate.setWorkflowId(wfContentPostModel.getWorkflowId());
-                wfContentCreate.setWfContentContentPre(wfContentPostModel.getWfContentContentPre());////
-                wfContentCreate.setWfContentYear(wfContentPostModel.getWfContentContentYear());////
-                wfContentCreate.setWfContentContentNumber(wfContentNumber);
-                wfContentCreate.setWfContentContentPoint(0);////
-                wfContentCreate.setWfContentContentTime(wfContentPostModel.getWfContentContentTime());
-                wfContentCreate.setWfContentContentNo(wfContentNo);
-                wfContentCreate.setWfContentBookYear(wfContentPostModel.getWfContentBookYear());////
-                wfContentCreate.setWfContentBookPre(wfContentPostModel.getWfContentBookPre());////
-                wfContentCreate.setWfContentBookNo(wfBookNo);
-                wfContentCreate.setWfContentBookNumber(wfBookNumber);
-                wfContentCreate.setWfContentBookPoint(0);////
-                wfContentCreate.setWfContentFrom(wfContentPostModel.getWfContentFrom());
-                wfContentCreate.setWfContentTo(wfContentPostModel.getWfContentTo());
-                wfContentCreate.setWfContentTitle(wfContentPostModel.getWfContentTitle());
-                wfContentCreate.setWfContentSpeed(wfContentPostModel.getWfContentSpeed());
-                wfContentCreate.setWfContentSecret(wfContentPostModel.getWfContentSecret());
-                wfContentCreate.setWfContentDescription(wfContentPostModel.getWfContentDescription());
-                wfContentCreate.setWfContentReference(wfContentPostModel.getWfContentReference());
-                wfContentCreate.setWfContentAttachment(wfContentPostModel.getWfContentAttachment());
-                wfContentCreate.setWfContentOwnername(userProfile.getUserProfileFullName());
-                wfContentCreate.setWfContentStr01(wfContentPostModel.getWfContentStr01());
-                wfContentCreate.setWfContentStr02(wfContentPostModel.getWfContentStr02());//พ.ศ. 
-                wfContentCreate.setWfContentStr03(wfContentPostModel.getWfContentStr03());//ลงนาม   
-                wfContentCreate.setWfContentStr04(wfContentPostModel.getWfContentStr04());//ตำแหน่ง
-                wfContentCreate.setWfContentStr05(wfContentPostModel.getWfContentStr05());//หน่วยงานที่ออก 
-                wfContentCreate.setWfContentStr06(wfContentPostModel.getWfContentStr06());
-                wfContentCreate.setWfContentStr07(wfContentPostModel.getWfContentStr07());
-                wfContentCreate.setWfContentStr08(wfContentPostModel.getWfContentStr08());
-                wfContentCreate.setWfContentStr09(wfContentPostModel.getWfContentStr09());
-                wfContentCreate.setWfContentStr10(wfContentPostModel.getWfContentStr10());
-                wfContentCreate.setWfContentText01(wfContentPostModel.getWfContentText01());//ชื่อคำสั่ง/ประกาศ/อื่นๆ
-                wfContentCreate.setWfContentText02(wfContentPostModel.getWfContentText02());//หมายเหตุ
-                wfContentCreate.setWfContentText03(wfContentPostModel.getWfContentText03());
-                wfContentCreate.setWfContentText04(wfContentPostModel.getWfContentText04());
-                wfContentCreate.setWfContentText05(wfContentPostModel.getWfContentText05());
-                wfContentCreate.setWfContentText06(wfContentPostModel.getWfContentText06());
-                wfContentCreate.setWfContentText07(wfContentPostModel.getWfContentText07());
-                wfContentCreate.setWfContentText08(wfContentPostModel.getWfContentText08());
-                wfContentCreate.setWfContentText09(wfContentPostModel.getWfContentText09());
-                wfContentCreate.setWfContentText10(wfContentPostModel.getWfContentText10());
-                wfContentCreate.setWfContentInt01(wfContentPostModel.getWfContentInt01());//ประเภท 
-                wfContentCreate.setWfContentInt02(wfContentPostModel.getWfContentInt02());
-                wfContentCreate.setWfContentInt03(wfContentPostModel.getWfContentInt03());
-                wfContentCreate.setWfContentInt04(wfContentPostModel.getWfContentInt04());
-                wfContentCreate.setWfContentInt05(wfContentPostModel.getWfContentInt05());
-                wfContentCreate.setWfContentInt06(wfContentPostModel.getWfContentInt06());
-                wfContentCreate.setWfContentInt07(wfContentPostModel.getWfContentInt07());
-                wfContentCreate.setWfContentInt08(wfContentPostModel.getWfContentInt08());
-                wfContentCreate.setWfContentInt09(wfContentPostModel.getWfContentInt09());
-                wfContentCreate.setWfContentInt10(wfContentPostModel.getWfContentInt10());
-                wfContentCreate.setWfContentDate01(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate01()));
-                wfContentCreate.setWfContentDate02(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate02()));
-                wfContentCreate.setWfContentDate03(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate03()));
-                wfContentCreate.setWfContentDate04(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate04()));
-                wfContentCreate.setWfContentDate05(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate05()));
-                wfContentCreate.setWfContentDate06(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate06()));
-                wfContentCreate.setWfContentDate07(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate07()));
-                wfContentCreate.setWfContentDate08(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate08()));
-                wfContentCreate.setWfContentDate09(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate09()));
-                wfContentCreate.setWfContentDate10(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate10()));
-                wfContentCreate.setConvertId(0);
-                wfContentCreate.setfOrgId(0);
-                wfContentCreate.setfTransMainId(0);
-                wfContentCreate.setfType(0);
-
-                wfContentCreate = wfContentService.update(wfContentCreate);
-                responseData.put("data", wfContentService.tranformToModel(wfContentCreate));
-
-                //LogData For Create
-                wfContentService.saveLogForCreate(wfContentCreate, httpHeaders.getHeaderString("clientIp"));
-            }
-            status = Response.Status.CREATED;
-            responseData.put("success", true);
-            if (chkRepeatContentNoMsg == 0 && chkRepeatBookNoMsg == 0) {
-                responseData.put("message", "WfContent successfully.");
-            } else if (chkRepeatContentNoMsg == 1 && chkRepeatBookNoMsg == 0) {
-                responseData.put("message", "WfContent successfully. This ContentNo is used. New ContentNo = " + wfContentNo);
-            } else if (chkRepeatContentNoMsg == 0 && chkRepeatBookNoMsg == 1) {
-                responseData.put("message", "WfContent successfully. This BookNo is used. New BookNo = " + wfBookNo);
-            } else if (chkRepeatContentNoMsg == 1 && chkRepeatBookNoMsg == 1) {
-                responseData.put("message", "WfContent successfully. ContentNo and BookNo are used. New ContentNo = " + wfContentNo + " and New BookNo = " + wfBookNo);
-            }
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
-
-    @ApiOperation(
             value = "Method for check duplicate WfContent title",
             notes = "เช็คชื่อเรื่องหนังสือซ้ำ",
             response = WfContentModel.class
@@ -1641,9 +1335,7 @@ public class WfContentResource {
         try {
             ParamService paramservice = new ParamService();
             WfContentService contentService = new WfContentService();
-            //WfContent content = contentService.getById(contentId);
-            WfFolderService folderService = new WfFolderService();
-            WfFolder folder = folderService.getById(folderId);
+            WfFolder folder = new WfFolderService().getById(folderId);
 
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR) + 543;
@@ -1653,16 +1345,14 @@ public class WfContentResource {
                 }
             }
 
-            //int contentNumber = content.getWfContentContentNumber();
-            //int bookNumber = content.getWfContentBookNumber();
-            String point = "0" + Integer.toString(contentService.getMaxContentPoint(folderId, year, contentNumber));
-            point = "." + point.substring(point.length() - 2);//00001.01
-
+            int pointNumber = contentService.getMaxContentPoint(folderId, year, contentNumber);
+            String point = "0" + Integer.toString(pointNumber);
+            point = "." + point.substring(point.length() - 2);//.xx
             String zeroDigit;
             String pre;
             String no;
 
-            int contentFormat = (folder.getWfContentType2().getId() == 5)//ทะเบียนคำสั่งเลข3หลัก, ปกติ5หลัก
+            int contentFormat = (folder.getWfContentType2().getId() == 5)//ทะเบียนคำสั่ง
                     ? Integer.parseInt(paramservice.getByParamName("ORDERFORMAT").getParamValue()) : Integer.parseInt(paramservice.getByParamName("CONTENTFORMAT").getParamValue());
             zeroDigit = "0";
             for (int i = 0; i < contentFormat; i++) {
@@ -1674,30 +1364,22 @@ public class WfContentResource {
             }
             no = zeroDigit + contentNumber;
             no = no.substring(no.length() - contentFormat);
-
-            String contentNo = pre + no + point + "/" + Integer.toString(year);//praxis00001/2560 pre+no+/year          
+            String contentNo = pre + no + point + "/" + Integer.toString(year);
 
             int bookFormat = Integer.parseInt(paramservice.getByParamName("BOOKNOFORMAT").getParamValue());
             zeroDigit = "0";
             for (int i = 0; i < contentFormat; i++) {
                 zeroDigit += "0";
             }
-            //[GHB]
-//            pre = folder.getWfFolderPreBookNo();
-//            if (pre == null) {
-//                pre = "";
-//            } 
             if (folder.getWfFolderPreBookNo() == null) {
                 pre = "";
             } else {
                 pre = folder.getWfFolderPreBookNo().split(", ")[preBookNoIndex];
             }
-//            no = zeroDigit + bookNumber;
             no = zeroDigit + contentNumber;
             String bookNo = "";
             switch (folder.getWfFolderBookNoType()) {
                 case 0:
-//                    bookNo = no.substring(no.length() - bookFormat) + point;
                     bookNo = "";
                     break;
 
@@ -1714,26 +1396,23 @@ public class WfContentResource {
             WfContentModel tmp = new WfContentModel();
             if (contentMain != null) {
                 tmp.setWfContentContentNumber(contentNumber);
+                tmp.setWfContentContentPoint(pointNumber);
                 tmp.setWfContentContentNo(contentNo);
-//            tmp.setWfContentBookNumber(bookNumber);
                 tmp.setWfContentBookNumber(contentNumber);
+                tmp.setWfContentBookPoint(pointNumber);
                 tmp.setWfContentBookNo(bookNo);
-
                 tmp.setWfContentContentDate(Common.localDateTimeToString4(contentMain.getWfContentContentDate()));
                 tmp.setWfContentContentTime(contentMain.getWfContentContentTime());
             }
-
             status = Response.Status.OK;
             responseData.put("data", tmp);
             responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
-
         return Response.status(status)
                 .entity(gs.toJson(responseData)).build();
     }
@@ -2482,13 +2161,9 @@ public class WfContentResource {
             WfFolder wfFolder = new WfFolderService().getByIdNotRemoved(wfContentModel.getWfContentFolderId());
             String wfContentNo = wfContentModel.getWfContentContentNo();
             int wfContentNumber = wfContentModel.getWfContentContentNumber();
-            HashMap<String, String> hashMapContentNo1 = new HashMap<String, String>();
-            hashMapContentNo1 = wfContentService.splitDataContentNo(wfContentNo, wfFolder);
-            wfContentNo = hashMapContentNo1.get("wfContentContentNo");
-            wfContentNumber = Integer.parseInt(hashMapContentNo1.get("wfContentNumber"));
-            int wfContentPoint = Integer.parseInt(hashMapContentNo1.get("wfContentPoint"));
-            String wfContentPre = hashMapContentNo1.get("wfContentPre");
-            int wfContentYear = Integer.parseInt(hashMapContentNo1.get("wfContentYear"));
+            int wfContentPoint = wfContentModel.getWfContentContentPoint();
+            String wfContentPre = wfContentModel.getWfContentContentPre();
+            int wfContentYear = wfContentModel.getWfContentContentYear();
 
             HashMap<String, String> hashMapContentNo = wfContentService.checkMaxContentNo(wfContentNo, wfContentModel.getWfContentFolderId(), wfContentPre, wfContentYear, wfContentPoint, Integer.parseInt(httpHeaders.getHeaderString("userID")));
             wfContentNo = hashMapContentNo.get("wfContentNo");
@@ -2976,11 +2651,15 @@ public class WfContentResource {
                     WfContentModel_groupWfContentAndWorkflowfinish tmp = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, false, true);
                     if (tmp.getStatus() == 2) {
                         String des = tmp.getWfContentDescription();
-                        if (des == null) des = ""; 
+                        if (des == null) {
+                            des = "";
+                        }
                         tmp.setWfContentDescription(des + finishStr);
                     } else if (tmp.getStatus() == 3) {
                         String des = tmp.getWfContentDescription();
-                        if (des == null) des = ""; 
+                        if (des == null) {
+                            des = "";
+                        }
                         tmp.setWfContentDescription(des + cancelStr);
                     }
                     listContentModel.add(tmp);
@@ -3006,7 +2685,9 @@ public class WfContentResource {
                         return object1.getWfContentContentNumber().compareTo(object2.getWfContentContentNumber());
                     }
                 });
-                if (listOptionModel.getDir().equalsIgnoreCase("desc")) Collections.reverse(listContentModel);
+                if (listOptionModel.getDir().equalsIgnoreCase("desc")) {
+                    Collections.reverse(listContentModel);
+                }
 
                 String header = "";
                 String tableHeader = "";
