@@ -38,6 +38,7 @@ public class WfModuleEntityService {
         metadataSource.addAnnotatedClass(com.px.wf.entity.WfReserveContentNo.class);
         metadataSource.addAnnotatedClass(com.px.wf.entity.WfDocumentType.class);
         metadataSource.addAnnotatedClass(com.px.wf.entity.WfAbsent.class);
+        metadataSource.addAnnotatedClass(com.px.wf.entity.WfRecord.class);
 
         return metadataSource;
     }
