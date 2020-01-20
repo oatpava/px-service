@@ -133,6 +133,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.wf.api.WfDocumentTypeResource.class);
         resources.add(com.px.wf.api.WfFieldResource.class);
         resources.add(com.px.wf.api.WfFolderResource.class);
+        resources.add(com.px.wf.api.WfRecordResource.class);
         resources.add(com.px.wf.api.WfReserveContentNoResource.class);
     }
     
