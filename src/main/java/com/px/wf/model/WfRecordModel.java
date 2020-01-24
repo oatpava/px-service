@@ -40,6 +40,13 @@ public class WfRecordModel extends VersionModel {
     @ApiModelProperty(name = "contentId", example = "0", dataType = "int", value = "รหัสหนังสือ", required = true)
     private Integer contentId;
 
+    @XmlElement(name = "documentId")
+    @ApiParam(name = "documentId", example = "0", value = "รหัส flow", defaultValue = "0", required = true)
+    @Expose
+    @Since(1.0)
+    @ApiModelProperty(name = "documentId", example = "0", dataType = "int", value = "รหัส flow", required = true)
+    private Integer documentId;
+
     @XmlElement(name = "description")
     @ApiParam(name = "description", value = "รายละเอียดบันทึกปฏิบัติงาน", required = false)
     @Expose
@@ -76,6 +83,14 @@ public class WfRecordModel extends VersionModel {
 
     public void setContentId(int contentId) {
         this.contentId = contentId;
+    }
+
+    public int getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(int documentId) {
+        this.documentId = documentId;
     }
 
     public String getDescription() {
