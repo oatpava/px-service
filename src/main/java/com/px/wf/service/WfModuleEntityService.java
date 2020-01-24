@@ -74,6 +74,7 @@ public class WfModuleEntityService {
         listParam.put("ECMSDELETEREQUEST", "Y");
         listParam.put("RESERVEFOLDERS", "0");//oat-add
         listParam.put("EMAILATTACHSIZE", "25");//oat-add
+        listParam.put("SHAREBOOKNO", "Y");
 
         ParamService paramService = new ParamService();
         Param param = null;
