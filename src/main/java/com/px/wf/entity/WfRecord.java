@@ -26,6 +26,9 @@ public class WfRecord extends BaseEntity {
     @Column(name = "CONTENT_ID", columnDefinition = "int default '0'")
     private Integer contentId;
 
+    @Column(name = "DOCUMENT_ID", columnDefinition = "int default '0'")
+    private Integer documentId;
+
     @Column(name = "DESCRIPTION", nullable = true, length = 4000)
     private String description;
 
@@ -35,6 +38,14 @@ public class WfRecord extends BaseEntity {
 
     public void setContentId(int contentId) {
         this.contentId = contentId;
+    }
+    
+    public int getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(int documentId) {
+        this.documentId = documentId;
     }
 
     public String getDescription() {

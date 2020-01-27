@@ -71,6 +71,7 @@ public class WfRecordResource {
             WfRecord wfRecord = new WfRecord();
             wfRecord.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
             wfRecord.setContentId(wfRecordModel.getContentId());
+            wfRecord.setDocumentId(wfRecordModel.getDocumentId());
             wfRecord.setDescription(wfRecordModel.getDescription());
             wfRecord = wfRecordService.create(wfRecord);
             wfRecord.setOrderNo(wfRecord.getId());
@@ -99,7 +100,7 @@ public class WfRecordResource {
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
-    @Path(value = "/list/{contentId}")
+    @Path(value = "/listByContentId/{contentId}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response listByContentId(
             @BeanParam ListOptionModel listOptionModel,
@@ -121,6 +122,58 @@ public class WfRecordResource {
         try {
             WfRecordService wfRecordService = new WfRecordService();
             List<WfRecord> listWfRecord = wfRecordService.listByContentId(contentId);
+            List<WfRecordModel> listWfRecordModel = new ArrayList<>();
+            if (!listWfRecord.isEmpty()) {
+                listWfRecord.forEach((wfRecord) -> {
+                    listWfRecordModel.add(wfRecordService.tranformToModel(wfRecord));
+                });
+            }
+            status = Response.Status.OK;
+            responseData.put("data", listWfRecordModel);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "รายการบันทึกปฏิบัติงานโดยรหัส flow",
+            notes = "รายการบันทึกปฏิบัติงานโดยรหัส flow",
+            responseContainer = "List",
+            response = WfRecordModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "WfRecord list success."),
+        @ApiResponse(code = 404, message = "WfRecord list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Path(value = "/listByDocumentId/{documentId}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response listByDocumentId(
+            @BeanParam ListOptionModel listOptionModel,
+            @ApiParam(name = "documentId", value = "รหัส flow", required = true)
+            @PathParam("documentId") int documentId
+    ) {
+        LOG.info("listByDocumentId...");
+        Gson gs = new GsonBuilder()
+                .setVersion(listOptionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "WfRecord by id not found in the database.");
+        try {
+            WfRecordService wfRecordService = new WfRecordService();
+            List<WfRecord> listWfRecord = wfRecordService.listByDocumentId(documentId);
             List<WfRecordModel> listWfRecordModel = new ArrayList<>();
             if (!listWfRecord.isEmpty()) {
                 listWfRecord.forEach((wfRecord) -> {

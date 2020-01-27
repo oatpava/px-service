@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface WfRecordDao extends GenericTreeDao<WfRecord, Integer> {
     List<WfRecord> listByContentId(int contentId);
+    List<WfRecord> listByDocumentId(int documentId);
 }
