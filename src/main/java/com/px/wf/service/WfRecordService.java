@@ -86,6 +86,7 @@ public class WfRecordService implements GenericService<WfRecord, WfRecordModel> 
             wfRecordModel.setId(wfRecord.getId());
             wfRecordModel.setCreatedDate(Common.localDateTimeToString2(wfRecord.getCreatedDate()));
             wfRecordModel.setContentId(wfRecord.getContentId());
+            wfRecordModel.setDocumentId(wfRecord.getDocumentId());
             wfRecordModel.setDescription(wfRecord.getDescription());
             wfRecordModel.setCreator(new UserProfileService().getById(wfRecord.getCreatedBy()).getUserProfileFullName());
         }
@@ -95,6 +96,11 @@ public class WfRecordService implements GenericService<WfRecord, WfRecordModel> 
     public List<WfRecord> listByContentId(int contentId) {
         checkNotNull(contentId, "contentId must not be null");
         return WfRecordDaoImpl.listByContentId(contentId);
+    }
+
+    public List<WfRecord> listByDocumentId(int documentId) {
+        checkNotNull(documentId, "documentId must not be null");
+        return WfRecordDaoImpl.listByDocumentId(documentId);
     }
 
 }

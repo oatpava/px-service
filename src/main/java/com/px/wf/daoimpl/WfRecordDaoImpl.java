@@ -34,4 +34,14 @@ public class WfRecordDaoImpl extends GenericTreeDaoImpl<WfRecord, Integer> imple
         criteria.add(conjunction).addOrder(Order.desc("orderNo"));
         return this.listByCriteria(criteria, 0, 50);
     }
+    
+    @Override
+    public List<WfRecord> listByDocumentId(int documentId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("documentId", documentId));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfRecord.class);
+        criteria.add(conjunction).addOrder(Order.desc("orderNo"));
+        return this.listByCriteria(criteria, 0, 50);
+    }
 }
