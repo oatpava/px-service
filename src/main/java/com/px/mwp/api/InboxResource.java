@@ -951,8 +951,8 @@ public class InboxResource {
     }
     
     @ApiOperation(
-            value = "updateข้อมูลการส่งกล่องข้อมูลเข้า",
-            notes = "uodateข้อมูลการส่งกล่องข้อมูลเข้า",
+            value = "updateข้อมูลการส่งกล่องหนังสือเข้า",
+            notes = "uodateข้อมูลการส่งกล่องหนังสือเข้า",
             response = InboxModel.class
     )
     @ApiResponses({

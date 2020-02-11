@@ -464,8 +464,8 @@ public class OutboxResource {
     }
 
     @ApiOperation(
-            value = "updateข้อมูลการส่งกล่องข้อมูลออก",
-            notes = "uodateข้อมูลการส่งกล่องข้อมูลออก",
+            value = "updateข้อมูลการส่งกล่องหนังสือออก",
+            notes = "uodateข้อมูลการส่งกล่องหนังสือออก",
             response = OutboxModel.class
     )
     @ApiResponses({
