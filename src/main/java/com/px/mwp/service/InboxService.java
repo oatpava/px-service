@@ -298,7 +298,7 @@ public class InboxService implements GenericService<Inbox, InboxModel> {
     private String generateLogForCreateEntity(Inbox inbox) {
         ModuleService moduleService = new ModuleService();
         StringBuilder descriptionLog = new StringBuilder();
-        descriptionLog.append("ข้อมูลเข้า : ");
+        descriptionLog.append("หนังสือเข้า : ");
 
         descriptionLog.append("ส่งเอกสาร[");
         Module module = moduleService.getById(inbox.getModuleId());
@@ -320,7 +320,7 @@ public class InboxService implements GenericService<Inbox, InboxModel> {
     private String generateLogForRemoveEntity(Inbox inbox) {
         ModuleService moduleService = new ModuleService();
         StringBuilder descriptionLog = new StringBuilder();
-        descriptionLog.append("ข้อมูลเข้า : ");
+        descriptionLog.append("หนังสือเข้า : ");
         descriptionLog.append("ลบรายการ[");
         Module module = moduleService.getById(inbox.getModuleId());
         descriptionLog.append(Common.noNull(module.getModuleName(), ""));

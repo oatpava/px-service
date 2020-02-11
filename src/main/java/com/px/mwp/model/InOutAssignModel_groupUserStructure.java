@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Mali
  */
 @MappedSuperclass
-@ApiModel( description = "ผู้ได้รับมอบหมายในการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก" )
+@ApiModel( description = "ผู้ได้รับมอบหมายในการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก" )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "InOutAssignModel_groupUserStructure")
 public class InOutAssignModel_groupUserStructure extends VersionModel {

@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  *
  * @author Mali
  */
-@Api(value = "InOutField ชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก")
+@Api(value = "InOutField ชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก")
 @Path("v1/inOutFields")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class InoutFieldResource {
@@ -45,8 +45,8 @@ public class InoutFieldResource {
     HttpHeaders httpHeaders;
     
     @ApiOperation(
-            value = "สร้างข้อมูลชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "สร้างข้อมูลชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "สร้างข้อมูลชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "สร้างข้อมูลชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก",
             response = InOutFieldModel.class
     )
     @ApiResponses({
@@ -100,8 +100,8 @@ public class InoutFieldResource {
     }
     
     @ApiOperation(
-            value = "ขอข้อมูลชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "ขอข้อมูลชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก ด้วย รหัสชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "ขอข้อมูลชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "ขอข้อมูลชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก ด้วย รหัสชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก",
             response = InOutFieldModel.class
     )
     @ApiResponses({
@@ -114,7 +114,7 @@ public class InoutFieldResource {
     @Path(value = "/{id}")
     public Response getById(
             @BeanParam VersionModel versionModel,
-            @ApiParam(name = "id", value = "รหัสชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+            @ApiParam(name = "id", value = "รหัสชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
             @PathParam("id") int id
     ) {
         LOG.info("getById...");
@@ -148,8 +148,8 @@ public class InoutFieldResource {
     }
     
     @ApiOperation(
-            value = "รายการทั้งหมดประเภทของชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
-            notes = "รายการทั้งหมดประเภทของชื่อฟิลด์ของกล่องข้อมูลเข้า/กล่องข้อมูลออก",
+            value = "รายการทั้งหมดประเภทของชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก",
+            notes = "รายการทั้งหมดประเภทของชื่อฟิลด์ของกล่องหนังสือเข้า/กล่องหนังสือออก",
             responseContainer = "List",
             response = InOutFieldModel.class
     )
