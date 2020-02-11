@@ -1343,18 +1343,18 @@ public class StructureResource {
                     //genInput
                     StructureFolder structureFolder = new StructureFolder();
                     structureFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    structureFolder.setStructureFolderDetail("ข้อมูลเข้าของ " + structure.getStructureName());
+                    structureFolder.setStructureFolderDetail("หนังสือเข้าของ " + structure.getStructureName());
                     structureFolder.setStructureFolderLinkId(0);
-                    structureFolder.setStructureFolderName("กล่องข้อมูลเข้า");
+                    structureFolder.setStructureFolderName("กล่องหนังสือเข้า");
                     structureFolder.setStructureFolderType("I");
                     structureFolder.setStructureId(structure.getId());
                     structureFolder = structureFolderService.create(structureFolder);
                     //genOutput
                     structureFolder = new StructureFolder();
                     structureFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    structureFolder.setStructureFolderDetail("ข้อมูลออกของ " + structure.getStructureName());
+                    structureFolder.setStructureFolderDetail("หนังสือออกของ " + structure.getStructureName());
                     structureFolder.setStructureFolderLinkId(0);
-                    structureFolder.setStructureFolderName("กล่องข้อมูลออก");
+                    structureFolder.setStructureFolderName("กล่องหนังสือออก");
                     structureFolder.setStructureFolderType("O");
                     structureFolder.setStructureId(structure.getId());
                     structureFolder = structureFolderService.create(structureFolder);
@@ -1443,13 +1443,13 @@ public class StructureResource {
                         StructureFolder structureFolder = new StructureFolder();
                         structureFolder = structureFolderService.getByStructureId(structure.getId(), "I");
                         if (structureFolder != null) {
-                            structureFolder.setStructureFolderDetail("ข้อมูลเข้าของ " + structure.getStructureName());
+                            structureFolder.setStructureFolderDetail("หนังสือเข้าของ " + structure.getStructureName());
                             structureFolder.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                             structureFolder = structureFolderService.update(structureFolder);
                         }
                         structureFolder = structureFolderService.getByStructureId(structure.getId(), "O");
                         if (structureFolder != null) {
-                            structureFolder.setStructureFolderDetail("ข้อมูลออกของ " + structure.getStructureName());
+                            structureFolder.setStructureFolderDetail("หนังสือออกของ " + structure.getStructureName());
                             structureFolder.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                             structureFolder = structureFolderService.update(structureFolder);
                         }

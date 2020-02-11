@@ -359,7 +359,7 @@ public class OutboxService implements GenericService<Outbox, OutboxModel> {
     private String generateLogForRemoveEntity(Outbox outbox) {
         ModuleService moduleService = new ModuleService();
         StringBuilder descriptionLog = new StringBuilder();
-        descriptionLog.append("ข้อมูลออก : ");
+        descriptionLog.append("หนังสือออก : ");
         descriptionLog.append("ลบรายการ[");
         Module module = moduleService.getById(outbox.getModuleId());
         descriptionLog.append(Common.noNull(module.getModuleName(), ""));

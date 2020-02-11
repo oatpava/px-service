@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "inOutAssign")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "กำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก")
+@ApiModel(description = "กำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก")
 public class InOutAssignModel extends VersionModel {
 
     private static final long serialVersionUID = 2155176976103668336L;
@@ -50,19 +50,19 @@ public class InOutAssignModel extends VersionModel {
     private String updatedDate;
 
     @XmlElement(name = "inOutAssignOwnerId")
-    @ApiParam(name = "inOutAssignOwnerId", value = "รหัสเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+    @ApiParam(name = "inOutAssignOwnerId", value = "รหัสเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
     @Expose
     @Since(1.0)
     private int inOutAssignOwnerId;
 
     @XmlElement(name = "inOutAssignAssignId")
-    @ApiParam(name = "inOutAssignAssignId", value = "รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+    @ApiParam(name = "inOutAssignAssignId", value = "รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
     @Expose
     @Since(1.0)
     private int inOutAssignAssignId;
 
     @XmlElement(name = "inOutAssignOwnerType")
-    @ApiParam(name = "inOutAssignOwnerType", value = "ประเภทของเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก [0=User, 1=Structure]", required = true)
+    @ApiParam(name = "inOutAssignOwnerType", value = "ประเภทของเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก [0=User, 1=Structure]", required = true)
     @Expose
     @Since(1.0)
     private int inOutAssignOwnerType;
@@ -167,7 +167,7 @@ public class InOutAssignModel extends VersionModel {
         return inOutAssignOwnerId;
     }
 
-    @ApiModelProperty(name = "inOutAssignOwnerId", example = "0", dataType = "int", value = "รหัสเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+    @ApiModelProperty(name = "inOutAssignOwnerId", example = "0", dataType = "int", value = "รหัสเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
     public void setInOutAssignOwnerId(int inOutAssignOwnerId) {
         this.inOutAssignOwnerId = inOutAssignOwnerId;
     }
@@ -176,7 +176,7 @@ public class InOutAssignModel extends VersionModel {
         return inOutAssignAssignId;
     }
 
-    @ApiModelProperty(name = "inOutAssignAssignId", example = "0", dataType = "int", value = "รหัสผู้ได้รับการกำหนดให้เปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก", required = true)
+    @ApiModelProperty(name = "inOutAssignAssignId", example = "0", dataType = "int", value = "รหัสผู้ได้รับการกำหนดให้เปิดกล่องหนังสือเข้า/กล่องหนังสือออก", required = true)
     public void setInOutAssignAssignId(int inOutAssignAssignId) {
         this.inOutAssignAssignId = inOutAssignAssignId;
     }
@@ -185,7 +185,7 @@ public class InOutAssignModel extends VersionModel {
         return inOutAssignOwnerType;
     }
 
-    @ApiModelProperty(name = "inOutAssignOwnerType", example = "0", dataType = "int", value = "ประเภทของเจ้าของกล่องข้อมูลเข้า/กล่องข้อมูลออก [0=User, 1=Structure]", required = true)
+    @ApiModelProperty(name = "inOutAssignOwnerType", example = "0", dataType = "int", value = "ประเภทของเจ้าของกล่องหนังสือเข้า/กล่องหนังสือออก [0=User, 1=Structure]", required = true)
     public void setInOutAssignOwnerType(int inOutAssignOwnerType) {
         this.inOutAssignOwnerType = inOutAssignOwnerType;
     }

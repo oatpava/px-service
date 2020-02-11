@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Mali
  */
 @MappedSuperclass
-@ApiModel( description = "ช่วงเวลาในการกำหนดการเปิดกล่องข้อมูลเข้า/กล่องข้อมูลออก" )
+@ApiModel( description = "ช่วงเวลาในการกำหนดการเปิดกล่องหนังสือเข้า/กล่องหนังสือออก" )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "InOutAssignModel_groupDate")
 public class InOutAssignModel_groupDate extends VersionModel {

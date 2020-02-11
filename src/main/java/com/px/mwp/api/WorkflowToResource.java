@@ -278,8 +278,8 @@ public class WorkflowToResource {
     }
 
     @ApiOperation(
-            value = "แก้ไขวันที่ได้รับ เมื่อทำการเปิดกล่องข้อมูลเข้า",
-            notes = "แก้ไขวันที่ได้รับ เมื่อทำการเปิดกล่องข้อมูลเข้า",
+            value = "แก้ไขวันที่ได้รับ เมื่อทำการเปิดกล่องหนังสือเข้า",
+            notes = "แก้ไขวันที่ได้รับ เมื่อทำการเปิดกล่องหนังสือเข้า",
             responseContainer = "List",
             response = WorkflowToModel.class
     )

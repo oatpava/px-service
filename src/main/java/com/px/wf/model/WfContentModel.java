@@ -227,7 +227,7 @@ public class WfContentModel extends VersionModel {
     private int workflowId;
 
     @XmlElement(name = "inboxId")
-    @ApiParam(name = "inboxId", value = "รหัสกล่องข้อมูลเข้า", required = false)
+    @ApiParam(name = "inboxId", value = "รหัสกล่องหนังสือเข้า", required = false)
     @Since(1.0)
     @Expose
     private int inboxId;
@@ -819,7 +819,7 @@ public class WfContentModel extends VersionModel {
         return inboxId;
     }
 
-    @ApiModelProperty(name = "inboxId", example = "0", dataType = "int", value = "รหัสกล่องข้อมูลเข้า", required = false)
+    @ApiModelProperty(name = "inboxId", example = "0", dataType = "int", value = "รหัสกล่องหนังสือเข้า", required = false)
     public void setInboxId(int inboxId) {
         this.inboxId = inboxId;
     }
