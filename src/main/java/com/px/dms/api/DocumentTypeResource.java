@@ -79,6 +79,7 @@ public class DocumentTypeResource {
         responseData.put("message", "Internal Server Error!");
         responseData.put("errorMessage", "");
         try {
+//            System.out.println("0000000000");
             DocumentType documentType = new DocumentType();
 //            documentTypePostModel.getDocumentTypeName(), documentTypePostModel.getDocumentTypeDescription(), userID
             documentType.setDocumentTypeName(documentTypePostModel.getDocumentTypeName());

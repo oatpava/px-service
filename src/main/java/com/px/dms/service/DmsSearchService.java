@@ -114,6 +114,7 @@ public class DmsSearchService {
                 String elasticsearchData = generateElasticsearchData(dmsSeaechResoreModel, setCreatedDate);
                 String id = null;
                 response = elasticsearch.addData(this.IndexName, this.IndexType, id, elasticsearchData);
+//                System.out.println("response = " + response);
                 id = response.getId();
                 GetResponse getReponse = elasticsearch.getData(this.IndexName, this.IndexType, id);
 
@@ -123,7 +124,9 @@ public class DmsSearchService {
                 }
 
             } catch (Exception e) {
+                System.out.println("Exception:DmsSearchService-addData:" + e);
             }
+
             elasticsearch.closeTransportClient();
         }
 
@@ -134,14 +137,17 @@ public class DmsSearchService {
         checkNotNull(dmsSeaechResoreModel, "DmsSeaechResoreModel must not be null");
 //        DmsFolderService dmsFolderService = new DmsFolderService();
 //        String folderP = dmsFolderService.getById(dmsSeaechResoreModel.getDocumentFolderId()).getDmsFolderParentKey();
+//        System.out.println("folderP 2-- " + folderP);
 //        dmsSeaechResoreModel.setParentKey(folderP);
 
         String[] parts = folderParentKey.split("฿");
         List<String> temp = new ArrayList<String>();
         for (int i = 1; i < parts.length; i++) {
+//            System.out.println("parts[i] = " + parts[i]);
             temp.add(parts[i]);
 
         }
+//        System.out.println("temp = " + temp);
         dmsSeaechResoreModel.setParentKey(temp);
 
         DmsSearchModel result = null;
@@ -156,6 +162,7 @@ public class DmsSearchService {
                 String elasticsearchData = generateElasticsearchData(dmsSeaechResoreModel, setCreatedDate);
                 String id = null;
                 response = elasticsearch.addData(this.IndexName, this.IndexType, id, elasticsearchData);
+//                System.out.println("response = " + response);
                 id = response.getId();
                 GetResponse getReponse = elasticsearch.getData(this.IndexName, this.IndexType, id);
 
@@ -165,6 +172,7 @@ public class DmsSearchService {
                 }
 
             } catch (Exception e) {
+                System.out.println("Exception:DmsSearchService-addDataFolder:" + e);
             }
 
             elasticsearch.closeTransportClient();
@@ -177,10 +185,13 @@ public class DmsSearchService {
         String result = "";
         UserProfileService userProfileService = new UserProfileService();
         UserProfile userProfile = new UserProfile();
+//        System.out.println("generateElasticsearchData");
         try {
             String searchContent = "";
             XContentBuilder builder = jsonBuilder();
             builder.startObject();
+
+            System.out.println("removeBy elas = " + dmsSeaechResoreModel.getRemovedBy());
 
             builder.field("removeBy", dmsSeaechResoreModel.getRemovedBy());
 
@@ -197,7 +208,9 @@ public class DmsSearchService {
             if (setCreatedDate) {
                 builder.field("createdDate", new Date());
             }
+//            System.out.println("dmsSeaechResoreModel.getCreatedBy() = "+dmsSeaechResoreModel.getCreatedBy());
 //             userProfile = userProfileService.getById(dmsSeaechResoreModel.getCreatedBy());
+            System.out.println("userProfile.getUserProfileFullName() = " + userProfile.getUserProfileFullName());
             if (dmsSeaechResoreModel.getCreatedBy() > 0) {
                 userProfile = userProfileService.getById(dmsSeaechResoreModel.getCreatedBy());
                 builder.field("createName", userProfile.getUserProfileFullName());
@@ -206,7 +219,9 @@ public class DmsSearchService {
                 builder.field("createName", "");
             }
 
+//            System.out.println("1111");
             builder.field("updatedDate", new Date());
+//            System.out.println("2222");
 
             builder.field("documentFolderId", dmsSeaechResoreModel.getDocumentFolderId());
 //            searchContent += " " + dmsSeaechResoreModel.getDocumentFolderId();
@@ -218,19 +233,27 @@ public class DmsSearchService {
             } else {
                 builder.field("updateName", "");
             }
+//            System.out.println("4444");
             builder.field("removeBy", dmsSeaechResoreModel.getRemovedBy());
+//            System.out.println("4444 1");
             builder.field("documentPublicDate", dateThaiToLocalDateTime(dmsSeaechResoreModel.getDocumentPublicDate()));
             searchContent += " " + dmsSeaechResoreModel.getDocumentPublicDate();
+//            System.out.println("4444 2");
             builder.field("documentExpireDate", dateThaiToLocalDateTime(dmsSeaechResoreModel.getDocumentExpireDate()));
             searchContent += " " + dmsSeaechResoreModel.getDocumentExpireDate();
+//            System.out.println("4444 3");
             builder.field("documentDate01", dateThaiToLocalDateTime(dmsSeaechResoreModel.getDocumentDate01()));
             searchContent += " " + dmsSeaechResoreModel.getDocumentDate01();
+//            System.out.println("4444 4");
             builder.field("documentDate02", dateThaiToLocalDateTime(dmsSeaechResoreModel.getDocumentDate02()));
             searchContent += " " + dmsSeaechResoreModel.getDocumentDate02();
+//            System.out.println("4444 5");
             builder.field("documentDate03", dateThaiToLocalDateTime(dmsSeaechResoreModel.getDocumentDate03()));
             searchContent += " " + dmsSeaechResoreModel.getDocumentDate03();
+//            System.out.println("4444 6");
             builder.field("documentDate04", dateThaiToLocalDateTime(dmsSeaechResoreModel.getDocumentDate04()));
             searchContent += " " + dmsSeaechResoreModel.getDocumentDate04();
+//            System.out.println("555555");
             builder.field("documentName", dmsSeaechResoreModel.getDocumentName());
             searchContent += " " + dmsSeaechResoreModel.getDocumentName();
 
@@ -240,6 +263,10 @@ public class DmsSearchService {
             String fullPath = dmsFolderService.getFullPathName(dmsSeaechResoreModel.getDocumentFolderId());
             builder.field("fullPathName", fullPath);
 
+            System.out.println("dmsSeaechResoreModel.getDocumentFolderId() = " + dmsSeaechResoreModel.getDocumentFolderId());
+
+//            builder.field("documentFolderId", dmsSeaechResoreModel.getDocumentFolderId());
+//            searchContent += " " + dmsSeaechResoreModel.getDocumentFolderId();
             builder.field("documentFloat01", dmsSeaechResoreModel.getDocumentFloat01());
             searchContent += " " + dmsSeaechResoreModel.getDocumentFloat01();
 
@@ -315,6 +342,7 @@ public class DmsSearchService {
             builder.field("documentTypeId", dmsSeaechResoreModel.getDocumentTypeId());
 
 //             parentKey
+            System.out.println("parentKey = " + dmsSeaechResoreModel.getParentKey());
 //            builder.field("parentKey", dmsSeaechResoreModel.getParentKey());
 
             builder.startArray("parentKey");
@@ -328,6 +356,7 @@ public class DmsSearchService {
             }
             builder.endArray();
 
+//            System.out.println("parentKey end");
 //            builder.field("documentFolderId", dmsSeaechResoreModel.getDocumentFolderId());
             builder.startArray("fileAttachName");
             if (dmsSeaechResoreModel.getFileAttachName() != null) {
@@ -339,6 +368,7 @@ public class DmsSearchService {
                 }
             }
             builder.endArray();
+//            System.out.println("77777777");
             builder.startArray("fullText");
             if (dmsSeaechResoreModel.getFullText() != null) {
                 if (dmsSeaechResoreModel.getFullText().size() > 0) {
@@ -349,6 +379,7 @@ public class DmsSearchService {
                 }
             }
             builder.endArray();
+//            System.out.println("88888888");
             builder.field(this.searchField, searchContent);
 
             builder.endObject();
@@ -356,7 +387,9 @@ public class DmsSearchService {
             result = builder.string();
 
         } catch (IOException e) {
+            System.out.println("Exception:DmsSearchService-generateElasticsearchData:" + e);
         }
+//        System.out.println("result add data = " + result);
         return result;
     }
 
@@ -391,6 +424,7 @@ public class DmsSearchService {
                     result.setDmsSearchId(id);
                 }
             } catch (Exception e) {
+                System.out.println("Exception:DmsSearchService-updateData:" + e);
             }
 
             elasticsearch.closeTransportClient();
@@ -407,10 +441,14 @@ public class DmsSearchService {
         String[] parts = folderParentKey.split("฿");
         List<String> temp = new ArrayList<String>();
         for (int i = 1; i < parts.length; i++) {
+//            System.out.println("parts[i] = " + parts[i]);
             temp.add(parts[i]);
 
         }
+//        System.out.println("temp = " + temp);
         dmsSeaechResoreModel.setParentKey(temp);
+//        System.out.println("dmsSeaechResoreModel = "+dmsSeaechResoreModel.getParentKey());
+
         DmsSearchModel result = null;
         UpdateResponse response;
 
@@ -428,6 +466,7 @@ public class DmsSearchService {
                     result.setDmsSearchId(id);
                 }
             } catch (Exception e) {
+                System.out.println("Exception:DmsSearchService-updateData:" + e);
             }
 
             elasticsearch.closeTransportClient();
@@ -473,6 +512,7 @@ public class DmsSearchService {
             response = elasticsearch.getData(this.IndexName, this.IndexType, id);
             elasticsearch.closeTransportClient();
 
+//            System.out.println("response get = "+response);
             if (response.getSourceAsString() != null) {
                 result = new Gson().fromJson(response.getSourceAsString(), DmsSearchModel.class);
                 result.setDmsSearchId(response.getId());
@@ -527,14 +567,18 @@ public class DmsSearchService {
             if (searchFormList != null) {
                 SubmoduleAuthService SubmoduleAuthService = new SubmoduleAuthService();
                 SubmoduleAuth submoduleAuth = SubmoduleAuthService.getBySubmoduleAuthCode("DMS_OF");
+                System.out.println("submoduleAuth = " + submoduleAuth.getId());
                 UserProfileService UserProfileService = new UserProfileService();
                 UserProfile userProfile = UserProfileService.getById(userID);
 
                 for (DmsSearchFormModel searchForm : searchFormList) {
 
+                    System.out.println("folderID = " + searchForm.getDocumentFolderId());
+
                     booleanQueryBuilder.must(matchQuery("parentKey", searchForm.getDocumentFolderId()));
                     DmsFolder folderTemp = dmsFolderService.getById(searchForm.getDocumentFolderId());
                     List<DmsFolder> listDms = dmsFolderService.getListForSearchNotInParentKey(folderTemp, submoduleAuth, userProfile);
+                    System.out.println("listDms = size = " + listDms.size());
                     if (listDms.size() > 0) {
                         BoolQueryBuilder tmpBooleanQueryBuilder2 = boolQuery();
                         for (DmsFolder folder : listDms) {
@@ -564,7 +608,9 @@ public class DmsSearchService {
 
                     if (searchForm.getDocumentName() != null && !searchForm.getDocumentName().trim().equals("")) {
                         searchText = searchForm.getDocumentName().trim();
+//                        System.out.println("-1111111");   
                         booleanQueryBuilder.must(elasticsearch.advanceSearchSubTextQuery("documentName", searchText, defaultSymbolForSpace, symbolAnd, symbolOr, symbolNot, symbolWith, wordBriefList));
+//                        System.out.println("doc name = "+booleanQueryBuilder);
                     }
 
                     if (searchForm.getDocumentPublicStatus() != null && !searchForm.getDocumentPublicStatus().trim().equals("")) {
@@ -787,14 +833,19 @@ public class DmsSearchService {
                     }
 
                     if (searchForm.getCreatedDateForm() != null && !searchForm.getCreatedDateForm().trim().equals("")) {
+//                        System.out.println("getCreatedDateForm = "+searchForm.getCreatedDateForm());
+//                        System.out.println("Common.dateThaiToEng(searchText) = "+Common.dateThaiToEng(searchForm.getCreatedDateForm()));
 
                         searchText = searchForm.getCreatedDateForm().trim();
+//                         System.out.println("Common.dateThaiToEng(searchText) = "+Common.dateThaiToEng(searchText));
+//                         System.out.println(" new Date() = "+ new Date());
 //                        Elasticsearch elasticsearch = new Elasticsearch();
                         booleanQueryBuilder.must(elasticsearch.advanceSearchDateQuery("createdDate", searchText, ""));
 
                     }
 
                     if (searchForm.getCreatedDateTo() != null && !searchForm.getCreatedDateTo().trim().equals("")) {
+//                        System.out.println("getCreatedDateTo = " + searchForm.getCreatedDateTo());
                         searchText = searchForm.getCreatedDateTo().trim();
 //                        booleanQueryBuilder.must(rangeQuery("createdDate").lte(Common.dateThaiToEng(searchText)));
                         booleanQueryBuilder.must(elasticsearch.advanceSearchDateQuery("createdDate", "", searchText));
@@ -802,6 +853,7 @@ public class DmsSearchService {
                     }
 
                     if (searchForm.getUpdatedDateForm() != null && !searchForm.getUpdatedDateForm().trim().equals("")) {
+//                        System.out.println("getUpdatedDateForm = " + searchForm.getUpdatedDateForm());
                         searchText = searchForm.getUpdatedDateForm().trim();
 //                        booleanQueryBuilder.must(rangeQuery("updatedDate").gt(Common.dateThaiToEng(searchText)));
                         booleanQueryBuilder.must(elasticsearch.advanceSearchDateQuery("updatedDate", searchText, ""));
@@ -809,6 +861,7 @@ public class DmsSearchService {
                     }
 
                     if (searchForm.getUpdatedDateTo() != null && !searchForm.getUpdatedDateTo().trim().equals("")) {
+//                        System.out.println("getUpdatedDateTo = " + searchForm.getUpdatedDateTo());
                         searchText = searchForm.getUpdatedDateTo().trim();
 //                        booleanQueryBuilder.must(rangeQuery("updatedDate").lte(dateThaiToLocalDateTime(searchText)));
                         booleanQueryBuilder.must(elasticsearch.advanceSearchDateQuery("updatedDate", "", searchText));
@@ -837,7 +890,11 @@ public class DmsSearchService {
 
                 }
             }
+//            System.out.println("searchFormList = "+searchFormList.get(0).getDocumentName());
+            System.out.println("booleanQueryBuilder = " + booleanQueryBuilder);
+            System.out.println("elasticsearch qqq1234");
             searchResponse = elasticsearch.searchData(this.IndexName, this.IndexType, booleanQueryBuilder, arrSortBuilder, fetchSource, highlightBuilder, from, size);
+            System.out.println("searchResponse = " + searchResponse);
             elasticsearch.closeTransportClient();
 
             result.setSearchTime(new Date().getTime() - searchTime);
@@ -846,6 +903,7 @@ public class DmsSearchService {
             List<DmsSearchModel> searchResult = new ArrayList();
             if (searchResponse.getHits().getHits() != null) {
                 for (SearchHit hit : searchResponse.getHits().getHits()) {
+//                    System.out.println("hit = "+hit);
 
                     DmsSearchModel tmpObj = new Gson().fromJson(hit.getSourceAsString(), DmsSearchModel.class);
                     tmpObj.setDmsSearchId(hit.getId());
@@ -1249,6 +1307,7 @@ public class DmsSearchService {
         dmsSearchModel.setFolderName(folder.getDmsFolderName());
         dmsSearchModel.setFolderDescription(folder.getDmsFolderDescription());
         dmsSearchModel.setDocumentFolderId(folder.getId());
+        System.out.println("in = " + folder.getRemovedBy());
 
         dmsSearchModel.setRemovedBy(folder.getRemovedBy());
         return (dmsSearchModel);
@@ -1276,6 +1335,7 @@ public class DmsSearchService {
                     result.setDmsSearchId(id);
                 }
             } catch (Exception e) {
+                System.out.println("Exception:DmsSearchService-updateDataBorrow:" + e);
             }
 
             elasticsearch.closeTransportClient();
@@ -1306,7 +1366,9 @@ public class DmsSearchService {
             result = builder.string();
 
         } catch (IOException e) {
+            System.out.println("Exception:DmsSearchService-generateElasticsearchDataMove:" + e);
         }
+//        System.out.println("result add data = " + result);
         return result;
     }
 
@@ -1331,6 +1393,7 @@ public class DmsSearchService {
                     result.setDmsSearchId(id);
                 }
             } catch (Exception e) {
+                System.out.println("Exception:DmsSearchService-updateDatareStore:" + e);
             }
 
             elasticsearch.closeTransportClient();
@@ -1355,7 +1418,9 @@ public class DmsSearchService {
             result = builder.string();
 
         } catch (IOException e) {
+            System.out.println("Exception:DmsSearchService-generateElasticsearchDataStore:" + e);
         }
+//        System.out.println("result add data = " + result);
         return result;
     }
 

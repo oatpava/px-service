@@ -171,6 +171,7 @@ public class borrowResource {
 //                    borrow.setRemovedBy(userID);           
                     borrow.setUpdatedBy(userID);
                     //borrowstatus ว่าง
+                    System.out.println("");
 
                     DmsDocument doc = DmsDocumentService.getById(borrow.getDmsDocument().getId());
 //                    String searchIdInDms = doc.getDmsSearchIdINDms();
@@ -237,6 +238,7 @@ public class borrowResource {
             DmsDocument DmsDocument = DmsDocumentService.getById(id);
 
             boolean result = borrowService.checkStatusDocBorrow(DmsDocument);
+            System.out.println("result = " + result);
             if (result) {
                 //ยืม หรือ ยืมเกินกำหนด
                 List<borrow> borrowList = borrowService.ListBorrow(DmsDocument);

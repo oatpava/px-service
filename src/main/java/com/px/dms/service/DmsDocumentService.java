@@ -118,6 +118,10 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
     public int countAll() {
         return dmsDocumentDaoImpl.countAll();
     }
+    
+     public int countDocInfolder(int folder) {
+        return dmsDocumentDaoImpl.countDocInfolder(folder);
+    }
 
     @Override
     public List<DmsDocument> search(MultivaluedMap<String, String> queryParams, int limit, int offset, String sort, String dir) {
@@ -1029,7 +1033,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
             }
             if (mode == 3) {
                 String[] docId = reportOutput.split("-");
-                reportOutput = "PDF";
+                reportOutput = "XLS";
                 for (String id : docId) {
                     DmsDocument temp = DmsDocumentService.getById(Integer.parseInt(id));
 

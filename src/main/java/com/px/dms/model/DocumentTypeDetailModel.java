@@ -141,6 +141,12 @@ public class DocumentTypeDetailModel extends VersionModel {
     @Expose
     @Since(1.0)
     private String documentTypeDetailAlignment;
+    
+    @XmlElement(name = "order")
+    @ApiParam(name = "order", value = "order", example = "1",required = false)
+    @Expose
+    @Since(1.0)
+    private double order;
 
     public DocumentTypeDetailModel() {
     }
@@ -316,6 +322,14 @@ public class DocumentTypeDetailModel extends VersionModel {
      @ApiModelProperty(name = "documentTypeDetailAlignment", example = "Y", dataType = "string", value = "Alignment", required = false)
     public void setDocumentTypeDetailAlignment(String documentTypeDetailAlignment) {
         this.documentTypeDetailAlignment = documentTypeDetailAlignment;
+    }
+
+    public double getOrder() {
+        return order;
+    }
+
+    public void setOrder(double order) {
+        this.order = order;
     }
 
 }

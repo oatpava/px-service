@@ -53,6 +53,7 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
 
         Elasticsearch elasticsearch = new Elasticsearch();
         elasticsearch.createTransportClient();
+//        System.out.println("TransportClient = " + elasticsearch.getClient());
         IndexResponse response = null;
 
         try {
@@ -63,6 +64,7 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
 
             }
             builder.endObject();
+//            System.out.println("builder = " + builder.string());
             response = elasticsearch.addData(indexName, indexType, id, builder.string());
 
         } catch (IOException ex) {
@@ -82,6 +84,7 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
 
         Elasticsearch elasticsearch = new Elasticsearch();
         elasticsearch.createTransportClient();
+//        System.out.println("TransportClient = " + elasticsearch.getClient());
         UpdateResponse response = null;
 
         try {
@@ -92,6 +95,7 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
 
             }
             builder.endObject();
+//            System.out.println("builder = " + builder.string());
             response = elasticsearch.updateData(moduleId, subModuleId, linkId, builder.string());
 
         } catch (IOException ex) {
@@ -123,6 +127,8 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
         }
         boolean useScroll = false;
 
+        System.out.println("----------1");
+        System.out.println("sortByField = " + sortByField);
         ArrayList<SortBuilder> arrSortBuilder = new ArrayList();//oreder
 
         if (!sortByField.equals("") || sortByField == null) {
@@ -135,10 +141,16 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
             } else {
                 arrSortBuilder.add(SortBuilders.fieldSort(sortByField).order(SortOrder.DESC));
             }
+            System.out.println("arrSortBuilder = " + arrSortBuilder.get(0));
         }
 
+        System.out.println("from = " + from);
+        System.out.println("size = " + size); 
+        System.out.println("222222222222");
+//        SearchResponse response = elasticsearch.searchData(indexName, indexType, booleanQueryBuilder, arrSortBuilder, from, size);
         SearchResponse response = new SearchResponse();
         
+        System.out.println("33333333333");
         return response;
     }
 
@@ -150,6 +162,9 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
         BoolQueryBuilder booleanQueryBuilder = boolQuery();
 
         for (ElasticSearch data1 : data) {
+//            System.out.println("data1 = "+data1.getFieldName());
+//            System.out.println("data2 = "+data1.getFieldData());
+//            queryBuilder = elasticsearch.advanceSearchFullTextQuery(data1.getFieldName(), data1.getFieldData(), defaultSymbolForSpace, symbolAnd, symbolOr, symbolNot, symbolWith, wordBriefList);
             booleanQueryBuilder.must(wildcardQuery(data1.getFieldName(), "*" + data1.getFieldData() + "*"));
         }
         return booleanQueryBuilder;
@@ -160,6 +175,7 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
         Elasticsearch elasticsearch = new Elasticsearch();
         elasticsearch.createTransportClient();
         QueryBuilder queryBuilder;
+//        System.out.println("1111111111");
         BoolQueryBuilder booleanQueryBuilder = boolQuery();
 
         String defaultSymbolForSpace = "|";
@@ -170,10 +186,15 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
 
         String[] wordBriefList = new String[1];//คำเหมือน
         wordBriefList[0] = "";
+//        System.out.println("22222222222");
         for (ElasticSearch data1 : data) {
+//            System.out.println("data1 = "+data1.getFieldName());
+//            System.out.println("data2 = "+data1.getFieldData());
             queryBuilder = elasticsearch.advanceSearchFullTextQuery(data1.getFieldName(), data1.getFieldData(), defaultSymbolForSpace, symbolAnd, symbolOr, symbolNot, symbolWith, wordBriefList);
+//            System.out.println("222-222");
             booleanQueryBuilder.must(queryBuilder);
         }
+//        System.out.println("33333333333");
         return booleanQueryBuilder;
     }
 
@@ -251,9 +272,12 @@ public class ElasticSearchDaoImpl extends GenericDaoImpl<ElasticSearch, Integer>
                     "}\n"
                     + "}\n"
                     + "}";
+            System.out.println("mappingData = "+mappingData);
             PutMappingResponse response = elasticsearch.putMapping(indexName, indexType, mappingData);
+            System.out.println("response = " + response.toString());
 
         } catch (Exception e) {
+            System.out.println("Exception:testAddData:" + e);
         }
 
         return true;
