@@ -102,6 +102,7 @@ public class DocumentTypeDetailService implements GenericService<DocumentTypeDet
             documentTypeDetailModel.setId(t.getId());
             documentTypeDetailModel.setDocumentTypeId(t.getDocumentTypeId());
             documentTypeDetailModel.setDmsFieldId(t.getDmsFieldId());
+            documentTypeDetailModel.setOrder(t.getOrderNo());
             documentTypeDetailModel.setDocumentTypeDetailName(t.getDocumentTypeDetailName());
             documentTypeDetailModel.setDocumentTypeDetailView(t.getDocumentTypeDetailView());
             documentTypeDetailModel.setDocumentTypeDetailSearch(t.getDocumentTypeDetailSearch());

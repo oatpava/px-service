@@ -33,7 +33,7 @@ public class DmsModuleEntityService {
         metadataSource.addAnnotatedClass(com.px.dms.entity.DmsMenu.class);
         metadataSource.addAnnotatedClass(com.px.dms.entity.DocumentType.class);
         metadataSource.addAnnotatedClass(com.px.dms.entity.DocumentTypeDetail.class);
-//        metadataSource.addAnnotatedClass(com.px.dms.entity.ElasticSearch.class);
+        metadataSource.addAnnotatedClass(com.px.dms.entity.ElasticSearch.class);
         metadataSource.addAnnotatedClass(com.px.dms.entity.WfDocumentType.class);
         metadataSource.addAnnotatedClass(com.px.dms.entity.borrow.class);
 
@@ -41,11 +41,15 @@ public class DmsModuleEntityService {
     }
 
     public void createDefaultData() {
+        System.out.println("---- createDefaultData -------");
         createDmsField();
+        System.out.println(" createDmsField ");
         createDocumentType();
+        System.out.println(" createDocumentType ");
         createDocumentTypeDrtail();
+        System.out.println(" createDocumentTypeDrtail ");
         createDmsFolder();
-//        setupElasticSearch();
+        setupElasticSearch();
     }
 
     public void createDocumentType() {
@@ -118,6 +122,8 @@ public class DmsModuleEntityService {
         DmsField DmsField = new DmsField();
         DmsField DmsField2 = null;
         DmsField2 = dmsFieldService.getById(1);
+//         System.out.println("id = "+id);
+//        System.out.println("DmsField2 = " + DmsField2);
         if (DmsField2 == null) {
             String map = "documentName,createdDate,createdBy,updatedDate,updatedBy,documentExpireDate,"
                     + "documentDate01,documentDate02,documentDate03,documentDate04,"

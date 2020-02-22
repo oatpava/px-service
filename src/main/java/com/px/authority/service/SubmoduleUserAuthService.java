@@ -14,6 +14,7 @@ import com.px.authority.daoimpl.SubmoduleUserAuthDaoImpl;
 import com.px.authority.entity.Auth;
 import com.px.authority.entity.SubmoduleAuth;
 import com.px.authority.entity.SubmoduleUserAuth;
+import com.px.authority.model.AuthEnableDisableIdListModel;
 import com.px.authority.model.SubmoduleUserAuthModel;
 import com.px.authority.model.SubmoduleUserAuthModel_groupStructureUser;
 import com.px.authority.model.SubmoduleUserAuthModel_groupStructureUser_authority;
@@ -1693,6 +1694,68 @@ public class SubmoduleUserAuthService implements GenericService<SubmoduleUserAut
         List<SubmoduleUserAuth> listSubmoduleUserAuth = new ArrayList<SubmoduleUserAuth>();
         listSubmoduleUserAuth = submoduleUserAuthDaoImpl.listUserByDmsFoldersAuth(dmsFolderId,auth);
         return listSubmoduleUserAuth;
+    }
+    
+    public AuthEnableDisableIdListModel getEnableDisableIdListByUserProfile(SubmoduleAuth submoduleAuth, UserProfile userProfile) {
+        checkNotNull(submoduleAuth, "submoduleAuth entity must not be null");
+        checkNotNull(userProfile, "userProfile entity must not be null");
+
+        AuthEnableDisableIdListModel result = new AuthEnableDisableIdListModel();
+        try {
+            String enableList = "";
+            String disableList = "";
+
+            String checkSeparator = "฿";
+            String checkList = checkSeparator;
+
+            StructureService structureService = new StructureService();
+
+            //Get List From UserProfile
+            List<SubmoduleUserAuth> submoduleUserAuthList = submoduleUserAuthDaoImpl.listBySubmoduleAuthUserProfile(submoduleAuth, userProfile, "orderNo", "desc");
+            for (SubmoduleUserAuth submoduleUserAuth : submoduleUserAuthList) {
+                if (!checkList.contains(checkSeparator + submoduleUserAuth.getLinkId() + checkSeparator)) {
+                    if (submoduleUserAuth.getAuthority().equals(enableAuthority)) {
+                        enableList += "," + submoduleUserAuth.getLinkId();
+                    } else {
+                        disableList += "," + submoduleUserAuth.getLinkId();
+                    }
+
+                    checkList += submoduleUserAuth.getLinkId() + checkSeparator;
+                }
+            }
+
+            //Get List From Structure
+            if (userProfile.getStructure() != null) {
+                List<Structure> structureList = structureService.listFromParentKey(userProfile.getStructure());
+                submoduleUserAuthList = submoduleUserAuthDaoImpl.listBySubmoduleAuthStructure(submoduleAuth, structureList, "orderNo", "desc");
+                for (SubmoduleUserAuth submoduleUserAuth : submoduleUserAuthList) {
+                    if (!checkList.contains(checkSeparator + submoduleUserAuth.getLinkId() + checkSeparator)) {
+                        if (submoduleUserAuth.getAuthority().equals(enableAuthority)) {
+                            enableList += "," + submoduleUserAuth.getLinkId();
+                        } else {
+                            disableList += "," + submoduleUserAuth.getLinkId();
+                        }
+
+                        checkList += submoduleUserAuth.getLinkId() + checkSeparator;
+                    }
+                }
+            }
+
+            if (!enableList.isEmpty()) {
+                enableList = enableList.substring(1);
+            }
+            if (!disableList.isEmpty()) {
+                disableList = disableList.substring(1);
+            }
+
+            result.setEnableList(enableList);
+            result.setDisableList(disableList);
+
+        } catch (Exception e) {
+            LOG.info("Exception:getEnableDisableIdListByUserProfile = " + e);
+        }
+
+        return result;
     }
 
 }

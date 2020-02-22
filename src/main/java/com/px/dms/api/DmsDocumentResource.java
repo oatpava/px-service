@@ -21,6 +21,7 @@ import com.px.dms.service.DmsSearchService;
 import com.px.dms.service.WfDocumentTypeService;
 import com.px.share.entity.Param;
 import com.px.share.model.ListOptionModel;
+import com.px.share.model.ListReturnModel;
 import static com.px.share.util.Common.dateThaiToLocalDateTime;
 import com.px.share.model.VersionModel;
 import com.px.share.service.FileAttachService;
@@ -530,7 +531,20 @@ public class DmsDocumentResource {
             DmsFolder folder = dmsFolderService.getById(folderId);
             int docType = folder.getDocumentTypeId();
             List<DmsDocument> listDmsDocument = DmsDocumentService.findListDocumentS(folderId, listOptionModel.getOffset(), listOptionModel.getLimit(), listOptionModel.getSort(), listOptionModel.getDir());
-
+            ListReturnModel listReturnModel = new ListReturnModel(0, 0, 0);
+            if (!listDmsDocument.isEmpty()) {
+                int count = listDmsDocument.size() + listOptionModel.getOffset();
+                int countAll = DmsDocumentService.countDocInfolder(folderId);
+                int next = 0;
+                if (count >= listOptionModel.getLimit()) {
+                    next = listOptionModel.getOffset() + listOptionModel.getLimit();
+                    if (next >= countAll) {
+                        next = 0;
+                    }
+                }
+            
+            listReturnModel = new ListReturnModel(countAll, count, next);
+            }
             if (!listDmsDocument.isEmpty()) {
                 List<DmsDocumentModel> listDmsDocumentModel = new ArrayList<>();
                 for (DmsDocument dmsDocument : listDmsDocument) {
@@ -548,6 +562,7 @@ public class DmsDocumentResource {
                 }
                 status = Response.Status.OK;
                 responseData.put("data", listDmsDocumentModel);
+                responseData.put("listReturn", listReturnModel);
                 responseData.put("message", "dmsDocument list success.");
             }
             responseData.put("success", true);

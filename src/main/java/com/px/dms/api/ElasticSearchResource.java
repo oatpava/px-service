@@ -101,6 +101,9 @@ public class ElasticSearchResource {
                 data.add(new ElasticSearch(field[i], fieldData[i]));
             }
             IndexResponse result = elasticSearchService.addData(elasticSearchModel.getIndexName(), elasticSearchModel.getIndexType(), elasticSearchModel.getId(), data);
+            System.out.println("result = " + result);
+            System.out.println("result getShardInfo= " + result.getShardInfo());
+            System.out.println("result getResult= " + result.getResult());
             responseData.put("data", result.getResult());
             status = Response.Status.CREATED;
             responseData.put("success", true);
@@ -158,6 +161,7 @@ public class ElasticSearchResource {
                 data.add(new ElasticSearch(field[i], fieldData[i]));
             }
             UpdateResponse result = elasticSearchService.updateData(elasticSearchModel.getIndexName(), elasticSearchModel.getIndexType(), elasticSearchModel.getId(), data);
+            System.out.println("result = " + result);
             responseData.put("data", result.getResult());
             status = Response.Status.CREATED;
             responseData.put("success", true);
@@ -209,7 +213,10 @@ public class ElasticSearchResource {
         try {
             
             ElasticSearchService elasticSearchService = new ElasticSearchService();
+            System.out.println("-----------1");
             DeleteResponse result = elasticSearchService.deleteData(indexName, indexType, id);
+            System.out.println("----------2");
+            System.out.println("result = " + result);
             responseData.put("data", result.getResult());
             status = Response.Status.CREATED;
             responseData.put("success", true);
@@ -274,33 +281,56 @@ public class ElasticSearchResource {
         responseData.put("errorMessage", "");
         try {
 
+//            System.out.println("-----------1");
             ElasticSearchService elasticSearchService = new ElasticSearchService();
+//            System.out.println("-----------2");
             ArrayList<ElasticSearch> data = new ArrayList<ElasticSearch>();
+//            ArrayList<String> dataReturn = new ArrayList<>();
             String[] field = listField.split(",");
+//            System.out.println("-----------3");
             String[] fieldData = listFieldData.split(",");
+//            System.out.println("-----------4");
             for (int i = 0; i < field.length; i++) {
+                System.out.println("field[i] = " + field[i]);
+                System.out.println("fieldData[i] = " + fieldData[i]);
                 data.add(new ElasticSearch(field[i], fieldData[i]));
             }
 
+//             data.add(new ElasticSearch("field1", "top top1"));
+//             isFullText="Y";
+//            System.out.println("-----------5");
             SearchResponse response = elasticSearchService.searchdata(indexName, indexType, isFullText, data, from, size, sortByField, orderBy);
+//            System.out.println("response = "+response);
+//            System.out.println("-----------6");
             Elasticsearch elasticsearch = new Elasticsearch();
             boolean useScroll = false;
             if (useScroll) {
                 do {
                     for (SearchHit hit : response.getHits().getHits()) {
                         //Handle the hit...
+                        System.out.println("hit = " + hit.getSourceAsString());
 
                     }
 
+//                    System.out.println("-----nextList-----");
                     response = elasticsearch.searchNextDataFromScroll(response.getScrollId());
+//                    System.out.println("-----------7");
+//                System.out.println("response = " + response.toString());
                 } while (response.getHits().getHits().length != 0);
             }
+//            for (SearchHit hit : response.getHits().getHits()) {
+//                        //Handle the hit...
+//                        System.out.println("hit = " + hit.getSourceAsString());
+////                         dataReturn.add(hit.getSourceAsString());
+//                    }
 
             Map<String, Object> dataretuen = new HashMap<String, Object>();
             List<Map<String, Object>> rivers = new ArrayList<Map<String, Object>>();
             int i = 0;
             for (SearchHit hit : response.getHits().hits()) {
 
+//            System.out.println("hit = " + hit.getSourceAsString());
+//            System.out.println("hit = " + hit.getSortValues().toString());
                 Map<String, Object> source = new HashMap<String, Object>();
                 String riverName = hit.getType();
 
@@ -313,7 +343,9 @@ public class ElasticSearchResource {
 
             }
             dataretuen.put("results", rivers);
+            System.out.println("data = " + data);
 
+            System.out.println("result = " + response);
             responseData.put("data", dataretuen);
             status = Response.Status.CREATED;
             responseData.put("success", true);

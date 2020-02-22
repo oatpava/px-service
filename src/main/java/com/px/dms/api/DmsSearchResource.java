@@ -107,6 +107,7 @@ public class DmsSearchResource {
             DmsSearchService dmsSearchService = new DmsSearchService();
             DmsFolderService dmsFolderService = new DmsFolderService();
             String folderP = dmsFolderService.getById(dmsSearchModel.getDocumentFolderId()).getDmsFolderParentKey();
+//            System.out.println("folderP -- " + folderP);
             
             String[] parts = folderP.split("฿");
             List<String> temp = new ArrayList<String>();
@@ -379,7 +380,9 @@ public class DmsSearchResource {
             }
 
             DmsSearchService searchCCService = new DmsSearchService();
+//            System.out.println("1111111111ababab");
             DmsSearchResultModel result = searchCCService.search(dmsSearchInputModel.getForm(), dmsSearchInputModel.getOrder(), fetchSourceList, dmsSearchInputModel.getFrom(), dmsSearchInputModel.getSize(), dmsSearchInputModel.getDefaultSymbolForSpace(), dmsSearchInputModel.getSymbolAnd(), dmsSearchInputModel.getSymbolOr(), dmsSearchInputModel.getSymbolNot(), dmsSearchInputModel.getSymbolWith(), dmsSearchInputModel.getPreHighlightTag(), dmsSearchInputModel.getPostHighlightTag(), userID);
+//            System.out.println("2222222222ababab");
             if (result != null) {
                 long countAll = result.getSearchAll();
                 long count = result.getSearchResult().size();
@@ -416,11 +419,17 @@ public class DmsSearchResource {
                         /////
                         if (dmsDocument.getDocumentExpireDate() != null) {
                             String str = dmsDocument.getDocumentExpireDate();
+//                            System.out.println("str exp = " + str);
                             str = str.replace("Z", "");
                             LocalDateTime dateTime = LocalDateTime.parse(str);
+//                            System.out.println("dateTime0 = " + dateTime);
                             String temp = Common.localDateTimeToString(dateTime);
                             result.getSearchResult().get(i).setDocumentExpireDate(temp);
+//                            System.out.println("name  = "+result.getSearchResult().get(i).getDocumentName());
+
+//                            System.out.println("is exp 9 = " + nowDate.isBefore(dateTime));
                             if (nowDate.isBefore(dateTime)) {
+//                                System.out.println("aaaabc ");
                                 result.getSearchResult().get(i).setIsExp("N");
                             } else {
                                 result.getSearchResult().get(i).setIsExp("Y");
@@ -463,7 +472,10 @@ public class DmsSearchResource {
 
                 }
 
+//                System.out.println("111111111111111");
                 ListReturnLongModel listReturnModel = new ListReturnLongModel(countAll, count, next);
+//                System.out.println("22222222222222");
+
 //                status = Response.Status.OK;
                 responseData.put("data", result);
                 responseData.put("list", listReturnModel);
@@ -528,10 +540,13 @@ public class DmsSearchResource {
             List<String> fulltext = new ArrayList<String>();
             String url = "";
             String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+            System.out.println(" listFileAttach = " + listFileAttach.size());
 
             for (FileAttach fileAttach : listFileAttach) {
                 url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+                System.out.println("url = " + url);
                 attachName.add(fileAttach.getFileAttachName());
+                System.out.println("getFileAttachName = " + fileAttach.getFileAttachName());
                 if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
 //                    url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
 
@@ -549,6 +564,7 @@ public class DmsSearchResource {
                     XWPFWordExtractor ex = new XWPFWordExtractor(doc);
                     String text = ex.getText();
                     fulltext.add(text);
+//                    System.out.println("text = " + text);
                 }
                 if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
                     File file = new File(url);
@@ -558,6 +574,7 @@ public class DmsSearchResource {
                     for (String rawText : extractor.getParagraphText()) {
                         String text = extractor.stripFields(rawText);
                         fulltext.add(text);
+//                        System.out.println(text);
                     }
 
                 }
@@ -580,6 +597,7 @@ public class DmsSearchResource {
                             tmp = sheet.getRow(i).getPhysicalNumberOfCells();
                             if (tmp > cols) {
                                 cols = tmp;
+//                                System.out.println("cols ="+cols);
                             }
                         }
                     }
@@ -590,6 +608,7 @@ public class DmsSearchResource {
                                 cell = row.getCell((short) c);
                                 if (cell != null) {
                                     // Your code here
+//                                    System.out.println("cell = "+cell);
                                     fulltext.add(cell.toString());
                                 }
                             }
@@ -618,11 +637,16 @@ public class DmsSearchResource {
                         while (cells.hasNext()) {
                             cell = (XSSFCell) cells.next();
                             if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+//                                System.out.print(cell.getStringCellValue() + "--");
                                 fulltext.add(cell.getStringCellValue());
                             } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+//                                System.out.print(cell.getNumericCellValue() + "--");
+//                                    fulltext.add( cell.getNumericCellValue());
                             }
 
                         }
+
+//                        System.out.println();
                     }
 
                 }

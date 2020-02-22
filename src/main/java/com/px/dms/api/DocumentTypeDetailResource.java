@@ -97,6 +97,9 @@ public class DocumentTypeDetailResource {
 
             DocumentTypeDetailService documentTypeDetailService = new DocumentTypeDetailService();
             documentTypeDetail = documentTypeDetailService.create(documentTypeDetail);
+            documentTypeDetail.setOrderNo(documentTypeDetailPostModel.getOrder());
+             documentTypeDetail.setUpdatedBy(userID);
+            documentTypeDetail = documentTypeDetailService.update(documentTypeDetail);
 
             status = Response.Status.CREATED;
             responseData.put("data", documentTypeDetailService.tranformToModel(documentTypeDetail));
@@ -167,7 +170,8 @@ public class DocumentTypeDetailResource {
                 documentTypeDetail.setDocumentTypeDetailLookup(documentTypeDetailPostModel.getDocumentTypeDetailLookup());
                 documentTypeDetail.setDocumentTypeDetailColumnWidth(documentTypeDetailPostModel.getDocumentTypeDetailColumnWidth());
                 documentTypeDetail.setDocumentTypeDetailAlignment(documentTypeDetailPostModel.getDocumentTypeDetailAlignment());
-
+                documentTypeDetail.setOrderNo(documentTypeDetailPostModel.getOrder());
+                
                 documentTypeDetail.setUpdatedBy(userID);
                 documentTypeDetail.setUpdatedDate(LocalDateTime.now());
                 documentTypeDetail = documentTypeDetailService.update(documentTypeDetail);
@@ -464,6 +468,7 @@ public class DocumentTypeDetailResource {
                     listLookupDetailModel.add(lookupDetailService.tranformToModel(lookupDetail));
                 }
                     listLookupDetailModel.trimToSize();
+//                    System.out.println("listLookupDetailModel = "+listLookupDetailModel.get(0).getId());
                 }
 
                
@@ -724,6 +729,7 @@ public class DocumentTypeDetailResource {
         try {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
             DmsDocument result = dmsDocumentService.getById(documentId);
+//            System.out.println("documentId = " + result.getDmsDocumentName());
             DocumentTypeDetailService DocumentTypeDetailService = new DocumentTypeDetailService();
             List<DocumentTypeDetail> documentTypeDetail = DocumentTypeDetailService.findListByDocumentTypeId(documentTypeId);
             ArrayList<DocumentTypeDetailModel> listDocumentTypeDetail = new ArrayList<>();
@@ -732,18 +738,28 @@ public class DocumentTypeDetailResource {
                 listDocumentTypeDetail.add(DocumentTypeDetailService.tranformToModel(documentType));
             }
 
+//             System.out.println("");
             DmsFieldService fielddmsService = new DmsFieldService();
             ArrayList hasArrayList = new ArrayList();
 
             JsonArray arrayJsonDocumentTypeDetail = (JsonArray) new JsonParser().parse(gs.toJson(listDocumentTypeDetail));
             JsonObject dataDoc = (JsonObject) new JsonParser().parse(gs.toJson(dmsDocumentService.tranformToModel(result)));
 
+//            System.out.println("documentTypeDetail gs.toJson ="+gs.toJson(listDocumentTypeDetail));
+//            System.out.println("arrayJsonDocumentTypeDetail = " + arrayJsonDocumentTypeDetail);
+//            System.out.println("dataDoc = " + dataDoc);
             for (int i = 0; i < documentTypeDetail.size(); i++) {
+//                System.out.println("documentTypeDetail getDmsFieldId = " + documentTypeDetail.get(i).getDmsFieldId());
                 DmsField fieldsDms = fielddmsService.getById(documentTypeDetail.get(i).getDmsFieldId());//data document
                 String fieldMap = fieldsDms.getDmsFieldMap();
+//                System.out.println("dataDoc = " + dataDoc);
+//                System.out.println("dataDoc.get(fieldMap).getAsString() ="+dataDoc.get(fieldMap).getAsString());
+                System.out.println("fieldMap = " + fieldMap);
                 String dataDocument = "";
                 if (dataDoc.has(fieldMap)) {
+
                     dataDocument = dataDoc.get(fieldMap).getAsString();
+                    System.out.println("dataDocument = " + dataDocument);
                 } else {
                     dataDocument = "";
                 }

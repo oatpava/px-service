@@ -42,6 +42,7 @@ public class DocumentTypeDetailDaoImpl extends GenericDaoImpl<DocumentTypeDetail
 
         DetachedCriteria criteria = DetachedCriteria.forClass(DocumentTypeDetail.class);
         criteria.add(conjunction);
+        criteria.addOrder(Order.asc("this.orderNo"));
         return this.listByCriteria(criteria);
     }
 
