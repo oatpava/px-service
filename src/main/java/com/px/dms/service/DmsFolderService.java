@@ -12,6 +12,7 @@ import com.px.share.service.LogDataService;
 import com.px.admin.service.UserProfileService;
 import com.px.authority.entity.SubmoduleAuth;
 import com.px.authority.entity.SubmoduleUserAuth;
+import com.px.authority.model.AuthEnableDisableIdListModel;
 import com.px.authority.service.SubmoduleUserAuthService;
 import com.px.dms.daoimpl.DmsFolderImpl;
 import com.px.dms.entity.DmsDocument;
@@ -98,6 +99,10 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
     @Override
     public int countAll() {
         return dmsFolderDaoImpl.countAll();
+    }
+
+    public int countAll(int ParentId) {
+        return dmsFolderDaoImpl.countAll(ParentId);
     }
 
     @Override
@@ -798,6 +803,11 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         }
 
         return result;
+    }
+    
+    public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit,AuthEnableDisableIdListModel data) {
+        checkNotNull(folderId, "folderId  must not be null");
+        return dmsFolderDaoImpl.findListByFolderParentIdLazy(folderId, offset, limit, data);
     }
 
     private List getListForSearchNotInParentKeyDetail(List<DmsFolder> resultList, DmsFolder dmsFolder, SubmoduleAuth submoduleAuth, UserProfile userProfile) {

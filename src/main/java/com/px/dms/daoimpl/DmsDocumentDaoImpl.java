@@ -414,6 +414,15 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
         return this.listAll("", "").size();
     }
 
+    public Integer countDocInfolder(int folderId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("dmsFolderId", folderId));
+        DetachedCriteria criteria = DetachedCriteria.forClass(DmsDocument.class);
+        criteria.add(conjunction);
+        return this.countAll(criteria);
+    }
+
     public List<DmsDocument> list(int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));

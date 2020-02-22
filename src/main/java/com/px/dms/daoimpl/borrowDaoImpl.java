@@ -61,6 +61,7 @@ public class borrowDaoImpl extends GenericDaoImpl<borrow, Integer> implements bo
          conjunction.add(Restrictions.eq("dmsDocument", document));
          conjunction.add(Restrictions.eq("removedBy", 0));
 //        conjunction.add(Restrictions.or(Restrictions.eq("returnName", ""), Restrictions.isNull("returnName"));
+
         conjunction.add(Restrictions.or(Restrictions.eq("returnName", ""), Restrictions.isNull("returnName")));
                 
         //create Query
@@ -68,6 +69,7 @@ public class borrowDaoImpl extends GenericDaoImpl<borrow, Integer> implements bo
         criteria.add(conjunction);
 
         List<borrow> dmsDocumentlist = this.listByCriteria(criteria);
+        System.out.println("dmsDocumentlist = "+dmsDocumentlist.size());
         int borrowId = 0;
         if (dmsDocumentlist.size() != 0) {
             borrow borrow = dmsDocumentlist.get(0);
