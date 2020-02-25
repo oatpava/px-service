@@ -24,12 +24,12 @@ public class ThegifDocFileModel extends ThegifDocFilePostModel {
     @Expose 
     @Since(1.0) private int id;
     @Expose @Since(1.0) private int createdBy;
-    @Expose @Since(1.0) private LocalDateTime createdDate;
+    @Expose @Since(1.0) private String createdDate;
     @Expose @Since(1.0) private float orderNo;
     @Expose @Since(1.0) private int removedBy;
-    @Expose @Since(1.0) private LocalDateTime removedDate;
+    @Expose @Since(1.0) private String removedDate;
     @Expose @Since(1.0) private int updatedBy;
-    @Expose @Since(1.0) private LocalDateTime updatedDate;
+    @Expose @Since(1.0) private String updatedDate;
     
     public ThegifDocFileModel() {
     }
@@ -51,7 +51,7 @@ public class ThegifDocFileModel extends ThegifDocFilePostModel {
         this.createdBy = createdBy;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -63,7 +63,7 @@ public class ThegifDocFileModel extends ThegifDocFilePostModel {
         this.removedBy = removedBy;
     }
 
-    public void setRemovedDate(LocalDateTime removedDate) {
+    public void setRemovedDate(String removedDate) {
         this.removedDate = removedDate;
     }
 
@@ -71,7 +71,7 @@ public class ThegifDocFileModel extends ThegifDocFilePostModel {
         this.updatedBy = updatedBy;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(String updatedDate) {
         this.updatedDate = updatedDate;
     }
 
