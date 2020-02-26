@@ -25,9 +25,9 @@ public class WfModuleEntityService {
     public MetadataSources listCreateEntity(MetadataSources metadataSource) {
         //Add Entity 
         metadataSource.addAnnotatedClass(com.px.wf.entity.FolderProperty.class);
-//        metadataSource.addAnnotatedClass(com.px.wf.entity.Thegif.class);
-//        metadataSource.addAnnotatedClass(com.px.wf.entity.ThegifDepartment.class);
-//        metadataSource.addAnnotatedClass(com.px.wf.entity.ThegifDocFile.class);
+        metadataSource.addAnnotatedClass(com.px.wf.entity.Thegif.class);
+        metadataSource.addAnnotatedClass(com.px.wf.entity.ThegifDepartment.class);
+        metadataSource.addAnnotatedClass(com.px.wf.entity.ThegifDocFile.class);
         metadataSource.addAnnotatedClass(com.px.wf.entity.WfCommandName.class);
         metadataSource.addAnnotatedClass(com.px.wf.entity.WfCommandType.class);
         metadataSource.addAnnotatedClass(com.px.wf.entity.WfContent.class);
