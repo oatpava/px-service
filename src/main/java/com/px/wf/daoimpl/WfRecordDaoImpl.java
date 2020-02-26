@@ -20,7 +20,6 @@ import org.hibernate.criterion.Restrictions;
  */
 public class WfRecordDaoImpl extends GenericTreeDaoImpl<WfRecord, Integer> implements WfRecordDao {
 
-
     public WfRecordDaoImpl() {
         super(WfRecord.class);
     }
@@ -34,7 +33,7 @@ public class WfRecordDaoImpl extends GenericTreeDaoImpl<WfRecord, Integer> imple
         criteria.add(conjunction).addOrder(Order.desc("orderNo"));
         return this.listByCriteria(criteria, 0, 50);
     }
-    
+
     @Override
     public List<WfRecord> listByDocumentId(int documentId) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -43,5 +42,14 @@ public class WfRecordDaoImpl extends GenericTreeDaoImpl<WfRecord, Integer> imple
         DetachedCriteria criteria = DetachedCriteria.forClass(WfRecord.class);
         criteria.add(conjunction).addOrder(Order.desc("orderNo"));
         return this.listByCriteria(criteria, 0, 50);
+    }
+
+    public int countByDocumentId(int documentId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("documentId", documentId));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfRecord.class);
+        criteria.add(conjunction);
+        return this.countAll(criteria);
     }
 }

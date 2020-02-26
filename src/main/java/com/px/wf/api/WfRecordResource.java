@@ -170,7 +170,7 @@ public class WfRecordResource {
         HashMap responseData = new HashMap();
         Response.Status status = Response.Status.NOT_FOUND;
         responseData.put("success", false);
-        responseData.put("message", "WfRecord by id not found in the database.");
+        responseData.put("message", "WfRecord list not found in the database.");
         try {
             WfRecordService wfRecordService = new WfRecordService();
             List<WfRecord> listWfRecord = wfRecordService.listByDocumentId(documentId);
@@ -191,5 +191,50 @@ public class WfRecordResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
+    
+    @ApiOperation(
+            value = "จำนวนรายการบันทึกปฏิบัติงานโดยรหัส flow",
+            notes = "จำนวนรายการบันทึกปฏิบัติงานโดยรหัส flow",
+            responseContainer = "List",
+            response = WfRecordModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "WfRecord count success."),
+        @ApiResponse(code = 404, message = "WfRecord list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Path(value = "/countByDocumentId/{documentId}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response countByDocumentId(
+            @BeanParam ListOptionModel listOptionModel,
+            @ApiParam(name = "documentId", value = "รหัส flow", required = true)
+            @PathParam("documentId") int documentId
+    ) {
+        LOG.info("countByDocumentId...");
+        Gson gs = new GsonBuilder()
+                .setVersion(listOptionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "WfRecord list not found in the database.");
+        try {
+            status = Response.Status.OK;
+            responseData.put("data", new WfRecordService().countByDocumentId(documentId));
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 
 }

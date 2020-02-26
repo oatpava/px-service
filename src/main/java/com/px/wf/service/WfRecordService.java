@@ -103,4 +103,9 @@ public class WfRecordService implements GenericService<WfRecord, WfRecordModel> 
         return WfRecordDaoImpl.listByDocumentId(documentId);
     }
 
+    public int countByDocumentId(int documentId) {
+        checkNotNull(documentId, "documentId must not be null");
+        return WfRecordDaoImpl.countByDocumentId(documentId);
+    }
+
 }
