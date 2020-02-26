@@ -96,8 +96,7 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "FileAttach created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -339,8 +338,7 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created from ActiveX successfully.")
-        ,
+        @ApiResponse(code = 201, message = "FileAttach created from ActiveX successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -567,8 +565,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created from Base64String successfully.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 201, message = "FileAttach created from Base64String successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Consumes({MediaType.APPLICATION_JSON})
     @POST
@@ -639,9 +637,9 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach by id success.")
-        ,@ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "FileAttach by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -697,9 +695,9 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,@ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.MULTIPART_FORM_DATA})
@@ -765,9 +763,9 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Version Control FileAttach updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Version Control FileAttach by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Version Control FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "Version Control FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.MULTIPART_FORM_DATA})
@@ -842,9 +840,9 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach deleted by id success.")
-        ,@ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "FileAttach deleted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -891,10 +889,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach list success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach list success."),
+        @ApiResponse(code = 404, message = "FileAttach list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -970,10 +966,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "PlugIn success.")
-        ,
-        @ApiResponse(code = 404, message = "PlugIn not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "PlugIn success."),
+        @ApiResponse(code = 404, message = "PlugIn not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1024,10 +1018,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Download File success.")
-        ,
-        @ApiResponse(code = 404, message = "File not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Download File success."),
+        @ApiResponse(code = 404, message = "File not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1084,9 +1076,9 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,@ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1138,10 +1130,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Create FullText success.")
-        ,
-        @ApiResponse(code = 404, message = "File not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Create FullText success."),
+        @ApiResponse(code = 404, message = "File not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1277,10 +1267,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach by id success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1475,9 +1463,9 @@ public class FileAttachResource {
     //response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,@ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1527,16 +1515,16 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/update2")
+    @Path(value = "/update2/{ecms}")
     public Response update_saraban(
+            @ApiParam(name = "ecms", value = "ลงรับ ecms", required = true)
+            @PathParam("ecms") int ecms,
             FileAttachModel fileAttachModel
     ) {
         LOG.info("update...");
@@ -1562,9 +1550,13 @@ public class FileAttachResource {
             FileAttach fileAttach = fileAttachService.getById(fileAttachModel.getId());
 
             if (fileAttach != null) {
-                fileAttach.setSecrets(fileAttachModel.getSecrets());
-                fileAttach.setFileAttachName(fileAttachModel.getFileAttachName());
-
+                if (ecms != 1) {
+                    fileAttach.setSecrets(fileAttachModel.getSecrets());
+                    fileAttach.setFileAttachName(fileAttachModel.getFileAttachName());
+                } else {
+                    fileAttach.setLinkType(fileAttachModel.getLinkType());
+                    fileAttach.setLinkId(fileAttachModel.getLinkId());
+                }
                 fileAttach = fileAttachService.update(fileAttach);
                 status = Response.Status.OK;
                 responseData.put("data ", fileAttachService.tranformToModel(fileAttach));
@@ -1673,8 +1665,7 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "FileAttach created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -1934,10 +1925,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1994,10 +1983,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -2059,10 +2046,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2125,10 +2110,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach check by id success.")
-        ,
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "FileAttach check by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2189,8 +2172,8 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created from Base64StringV2 successfully.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 201, message = "FileAttach created from Base64StringV2 successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Consumes({MediaType.APPLICATION_JSON})
     @POST
@@ -2261,8 +2244,7 @@ public class FileAttachResource {
             response = FileAttachModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "FileAttach created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Consumes(MediaType.APPLICATION_JSON)
