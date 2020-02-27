@@ -1314,19 +1314,20 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                 String documentName = subject;
                 int thegifId = thegif.getId();
 
-                DmsDocument document = new DmsDocument();
+//                DmsDocument document = new DmsDocument();
                 SubmoduleService submoduleService = new SubmoduleService();
                 int submoduleId = submoduleService.getBySubmoduleCode("thegif").getId();
-                DmsDocumentService dmsDocumentService = new DmsDocumentService();
-                DocumentFile documentFile = new DocumentFile();
-                DocumentFileService documentFileService = new DocumentFileService();
+//                DmsDocumentService dmsDocumentService = new DmsDocumentService();
+//                DocumentFile documentFile = new DocumentFile();
+//                DocumentFileService documentFileService = new DocumentFileService();
                 ParamService paramService = new ParamService();
                 FileAttach fileAttach = new FileAttach();
                 FileAttachService fileAttachService = new FileAttachService();
-                String paramPath = paramService.getByParamName("THEGIF_PAHT").getParamValue();
-
-                document = dmsDocumentService.createForWf(userID, documentName);
-                int docId = document.getId();
+                String paramPath = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
+                System.out.println("xxxxparamPath="+paramPath);
+//                document = dmsDocumentService.createForWf(userID, documentName);
+//                int docId = document.getId();
+                int docId = thegif.getId();
                 //--todox insert into pc_thegif_docfile
                 for (int att = 0; att < letter.getAttachment().size(); att++) {
                     attach = letter.getAttachment().get(att);
@@ -1373,24 +1374,25 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
                     String thegifType = thegifDocFile.getThegifDocFileLetterType();
                     String tempPath = paramPath + Integer.toString(thegifId) + "_" + thegifIdStr + thegifType;
+                    System.out.println("zzzztempPath="+tempPath);
                     String docFileName = thegifDocFile.getThegifDocFileLetter();
 
-                    documentFile.setDocumentFileName(docFileName);
-                    documentFile.setModuleId(submoduleId);
-                    documentFile.setLinkId(docId);
-                    documentFile.setLinkId2(3);
-                    documentFile.setCreatedBy(userID);
-                    documentFile.setDocumentFileType(thegifType);
+//                    documentFile.setDocumentFileName(docFileName);
+//                    documentFile.setModuleId(submoduleId);
+//                    documentFile.setLinkId(docId);
+//                    documentFile.setLinkId2(3);
+//                    documentFile.setCreatedBy(userID);
+//                    documentFile.setDocumentFileType(thegifType);
                     ThegifDocFile thegifDocFile1 = thegifDocFileService.getById(thegifDocFile.getId());
                     thegifDocFile1.setDmsDocumentId(docId);
                     thegifDocFileService.update(thegifDocFile1);
-                    int documentFileId = documentFileService.createDocumentFile(documentFile);
+//                    int documentFileId = documentFileService.createDocumentFile(documentFile);
 
                     fileAttach.setCreatedBy(userID);
                     fileAttach.setFileAttachName(docFileName);
                     fileAttach.setFileAttachType(thegifType);
                     fileAttach.setLinkType("thegif");
-                    fileAttach.setLinkId(documentFileId);
+                    fileAttach.setLinkId(thegifId);
                     fileAttach = fileAttachService.create(fileAttach);
 
                     if (fileAttach != null) {

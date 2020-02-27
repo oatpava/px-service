@@ -1554,6 +1554,8 @@ public class FileAttachResource {
                     fileAttach.setSecrets(fileAttachModel.getSecrets());
                     fileAttach.setFileAttachName(fileAttachModel.getFileAttachName());
                 } else {
+                    fileAttach.setSecrets(fileAttachModel.getSecrets());
+                    fileAttach.setFileAttachName(fileAttachModel.getFileAttachName());
                     fileAttach.setLinkType(fileAttachModel.getLinkType());
                     fileAttach.setLinkId(fileAttachModel.getLinkId());
                 }
