@@ -67,6 +67,7 @@ import com.px.wf.ecms.Speed;
 import com.px.wf.ecms.WsecmsService;
 import com.px.wf.ecms.WsecmsService_Service;
 import java.time.LocalDateTime;
+import javax.ws.rs.core.HttpHeaders;
 
 
 /**
@@ -78,6 +79,9 @@ import java.time.LocalDateTime;
 @Path("v1/thegifs")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ThegifResource {
+    
+    @Context
+    HttpHeaders httpHeaders;
 
     private static final Logger log = Logger.getLogger(ThegifResource.class.getName());
 
@@ -1105,18 +1109,15 @@ log.info("tmpECMSService = "+tmpECMSService);
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/sendECMSLetter")
+    @Path(value = "/sendECMSLetter/{wfContentId}/{DEPCODE}")
     public Response sendECMSLetter(
             @BeanParam VersionModel versionModel,
             @BeanParam ListOptionModel listOptionModel,            
-            @HeaderParam("userProfileId") int userProfileId,
             @HeaderParam("clientIp") String clientIp,
             @ApiParam(name = "wfContentId", value = "รหัสหนังสือ", required = true)
-            @QueryParam("wfContentId") int wfContentId,
-//            @ApiParam(name = "deptId", value = "รหัสหน่วยงาน", required = true)
-//            @QueryParam("deptId") String deptId
+            @PathParam("wfContentId") int wfContentId,
             @ApiParam(name = "DEPCODE", value = "รหัสหน่วยงาน", required = true)
-            @QueryParam("DEPCODE") String DEPCODE
+            @PathParam("DEPCODE") String DEPCODE
     ) {
         log.info("sendECMSLetter...");
         log.info("wfContentId = " + wfContentId);
@@ -1133,6 +1134,7 @@ log.info("tmpECMSService = "+tmpECMSService);
         responseData.put("success", false);
         responseData.put("message", "ECMSLetter by id not found in the database.");
         try {
+            int userProfileId = Integer.parseInt(httpHeaders.getHeaderString("userID"));
             String deptId = DEPCODE;
             ThegifService thegifService = new ThegifService();
             ParamService paramService = new ParamService();
@@ -1209,6 +1211,7 @@ log.info("tmpECMSService = "+tmpECMSService);
             responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             log.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
