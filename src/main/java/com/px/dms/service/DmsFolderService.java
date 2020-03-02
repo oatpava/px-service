@@ -119,6 +119,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
     public DmsFolderModel tranformToModel(DmsFolder t) {
         DmsFolderModel DmsFolderModel = null;
 
+//        System.out.println("DmsFolder = "+ t.getId());
         if (t != null) {
 //            DmsFolderModel = new DmsFolderModel(t.getId(),t.getDmsFolderType(),t.getDmsFolderParentId(),t.getDmsFolderParentType(),t.getDmsFolderParentKey(),t.get);
             DmsFolderModel = new DmsFolderModel();
@@ -147,6 +148,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
             DmsFolderModel.setFullPathName(t.getFullPathName());
 
         };
+//         System.out.println(DmsFolderModel);
         return DmsFolderModel;
 
     }
@@ -278,23 +280,23 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
 
     public String getFullPathName(int folderId) {
         DmsFolder temp = dmsFolderDaoImpl.getById(folderId);
-    
+
         String parent = temp.getDmsFolderParentKey();
-      
+
         String listId = "";
         String[] valueFolderParent = parent.split("฿");
-        
+
         for (int i = 1; i < valueFolderParent.length; i++) {
-        
+
             DmsFolder temp2 = dmsFolderDaoImpl.getById(Integer.parseInt(valueFolderParent[i]));
-        
+
             if (listId.length() == 0) {
                 listId = temp2.getDmsFolderName();
             } else {
                 listId = listId + '/' + temp2.getDmsFolderName();
             }
         }
-        
+
         return listId;
     }
 
@@ -304,22 +306,32 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         String listId = "";
         String[] valueFolderParent = parent.split("฿");
 
+//        for (String FolderId : valueFolderParent) {
+//            System.out.println("getFullPathName = "+FolderId);
+//        }
         for (int i = 1; i < valueFolderParent.length; i++) {
+//            System.out.println(" ,, "+valueFolderParent[i]);
             DmsFolder temp2 = dmsFolderDaoImpl.getById(Integer.parseInt(valueFolderParent[i]));
+//            System.out.println("temp2 = "+temp2.getDmsFolderName());
             if (listId.length() == 0) {
                 listId = temp2.getDmsFolderName();
             } else {
                 listId = listId + '/' + temp2.getDmsFolderName();
             }
         }
+//        System.out.println("listId = "+listId);
         return listId;
     }
 
     public DmsFolder saveLogForCreate(DmsFolder dmsFolder, String clientIp) {
         //For Create Log when create MeetingRoom
+//        System.out.println("saveLogForCreate 33333333");
         String logDescription = this.generateLogForCreateEntity(dmsFolder);
+//        System.out.println("saveLogForCreate generateLogForCreateEntity");
         LogData logData = new LogData();
+        System.out.println(dmsFolder.getCreatedBy());
         logData.setCreatedBy(dmsFolder.getCreatedBy());
+//        System.out.println("saveLogForCreate --------2");
         logData.setDescription(logDescription);
         logData.setEntityName(dmsFolder.getClass().getName());
         logData.setLinkId(dmsFolder.getId());
@@ -327,6 +339,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         logData.setModuleName(LogData.MODULE_DMS);
         LogDataService logDataService = new LogDataService();
         logDataService.createEntity(logData);
+//        System.out.println("saveLogForCreate 444444444");
         return dmsFolder;
     }
 
@@ -525,6 +538,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
     public DmsFolderModel tranformToModel2(DmsFolder t) {
         DmsFolderModel DmsFolderModel = null;
 
+//        System.out.println("DmsFolder = "+ t.getId());
         if (t != null) {
             UserProfile userProfile = new UserProfile();
             UserProfileService userProfileService = new UserProfileService();
@@ -574,6 +588,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
             }
 
         };
+//         System.out.println(DmsFolderModel);
         return DmsFolderModel;
 
     }
@@ -587,6 +602,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
     public DmsFolderModel tranformToModel2(DmsFolder t, String isWfFolderFromType) {
         DmsFolderModel DmsFolderModel = null;
 
+//        System.out.println("DmsFolder = "+ t.getId());
         if (t != null) {
 //            DmsFolderModel = new DmsFolderModel(t.getId(),t.getDmsFolderType(),t.getDmsFolderParentId(),t.getDmsFolderParentType(),t.getDmsFolderParentKey(),t.get);
             DmsFolderModel = new DmsFolderModel();
@@ -614,6 +630,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
             DmsFolderModel.setDmsEmailUserPreExpire(t.getDmsEmailUserPreExpire());
 
         };
+//         System.out.println(DmsFolderModel);
         return DmsFolderModel;
 
     }
@@ -646,17 +663,24 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         folderCopy.setParentKey(folderParentKey);
 //        folderCopy = dmsFolderDaoImpl.update(folderCopy);
 
-    /// add search
+        /// add search
+//        System.out.println("1111");
         String folderParentKeyTemp = folderCopy.getParentKey();
+//        System.out.println("2222");
         DmsSearchService dmsSearchService = new DmsSearchService();
         DmsFolderService dmsFolderService = new DmsFolderService();
+//        System.out.println("33333");
         DmsSearchModel tempDoc = dmsSearchService.changFolderToSearch(folderCopy);
+//        System.out.println("4444");
         DmsSearchModel resultSearch = dmsSearchService.addDataFolder(tempDoc, folderParentKeyTemp);
+//        System.out.println("55555");
         folderCopy.setDmsSearchId(resultSearch.getDmsSearchId());
+//        System.out.println("666666666");
         String fullPath = dmsFolderService.getFullPathName(folderParentKeyTemp);
+//        System.out.println("77777");
         folderCopy.setFullPathName(fullPath);
-    /// add search
-    
+        /// add search
+
         folderCopy = dmsFolderDaoImpl.update(folderCopy);
 
         List<DmsFolder> listFolderChild = dmsFolderDaoImpl.findListByFolderParentId2(folderIdCopy, 0, 100);
@@ -680,28 +704,31 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
 
 //        folderMove = dmsFolderDaoImpl.update(folderMove);
         // update search
+         DmsFolderService dmsFolderService = new DmsFolderService();
         String searchId = folderMove.getDmsSearchId();
         String folderParentKeyTemp = folderMove.getParentKey();
-        if (searchId != null) {
-            DmsSearchService dmsSearchService = new DmsSearchService();
-            DmsFolderService dmsFolderService = new DmsFolderService();
-            DmsSearchModel temp = dmsSearchService.changFolderToSearch(folderMove);
-            DmsSearchModel result = dmsSearchService.updateDataFolder(searchId, temp, folderParentKeyTemp);
-            folderMove.setDmsSearchId(result.getDmsSearchId());
             String fullPath = dmsFolderService.getFullPathName(folderMove.getParentKey());
             folderMove.setFullPathName(fullPath);
-        } else {
-            //add seach
-            DmsSearchService dmsSearchService = new DmsSearchService();
-            DmsFolderService dmsFolderService = new DmsFolderService();
-            DmsSearchModel tempDoc = dmsSearchService.changFolderToSearch(folderMove);
-            DmsSearchModel resultSearch = dmsSearchService.addDataFolder(tempDoc, folderParentKeyTemp);
-            folderMove.setDmsSearchId(resultSearch.getDmsSearchId());
-            String fullPath = dmsFolderService.getFullPathName(folderMove.getParentKey());
-            folderMove.setFullPathName(fullPath);
-            //end search
-
-        }
+//        if (searchId != null) {
+//            DmsSearchService dmsSearchService = new DmsSearchService();
+//           
+//            DmsSearchModel temp = dmsSearchService.changFolderToSearch(folderMove);
+//            DmsSearchModel result = dmsSearchService.updateDataFolder(searchId, temp, folderParentKeyTemp);
+//            folderMove.setDmsSearchId(result.getDmsSearchId());
+//            String fullPath = dmsFolderService.getFullPathName(folderMove.getParentKey());
+//            folderMove.setFullPathName(fullPath);
+//        } else {
+//            //add seach
+//            DmsSearchService dmsSearchService = new DmsSearchService();
+//            DmsFolderService dmsFolderService = new DmsFolderService();
+//            DmsSearchModel tempDoc = dmsSearchService.changFolderToSearch(folderMove);
+//            DmsSearchModel resultSearch = dmsSearchService.addDataFolder(tempDoc, folderParentKeyTemp);
+//            folderMove.setDmsSearchId(resultSearch.getDmsSearchId());
+//            String fullPath = dmsFolderService.getFullPathName(folderMove.getParentKey());
+//            folderMove.setFullPathName(fullPath);
+//            //end search
+//
+//        }
 
         //
         folderMove = dmsFolderDaoImpl.update(folderMove);
@@ -710,11 +737,14 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         for (int i = 0; i < listFolderChild.size(); i++) {
             folderMove(listFolderChild.get(i).getId(), folderMove.getId(), userId);
         }
+        System.out.println("listFolderChild.size() = " + listFolderChild.size());
         if (listFolderChild.size() == 0) {
+//            System.out.println("folder id = " + folderIdMove);
             String parentKey = folderMove.getDmsFolderParentKey();
             DmsDocumentService DmsDocumentService = new DmsDocumentService();
 
             List<DmsDocument> listDmsDocument = DmsDocumentService.findListDocumentS(folderIdMove, 0, 1000, "createdDate", "asc");
+//            System.out.println("listDmsDocument size = " + listDmsDocument.size());
             if (listDmsDocument.size() > 0) {
 
                 String listId = "";
@@ -738,32 +768,45 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
                     DmsSearchModel result = dmsSearchService.getData(temp.getDmsSearchId());
 
                     if (result.getUpdatedDate() != null) {
+//                        System.out.println("aaaa");
                         result.setUpdatedDate(localDateTimeToString2(temp.getUpdatedDate()));
                     }
                     if (result.getDocumentPublicStatus() != null) {
+//                        System.out.println("bbbb");
                         result.setDocumentPublicDate(localDateTimeToString2(temp.getDmsDocumentPublicDate()));
                     }
                     if (result.getDocumentDate01() != null) {
+//                        System.out.println("cccc");
                         result.setDocumentDate01(localDateTimeToString2(temp.getDmsDocumentDatetime01()));
                     }
                     if (result.getDocumentDate01() != null) {
+//                        System.out.println("dddd");
                         result.setDocumentDate02(localDateTimeToString2(temp.getDmsDocumentDatetime02()));
                     }
                     if (result.getDocumentDate01() != null) {
+//                        System.out.println("eeee");
                         result.setDocumentDate03(localDateTimeToString2(temp.getDmsDocumentDatetime03()));
                     }
                     if (result.getDocumentDate01() != null) {
+//                        System.out.println("ffff");
                         result.setDocumentDate04(localDateTimeToString2(temp.getDmsDocumentDatetime04()));
                     }
+//                    System.out.println("aaaaa1234");
+                    System.out.println("exp " + result.getDocumentExpireDate());
                     if (result.getDocumentExpireDate() != null) {
+//                        System.out.println("gggg");
                         result.setDocumentExpireDate(localDateTimeToString2(temp.getDmsDocumentExpireDate()));
                     }
+//                    result.setParentKey(parentKey);
                     String[] parts2 = parentKey.split("฿");
                     List<String> temp2 = new ArrayList<String>();
                     for (int j = 1; j < parts2.length; j++) {
+
                         temp2.add(parts2[j]);
+
                     }
                     result.setParentKey(temp2);
+
                     dmsSearchService.updateData(temp.getDmsSearchId(), result);
                 }
             }
@@ -812,6 +855,7 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
 
     private List getListForSearchNotInParentKeyDetail(List<DmsFolder> resultList, DmsFolder dmsFolder, SubmoduleAuth submoduleAuth, UserProfile userProfile) {
         List result = resultList;
+        System.out.println("dmsFolder = " + dmsFolder.getId());
         try {
             boolean addEntity = false;
             //Get Entity Detail

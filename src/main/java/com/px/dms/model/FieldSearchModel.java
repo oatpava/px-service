@@ -276,6 +276,12 @@ public class FieldSearchModel extends  VersionModel{
     @Since(1.0)
     private int documentIntComma;
     
+    @XmlElement(name = "fullText")
+    @ApiParam(name = "fullText", example = "fullText", value = "fullText",   required = false)
+    @Expose
+    @Since(1.0)
+    private String fullText;
+    
     public FieldSearchModel() {
     }
 
@@ -640,6 +646,17 @@ public class FieldSearchModel extends  VersionModel{
     public void setDocumentIntComma(int documentIntComma) {
         this.documentIntComma = documentIntComma;
     }
+
+    public String getFullText() {
+        return fullText;
+    }
+
+    @ApiModelProperty(name = "fullText", example = "fullText", dataType = "String", value = "fullText", required = false)
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
+    }
+    
+    
     
     
     

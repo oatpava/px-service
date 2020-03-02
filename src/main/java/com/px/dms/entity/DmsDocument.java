@@ -54,7 +54,7 @@ public class DmsDocument extends BaseEntity {
     @Column(name = "DMS_DOCUMENT_EXPIRE_DATE")
 //    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private LocalDateTime dmsDocumentExpireDate;
-    
+
     @Column(name = "DMS_DOCUMENT_PRE_EXPIRE_DATE")
 //    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private LocalDateTime dmsDocumentPreExpireDate;
@@ -76,16 +76,16 @@ public class DmsDocument extends BaseEntity {
 
     @Column(name = "DMS_DOCUMENT_VARCHAR06", nullable = true, length = 255)
     private String dmsDocumentVarchar06;
-    
+
     @Column(name = "DMS_DOCUMENT_VARCHAR07", nullable = true, length = 255)
     private String dmsDocumentVarchar07;
-    
+
     @Column(name = "DMS_DOCUMENT_VARCHAR08", nullable = true, length = 255)
     private String dmsDocumentVarchar08;
-    
+
     @Column(name = "DMS_DOCUMENT_VARCHAR09", nullable = true, length = 255)
     private String dmsDocumentVarchar09;
-    
+
     @Column(name = "DMS_DOCUMENT_VARCHAR10", nullable = true, length = 255)
     private String dmsDocumentVarchar10;
 
@@ -100,7 +100,7 @@ public class DmsDocument extends BaseEntity {
 
     @Column(name = "DMS_DOCUMENT_TEXT04", nullable = true, length = 1000)
     private String dmsDocumentText04;
-    
+
     @Column(name = "DMS_DOCUMENT_TEXT05", nullable = true, length = 1000)
     private String dmsDocumentText05;
 
@@ -115,7 +115,7 @@ public class DmsDocument extends BaseEntity {
 
     @Column(name = "DMS_DOCUMENT_INT04", nullable = true, columnDefinition = "int default '0'")
     private int dmsDocumentInt04;
-    
+
     @Column(name = "DMS_DOCUMENT_INT05", nullable = true, columnDefinition = "int default '0'")
     private int dmsDocumentIntComma;
 
@@ -149,34 +149,35 @@ public class DmsDocument extends BaseEntity {
 
     @Column(name = "CONVERT_ID", nullable = true, columnDefinition = "int default '0'")
     private int CONVERT_ID;
-    
+
     @Column(name = "INBOX_APPOVE", nullable = true, columnDefinition = "int default '0'")
-    private int  inboxApprove;
-    
+    private int inboxApprove;
+
     @Column(name = "wfTypeId", nullable = true, columnDefinition = "int default '0'")
     private int wfTypeId;
-    
+
     @Column(name = "flowId", nullable = true, columnDefinition = "int default '0'")
     private int flowId;
-    
+
     @Column(name = "DMS_SEARCH_ID", nullable = true, length = 1000)
     private String dmsSearchId;
-    
+
     @Column(name = "FULL_PATH_NAME", nullable = true, length = 1000)
     private String fullPathName;
-    
-    @Column(name = "BORROW_STATUS",  nullable = true,columnDefinition = "int default '0'")
+
+    @Column(name = "BORROW_STATUS", nullable = true, columnDefinition = "int default '0'")
     private int borrowStatus;
 
-    
-    
+    @Column(name = "FULL_TEXT", columnDefinition = "TEXT")
+    private String fullText;
+
     public DmsDocument() {
     }
 
     public DmsDocument(int dmsFolderId, int documentTypeId, int dmsDocumentEdit, LocalDateTime dmsDocumentEditDate, String dmsDocumentPublicStatus, LocalDateTime dmsDocumentPublicDate, String dmsDocumentName, LocalDateTime dmsDocumentExpireDate,
             String dmsDocumentVarchar01, String dmsDocumentVarchar02, String dmsDocumentVarchar03, String dmsDocumentVarchar04,
             String dmsDocumentVarchar05, String dmsDocumentVarchar06, String dmsDocumentText01, String dmsDocumentText02, String dmsDocumentText03, String dmsDocumentText04, int dmsDocumentInt01, int dmsDocumentInt02, int dmsDocumentInt03, int dmsDocumentInt04, float dmsDocumentFloat01,
-            float dmsDocumentFloat02, LocalDateTime dmsDocumentDatetime01, LocalDateTime dmsDocumentDatetime02, LocalDateTime dmsDocumentDatetime03, LocalDateTime dmsDocumentDatetime04, Integer createdBy, int dmsDocumentSec,LocalDateTime dmsDocumentPreExpireDate
+            float dmsDocumentFloat02, LocalDateTime dmsDocumentDatetime01, LocalDateTime dmsDocumentDatetime02, LocalDateTime dmsDocumentDatetime03, LocalDateTime dmsDocumentDatetime04, Integer createdBy, int dmsDocumentSec, LocalDateTime dmsDocumentPreExpireDate
     ) {
         super(createdBy);
         this.dmsFolderId = dmsFolderId;
@@ -563,8 +564,15 @@ public class DmsDocument extends BaseEntity {
     public void setBorrowStatus(int borrowStatus) {
         this.borrowStatus = borrowStatus;
     }
+
+    public String getFullText() {
+        return fullText;
+    }
+
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
+    }
     
     
-    
-    
+
 }

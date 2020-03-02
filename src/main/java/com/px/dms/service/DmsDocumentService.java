@@ -192,6 +192,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
             dmsDocumentModel.setBorrowStatus(t.getBorrowStatus());
 
         }
+//        System.out.println("tranformToModel dmsDocumentModel = "+dmsDocumentModel.getDocumentName());
         return dmsDocumentModel;
     }
 
@@ -418,6 +419,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
 
     public DmsDocument saveLogForCreate(DmsDocument dmsDocument, String clientIp) {
         //For Create Log when create MeetingRoom
+//        System.out.println("saveLogForCreate --- 0");
         String logDescription = this.generateLogForCreateEntity(dmsDocument);
         LogData logData = new LogData();
         logData.setCreatedBy(dmsDocument.getCreatedBy());
@@ -428,6 +430,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         logData.setModuleName(LogData.MODULE_DMS);
         LogDataService logDataService = new LogDataService();
         logDataService.createEntity(logData);
+//        System.out.println("saveLogForCreate --- 1");
         return dmsDocument;
     }
 
@@ -523,8 +526,10 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
     }
 
     private String generateLogForCreateEntity(DmsDocument dmsDocument) {
+//        System.out.println("generateLogForCreateEntity ----- 0");
         DocumentTypeService documentTypeService = new DocumentTypeService();
         UserProfileService userProfileService = new UserProfileService();
+//        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         DmsFolderService dmsFolderService = new DmsFolderService();
         StringBuilder dmsDocumentLog = new StringBuilder();
         dmsDocumentLog.append("ชื่อเอกสาร : ");
@@ -537,6 +542,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         dmsDocumentLog.append(Common.localDateTimeToString(dmsDocument.getCreatedDate()));
         dmsDocumentLog.append(" ชื่อที่เก็บเอกสาร : ");
         dmsDocumentLog.append(Common.noNull(dmsFolderService.getById(dmsDocument.getDmsFolderId()).getDmsFolderName(), ""));
+//        System.out.println("generateLogForCreateEntity ----- 1");
         return dmsDocumentLog.toString();
     }
 
@@ -1304,9 +1310,59 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
             }
 
         } catch (Exception e) {
+            System.out.println("Exception:DynamicReportDataFromSearch = " + e);
         }
 
         return result;
+    }
+    
+    
+    public String changDocumntToSearchField(DmsDocument document) {
+        String returnData = "";
+        returnData = returnData + document.getDmsDocumentName()+" ";
+
+        returnData = returnData + document.getDmsDocumentFloat01()+" ";
+        returnData = returnData + document.getDmsDocumentFloat02()+" ";
+
+        returnData = returnData + document.getDmsDocumentVarchar01()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar02()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar03()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar04()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar05()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar06()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar07()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar08()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar09()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar10()+" ";
+
+
+        returnData = returnData + document.getDmsDocumentText01()+" ";
+        returnData = returnData + document.getDmsDocumentText02()+" ";
+        returnData = returnData + document.getDmsDocumentText03()+" ";
+        returnData = returnData + document.getDmsDocumentText04()+" ";
+        returnData = returnData + document.getDmsDocumentText05()+" ";
+
+
+        returnData = returnData + document.getDmsDocumentInt01()+" ";
+        returnData = returnData + document.getDmsDocumentInt02()+" ";
+        returnData = returnData + document.getDmsDocumentInt03()+" ";
+        returnData = returnData + document.getDmsDocumentInt04()+" ";
+
+
+        UserProfileService userProfileService = new UserProfileService();
+        UserProfile userProfile = new UserProfile();
+
+        if (document.getCreatedBy() > 0) {
+            userProfile = userProfileService.getById(document.getCreatedBy());
+             returnData = returnData + userProfile.getUserProfileFullName();
+        }
+        if (document.getUpdatedBy() > 0) {
+            userProfile = userProfileService.getById(document.getUpdatedBy());
+            returnData = returnData + userProfile.getUserProfileFullName();
+        }
+
+        return returnData;
+
     }
 
 }
