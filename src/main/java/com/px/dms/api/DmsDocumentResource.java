@@ -19,6 +19,7 @@ import com.px.dms.service.DmsDocumentService;
 import com.px.dms.service.DmsFolderService;
 import com.px.dms.service.DmsSearchService;
 import com.px.dms.service.WfDocumentTypeService;
+import com.px.share.entity.FileAttach;
 import com.px.share.entity.Param;
 import com.px.share.model.ListOptionModel;
 import com.px.share.model.ListReturnModel;
@@ -32,6 +33,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,10 +55,27 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
  *
@@ -74,8 +97,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Document created successfully.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 201, message = "Document created successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -208,9 +231,9 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Document updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Document by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Document updeted by id success."),
+        @ApiResponse(code = 404, message = "Document by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -305,11 +328,152 @@ public class DmsDocumentResource {
                 }
 
 //                document.setRemovedBy(0);
+                 List<String> attachName = new ArrayList<String>();
+                List<String> fulltext = new ArrayList<String>();
+                ParamService paramService = new ParamService();
+                FileAttachService fileAttachService = new FileAttachService();
+                List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", id, "createdDate", "asc");
+                if (!listFileAttach.isEmpty()) {
+                    for (FileAttach fileAttach : listFileAttach) {
+                        System.out.println("fileAttach new id = " + fileAttach.getId());
+
+                        String url = "";
+                        String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+                        url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+                        System.out.println("url = " + url);
+                        attachName.add(fileAttach.getFileAttachName());
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
+                            File file = new File(url);
+                            BufferedReader br = new BufferedReader(new FileReader(file));
+                            String sCurrentLine;
+
+                            while ((sCurrentLine = br.readLine()) != null) {
+                                fulltext.add(sCurrentLine);
+                            }
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
+                            System.out.println(" is docX ");
+                            InputStream in = new FileInputStream(url);
+                            XWPFDocument doc = new XWPFDocument(in);
+                            XWPFWordExtractor ex = new XWPFWordExtractor(doc);
+                            String text = ex.getText();
+                            fulltext.add(text);
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
+                            System.out.println(" is doc ");
+                            File file = new File(url);
+                            NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
+                            WordExtractor extractor = new WordExtractor(fs.getRoot());
+                            for (String rawText : extractor.getParagraphText()) {
+                                String text = extractor.stripFields(rawText);
+                                fulltext.add(text);
+                                System.out.println(text);
+                            }
+
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
+                            File file = new File(url);
+                            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+                            HSSFWorkbook wb = new HSSFWorkbook(fs);
+                            HSSFSheet sheet = wb.getSheetAt(0);
+                            HSSFRow row;
+                            HSSFCell cell;
+                            int rows; // No of rows
+                            rows = sheet.getPhysicalNumberOfRows();
+
+                            int cols = 0; // No of columns
+                            int tmp = 0;
+
+                            for (int i = 0; i < 10 || i < rows; i++) {
+                                row = sheet.getRow(i);
+                                if (row != null) {
+                                    tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                                    if (tmp > cols) {
+                                        cols = tmp;
+                                    }
+                                }
+                            }
+                            for (int r = 0; r < rows; r++) {
+                                row = sheet.getRow(r);
+                                if (row != null) {
+                                    for (int c = 0; c < cols; c++) {
+                                        cell = row.getCell((short) c);
+                                        if (cell != null) {
+                                            fulltext.add(cell.toString());
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
+
+                            InputStream ExcelFileToRead = new FileInputStream(url);
+                            XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+
+                            XSSFSheet sheet = wb.getSheetAt(0);
+                            XSSFRow row;
+                            XSSFCell cell;
+
+                            Iterator rows = sheet.rowIterator();
+
+                            while (rows.hasNext()) {
+                                row = (XSSFRow) rows.next();
+                                Iterator cells = row.cellIterator();
+                                while (cells.hasNext()) {
+                                    cell = (XSSFCell) cells.next();
+                                    if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                        fulltext.add(cell.getStringCellValue());
+                                    } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
+                            System.out.println("read text in pdf ");
+                            File myFile = new File(url);
+                            try (PDDocument doc = PDDocument.load(myFile)) {
+
+                                PDFTextStripper stripper = new PDFTextStripper();
+                                String text = stripper.getText(doc);
+                                fulltext.add(text);
+//                                        System.out.println("Text size: " + text.length() + " characters:");
+//                                        System.out.println(text);
+
+                            } catch (Exception ex) {
+                                System.out.println("can not read text in pdf file");
+                            }
+                        }
+                    }
+                }
+                DmsSearchService dmsSearchService = new DmsSearchService();
+//                String searchId = document.getDmsSearchId();
+//                String useElastic = paramService.getByParamName("USE_ELASTICSEARCH").getParamValue();
+
+              
+                   System.out.println("--search table--");
+                    //search table
+                    System.out.println("--------0001");
+                    String temp = dmsSearchService.changDocumntToSearchField(document);
+                    System.out.println("--------0002");
+                    temp = temp + attachName;
+                    temp = temp + fulltext;
+                    String temp1 = temp.replaceAll("null"," ");
+                    document.setFullText(temp1);
+
+                
+                System.out.println("---end");
+                
                 DmsDocument documentNew = dmsDocumentService.update(document);
                 //log update
                 if (document.getRemovedBy() != -1) {
                     dmsDocumentService.saveLogForUpdate(document, documentNew, httpHeaders.getHeaderString("clientIp"));
+
                 }
+
 
                 status = Response.Status.OK;
                 responseData.put("data", dmsDocumentService.tranformToModel(documentNew));
@@ -330,9 +494,9 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument deleted by id success.")
-        ,@ApiResponse(code = 404, message = "dmsDocument by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "dmsDocument deleted by id success."),
+        @ApiResponse(code = 404, message = "dmsDocument by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -361,6 +525,13 @@ public class DmsDocumentResource {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
             DmsDocument dmsDocument = dmsDocumentService.remove(id, Integer.parseInt(httpHeaders.getHeaderString("userID")));
             dmsDocumentService.saveLogForRemove(dmsDocument, httpHeaders.getHeaderString("clientIp"));
+//            System.out.println("dmsDocument remove =" + dmsDocument.getRemovedBy());
+//            DmsSearchService dmsSearchService = new DmsSearchService();
+//            DmsSearchModel temp = dmsSearchService.changDocumntToSearch(dmsDocument);
+//            String searchId = dmsDocument.getDmsSearchId();
+//            temp.setType("DOC");
+//            DmsSearchModel result = dmsSearchService.updateData(searchId, temp);
+
             if (dmsDocument != null) {
 //                dmsDocumentService.saveLogForRemove(dmsDocument, versionModel.getClientIp());
                 status = Response.Status.OK;
@@ -384,10 +555,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "document  success.")
-        ,
-        @ApiResponse(code = 404, message = "document  not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "document  success."),
+        @ApiResponse(code = 404, message = "document  not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -415,7 +584,10 @@ public class DmsDocumentResource {
         responseData.put("errorMessage", "");
         try {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
+//            System.out.println(" 1111111");
             DmsDocument document = dmsDocumentService.getById(id);
+//            System.out.println("222222");
+//            System.out.println("document = "+document.getDmsDocumentName());
             if (document != null) {
 
                 status = Response.Status.OK;
@@ -493,10 +665,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -530,6 +700,8 @@ public class DmsDocumentResource {
             DmsFolderService dmsFolderService = new DmsFolderService();
             DmsFolder folder = dmsFolderService.getById(folderId);
             int docType = folder.getDocumentTypeId();
+//            System.out.println("listOptionModel.getOffset() - " + listOptionModel.getOffset());
+//            System.out.println("listOptionModel.getLimit() - " + listOptionModel.getLimit());
             List<DmsDocument> listDmsDocument = DmsDocumentService.findListDocumentS(folderId, listOptionModel.getOffset(), listOptionModel.getLimit(), listOptionModel.getSort(), listOptionModel.getDir());
             ListReturnModel listReturnModel = new ListReturnModel(0, 0, 0);
             if (!listDmsDocument.isEmpty()) {
@@ -542,8 +714,8 @@ public class DmsDocumentResource {
                         next = 0;
                     }
                 }
-            
-            listReturnModel = new ListReturnModel(countAll, count, next);
+
+                listReturnModel = new ListReturnModel(countAll, count, next);
             }
             if (!listDmsDocument.isEmpty()) {
                 List<DmsDocumentModel> listDmsDocumentModel = new ArrayList<>();
@@ -581,10 +753,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -593,12 +763,12 @@ public class DmsDocumentResource {
     public Response searchDocumentWithOutAuth(
             //            @Context UriInfo uriInfo,
             @BeanParam VersionModel versionModel,
-            FieldSearchModel fieldSearchModel
-    //            @ApiParam(name = "aa", value = "aaa", required = false)
+            FieldSearchModel fieldSearchModel //            @ApiParam(name = "aa", value = "aaa", required = false)
     //            @QueryParam("aa") String aa
 
     ) {
 //        log.info("searchDocument...");
+        System.out.println("searchDocumentWithOutAuth");
 
         Gson gs = new GsonBuilder()
                 .setVersion(versionModel.getVersion())
@@ -614,10 +784,14 @@ public class DmsDocumentResource {
         responseData.put("message", "dmsDocument list not found in the database.");
         responseData.put("errorMessage", "");
         try {
+            System.out.println("-----1");
 
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
 
+            System.out.println("-----2");
+            System.out.println("fieldSearchModel -" + fieldSearchModel.getCreatedDateForm());
             List<DmsDocument> listDocAll = dmsDocumentService.searchDocumentWithOutAuth(fieldSearchModel, fieldSearchModel.getFolderId(), 0, 100, Integer.parseInt(httpHeaders.getHeaderString("userID")));
+            System.out.println("listDocAll = " + listDocAll.size());
             LocalDateTime nowDate = LocalDateTime.now();
             if (!listDocAll.isEmpty()) {
                 List<DmsDocumentModel> listDmsDocumentModel = new ArrayList<>();
@@ -658,19 +832,17 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/emailDocExp")
     public Response sendEmail(
-            @BeanParam VersionModel versionModel
-    //                @ApiParam(name = "folderId", value = "รหัสที่เก็บเอกสาร", required = false)
+            @BeanParam VersionModel versionModel //                @ApiParam(name = "folderId", value = "รหัสที่เก็บเอกสาร", required = false)
     //                @QueryParam("folderId") int folderId
+
     ) {
         LOG.info("emailDocExp...");
         Gson gs = new GsonBuilder()
@@ -700,10 +872,12 @@ public class DmsDocumentResource {
                 a.add(listDocAll.get(i).getDmsFolderId());
 
             }
+            System.out.println("a size " + a.size());
 
             ArrayList listFolderId = new ArrayList();
 
             listFolderId = new ArrayList<String>(new LinkedHashSet<String>(a));//ตัดตัวซ้ำ
+            System.out.println("listFolderId = " + listFolderId);
             ArrayList listUserId = new ArrayList();
             List<DmsFolder> listFolder = new ArrayList();
 
@@ -717,6 +891,9 @@ public class DmsDocumentResource {
 
             }
             listUserId = new ArrayList<String>(new LinkedHashSet<String>(listUserId));
+            System.out.println("listUserId = " + listUserId);
+//            System.out.println("listFolder = " + listFolder.get(0).getId());
+
             //send form userProfile
             for (int i = 0; i < listUserId.size(); i++) {
                 int userProfileId = (int) listUserId.get(i);
@@ -726,6 +903,7 @@ public class DmsDocumentResource {
                 String detailEmail = "<br>";
                 for (DmsFolder aFolder : listFolder) {
                     if (aFolder.getDmsUserPreExpire() == userProfileId) {
+                        System.out.println("folder send mail id = " + aFolder.getId());
                         List<DmsDocument> listDocAllByFolderId = dmsDocumentService.findListDocumentExpire(aFolder.getId());
                         int countDoc = listDocAllByFolderId.size();
                         countDocAll = countDocAll + countDoc;
@@ -760,6 +938,7 @@ public class DmsDocumentResource {
                 detailEmail = "ตรวจพบเอกสารหมดอายุจำนวน " + countDocAll + " เอกสาร <br>" + detailEmail;
 
                 String emailUserProfileId = userProfileService.getById(userProfileId).getUserProfileEmail();
+                System.out.println("emailUserProfileId = " + emailUserProfileId);
                 if (emailUserProfileId != "" && emailUserProfileId != null) {
                     boolean debug = false;
                     String mailSubject = "[ADOCUMENT] แจ้งเตือนเอกสารหมดอายุ";
@@ -770,6 +949,7 @@ public class DmsDocumentResource {
                     String mailType = "html";
 
                     boolean result = Common.sendEmail(mailSubject, mailTo, mailToCC, mailToBCC, mailBody, fileAttachPath, mailType, debug);
+                    System.out.println("mail result = " + result);
                 }
             }
 
@@ -781,6 +961,7 @@ public class DmsDocumentResource {
                     String urlPath = "";
                     String folderName = folderData.getDmsFolderName();
                     String parentKey = folderData.getDmsFolderParentKey();
+                    System.out.println(parentKey);
                     int folderIda = folderData.getId();
                     List<DmsDocument> listDocAllTemp = dmsDocumentService.findListDocumentExpire(folderIda);
                     String[] output = parentKey.split("฿");
@@ -795,6 +976,7 @@ public class DmsDocumentResource {
                             urlPath = urlPath + "/" + folderDataTemp.getDmsFolderName();
                         }
                     }
+                    System.out.println("urlPath = " + urlPath);
 //                listNameDoc = listNameDoc + "ตำแหน่งที่อยู่ของเอกสาร " + urlPath + "<br>" + "รายชื่อเอกสาร จำนวน&nbsp;" + listDocAllTemp.size() + "&nbsp;รายการ <br>";
                     listNameDoc = listNameDoc + "ชื่อแฟ้ม : " + folderName + "<br>"
                             + "จำนวน : " + listDocAllTemp.size() + " เอกสาร<br>มีดังต่อไปนี้";
@@ -804,6 +986,8 @@ public class DmsDocumentResource {
 
                     }
                     listNameDoc = listNameDoc + "ท่านสามารถเข้าสู่ระบบได้ตามลิงค์นี้<br>" + urlPath;
+//                System.out.println("listNameDoc = " + listNameDoc);
+//                System.out.println("folderData.getDmsEmailUserPreExpire()  = " + folderData.getDmsEmailUserPreExpire());
 
                     boolean debug = false;
                     String mailSubject = "[ADOCUMENT] แจ้งเตือนเอกสารหมดอายุ";
@@ -814,6 +998,7 @@ public class DmsDocumentResource {
                     String mailType = "html";
                     if (mailTo != null && mailTo != "") {
                         boolean result = Common.sendEmail(mailSubject, mailTo, mailToCC, mailToBCC, mailBody, fileAttachPath, mailType, debug);
+                        System.out.println("mail result = " + result);
                     }
                 }
             }
@@ -918,8 +1103,7 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Document created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Document created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -993,8 +1177,7 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Document created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Document created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1101,10 +1284,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1116,8 +1297,8 @@ public class DmsDocumentResource {
             @ApiParam(name = "docTypeId", value = "docTypeId", required = true)
             @PathParam("docTypeId") int docTypeId,
             @ApiParam(name = "folderId", value = "folderId", required = true)
-            @PathParam("folderId") int folderId
-    //            @BeanParam ListOptionModel listOptionModel
+            @PathParam("folderId") int folderId //            @BeanParam ListOptionModel listOptionModel
+
     ) {
         LOG.info("listDocByDocTypeId...");
 
@@ -1176,10 +1357,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1190,8 +1369,8 @@ public class DmsDocumentResource {
             @ApiParam(name = "wfDocTypeId", value = "wfDocTypeId", required = true)
             @PathParam("wfDocTypeId") int wfDocTypeId,
             @ApiParam(name = "folderId", value = "folderId", required = true)
-            @PathParam("folderId") int folderId
-    //            @BeanParam ListOptionModel listOptionModel
+            @PathParam("folderId") int folderId //            @BeanParam ListOptionModel listOptionModel
+
     ) {
         LOG.info("listDocByDocTypeId...");
 
@@ -1250,10 +1429,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "document  success.")
-        ,
-        @ApiResponse(code = 404, message = "document  not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "document  success."),
+        @ApiResponse(code = 404, message = "document  not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1281,7 +1458,9 @@ public class DmsDocumentResource {
         responseData.put("errorMessage", "");
         try {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
+            System.out.println("id = " + id);
             List<DmsDocument> listDmsDocument = dmsDocumentService.listByWfId(id);
+            System.out.println("listDmsDocument = " + listDmsDocument.size());
             if (!listDmsDocument.isEmpty()) {
                 List<DmsDocumentModel> listDmsDocumentModel = new ArrayList<>();
                 for (DmsDocument dmsDocument : listDmsDocument) {
@@ -1310,10 +1489,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "document  success.")
-        ,
-        @ApiResponse(code = 404, message = "document  not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "document  success."),
+        @ApiResponse(code = 404, message = "document  not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1349,9 +1526,13 @@ public class DmsDocumentResource {
 
             outerloop:
             for (int i = 0; i < listFolder.size(); i++) {
+                System.out.println(" listFolder = " + listFolder.get(i).getId());
                 listDmsDocument = dmsDocumentService.listByFolderIdAndWfType(listFolder.get(i).getId(), wfTypeId);
+                System.out.println("listDmsDocument 00= " + listDmsDocument);
+                System.out.println("size = " + listDmsDocument.size());
                 if (listDmsDocument.size() > 0) {
                     for (int j = 0; j < listDmsDocument.size(); j++) {
+                        System.out.println("listDmsDocument 11= " + listDmsDocument.get(j).getDmsDocumentName());
                     }
                     break outerloop;
                 }
@@ -1386,10 +1567,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1405,6 +1584,7 @@ public class DmsDocumentResource {
             @BeanParam ListOptionModel listOptionModel
     ) {
 //        log.info("searchDocument...");
+        System.out.println("searchDocumentWithDocType");
 
         Gson gs = new GsonBuilder()
                 .setVersion(versionModel.getVersion())
@@ -1420,8 +1600,13 @@ public class DmsDocumentResource {
         responseData.put("message", "dmsDocument list not found in the database.");
         responseData.put("errorMessage", "");
         try {
+            System.out.println("-----1");
+
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
+
+            System.out.println("-----2");
             List<DmsDocument> listDocAll = dmsDocumentService.searchDocumentWithDocType(fieldSearchModel, docTypeId, isWfType, listOptionModel.getOffset(), listOptionModel.getLimit());
+            System.out.println("listDocAll = " + listDocAll.size());
             LocalDateTime nowDate = LocalDateTime.now();
             if (!listDocAll.isEmpty()) {
                 List<DmsDocumentModel> listDmsDocumentModel = new ArrayList<>();
@@ -1461,8 +1646,7 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Document created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Document created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1571,7 +1755,9 @@ public class DmsDocumentResource {
             document = dmsDocumentService.create(document);
 
             //log 
+            System.out.println("aaaaa222");
             dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
+            System.out.println("aaaa3333");
 
             DmsSearchService dmsSearchService = new DmsSearchService();
             DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
@@ -1599,10 +1785,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Document updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Document by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Document updeted by id success."),
+        @ApiResponse(code = 404, message = "Document by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -1724,8 +1908,7 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Document created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Document created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1757,7 +1940,16 @@ public class DmsDocumentResource {
 
             DmsFolderService dmsFolderService = new DmsFolderService();
             DmsFolder folder = dmsFolderService.getById(dmsDocumentModel.getDocumentFolderId());
+//            int expNum = folder.getDmsFolderTypeExpireNumber();
+//            String expType = folder.getDmsFolderTypeExpire();
 
+//            System.out.println("folder exp num = "+expNum);
+//            System.out.println("folder exp type = "+expType);
+//            
+//            if(expNum == 0){
+//                System.out.println(" expNum == 0 ");
+//            document.setDmsDocumentExpireDate(LocalDateTime.now());
+//            }
             document.setRemovedBy(-1);
             document.setDocumentTypeId(dmsDocumentModel.getDocumentTypeId());
             document.setDmsDocumentName(dmsDocumentModel.getDocumentName());
@@ -1785,10 +1977,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Document updateCreate by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Document by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Document updateCreate by id success."),
+        @ApiResponse(code = 404, message = "Document by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -1818,50 +2008,53 @@ public class DmsDocumentResource {
         try {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
             DmsDocument document = dmsDocumentService.getById(id);
+
+//            System.out.println("wf TypeId -- " + dmsDocumentPostModel.getWfTypeId());
+//             System.out.println("dmsDocumentPostModel = "+dmsDocumentPostModel.getDocumentPublicDate());
             if (document != null) {
-                
+
                 document.setDmsDocumentEdit(Integer.parseInt(httpHeaders.getHeaderString("userID")));
 
                 document.setDmsDocumentEditDate(LocalDateTime.now());
-                
+
                 document.setDocumentTypeId(dmsDocumentPostModel.getDocumentTypeId());
-               
+
                 document.setDmsDocumentName(dmsDocumentPostModel.getDocumentName());
-               
+
                 if (dmsDocumentPostModel.getDocumentPublicDate() != null) {
-                    
+
                     document.setDmsDocumentPublicDate(dateThaiToLocalDateTime(dmsDocumentPostModel.getDocumentPublicDate()));
                 }
-               
+
                 document.setDmsDocumentPublicStatus(dmsDocumentPostModel.getDocumentPublicStatus());
-                
+
                 document.setDmsFolderId(dmsDocumentPostModel.getDocumentFolderId());
-               
+
                 if (dmsDocumentPostModel.getDocumentExpireDate() != null) {
-                    
+
                     document.setDmsDocumentExpireDate(dateThaiToLocalDateTime(dmsDocumentPostModel.getDocumentExpireDate()));
-             
+
                 }
-                
+
                 if (dmsDocumentPostModel.getDocumentDate01() != null) {
                     document.setDmsDocumentDatetime01(dateThaiToLocalDateTime(dmsDocumentPostModel.getDocumentDate01()));
                 }
-               
+
                 if (dmsDocumentPostModel.getDocumentDate02() != null) {
                     document.setDmsDocumentDatetime02(dateThaiToLocalDateTime(dmsDocumentPostModel.getDocumentDate02()));
                 }
-               
+
                 if (dmsDocumentPostModel.getDocumentDate03() != null) {
                     document.setDmsDocumentDatetime03(dateThaiToLocalDateTime(dmsDocumentPostModel.getDocumentDate03()));
                 }
-              
+
                 if (dmsDocumentPostModel.getDocumentDate04() != null) {
                     document.setDmsDocumentDatetime04(dateThaiToLocalDateTime(dmsDocumentPostModel.getDocumentDate04()));
                 }
-              
+
                 document.setDmsDocumentFloat01(dmsDocumentPostModel.getDocumentFloat01());
                 document.setDmsDocumentFloat02(dmsDocumentPostModel.getDocumentFloat02());
-                
+
                 document.setDmsDocumentVarchar01(dmsDocumentPostModel.getDocumentVarchar01());
                 document.setDmsDocumentVarchar02(dmsDocumentPostModel.getDocumentVarchar02());
                 document.setDmsDocumentVarchar03(dmsDocumentPostModel.getDocumentVarchar03());
@@ -1872,13 +2065,13 @@ public class DmsDocumentResource {
                 document.setDmsDocumentVarchar08(dmsDocumentPostModel.getDocumentVarchar08());
                 document.setDmsDocumentVarchar09(dmsDocumentPostModel.getDocumentVarchar09());
                 document.setDmsDocumentVarchar10(dmsDocumentPostModel.getDocumentVarchar10());
-                
+
                 document.setDmsDocumentText01(dmsDocumentPostModel.getDocumentText01());
                 document.setDmsDocumentText02(dmsDocumentPostModel.getDocumentText02());
                 document.setDmsDocumentText03(dmsDocumentPostModel.getDocumentText03());
                 document.setDmsDocumentText04(dmsDocumentPostModel.getDocumentText04());
                 document.setDmsDocumentText05(dmsDocumentPostModel.getDocumentText05());
-                
+
                 document.setDmsDocumentInt01(dmsDocumentPostModel.getDocumentInt01());
                 document.setDmsDocumentInt02(dmsDocumentPostModel.getDocumentInt02());
                 document.setDmsDocumentInt03(dmsDocumentPostModel.getDocumentInt03());
@@ -1887,22 +2080,166 @@ public class DmsDocumentResource {
 
                 document.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 document.setUpdatedDate(LocalDateTime.now());
-               
-//                document.setWfTypeId(dmsDocumentPostModel.getWfTypeId());
 
+//                document.setWfTypeId(dmsDocumentPostModel.getWfTypeId());
                 DmsFolderService dmsFolderService = new DmsFolderService();
-                
-               
+
                 String fullPath = dmsFolderService.getFullPathName(document.getDmsFolderId());
-             
+
                 document.setFullPathName(fullPath);
-                
+
                 document.setRemovedBy(0);
-            
-                dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
-                document = dmsDocumentService.update(document);
-//                dmsDocumentService.saveLogForUpdate(document, documentNew, dmsDocumentPostModel.getClientIp());
+
+                List<String> attachName = new ArrayList<String>();
+                List<String> fulltext = new ArrayList<String>();
+                ParamService paramService = new ParamService();
+                FileAttachService fileAttachService = new FileAttachService();
+                List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", id, "createdDate", "asc");
+                if (!listFileAttach.isEmpty()) {
+                    for (FileAttach fileAttach : listFileAttach) {
+                        System.out.println("fileAttach new id = " + fileAttach.getId());
+
+                        String url = "";
+                        String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+                        url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+                        System.out.println("url = " + url);
+                        attachName.add(fileAttach.getFileAttachName());
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
+                            File file = new File(url);
+                            BufferedReader br = new BufferedReader(new FileReader(file));
+                            String sCurrentLine;
+
+                            while ((sCurrentLine = br.readLine()) != null) {
+                                fulltext.add(sCurrentLine);
+                            }
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
+                            System.out.println(" is docX ");
+                            InputStream in = new FileInputStream(url);
+                            XWPFDocument doc = new XWPFDocument(in);
+                            XWPFWordExtractor ex = new XWPFWordExtractor(doc);
+                            String text = ex.getText();
+                            fulltext.add(text);
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
+                            System.out.println(" is doc ");
+                            File file = new File(url);
+                            NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
+                            WordExtractor extractor = new WordExtractor(fs.getRoot());
+                            for (String rawText : extractor.getParagraphText()) {
+                                String text = extractor.stripFields(rawText);
+                                fulltext.add(text);
+                                System.out.println(text);
+                            }
+
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
+                            File file = new File(url);
+                            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+                            HSSFWorkbook wb = new HSSFWorkbook(fs);
+                            HSSFSheet sheet = wb.getSheetAt(0);
+                            HSSFRow row;
+                            HSSFCell cell;
+                            int rows; // No of rows
+                            rows = sheet.getPhysicalNumberOfRows();
+
+                            int cols = 0; // No of columns
+                            int tmp = 0;
+
+                            for (int i = 0; i < 10 || i < rows; i++) {
+                                row = sheet.getRow(i);
+                                if (row != null) {
+                                    tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                                    if (tmp > cols) {
+                                        cols = tmp;
+                                    }
+                                }
+                            }
+                            for (int r = 0; r < rows; r++) {
+                                row = sheet.getRow(r);
+                                if (row != null) {
+                                    for (int c = 0; c < cols; c++) {
+                                        cell = row.getCell((short) c);
+                                        if (cell != null) {
+                                            fulltext.add(cell.toString());
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
+
+                            InputStream ExcelFileToRead = new FileInputStream(url);
+                            XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+
+                            XSSFSheet sheet = wb.getSheetAt(0);
+                            XSSFRow row;
+                            XSSFCell cell;
+
+                            Iterator rows = sheet.rowIterator();
+
+                            while (rows.hasNext()) {
+                                row = (XSSFRow) rows.next();
+                                Iterator cells = row.cellIterator();
+                                while (cells.hasNext()) {
+                                    cell = (XSSFCell) cells.next();
+                                    if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                        fulltext.add(cell.getStringCellValue());
+                                    } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                        if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
+                            System.out.println("read text in pdf ");
+                            File myFile = new File(url);
+                            try (PDDocument doc = PDDocument.load(myFile)) {
+
+                                PDFTextStripper stripper = new PDFTextStripper();
+                                String text = stripper.getText(doc);
+                                fulltext.add(text);
+//                                        System.out.println("Text size: " + text.length() + " characters:");
+//                                        System.out.println(text);
+
+                            } catch (Exception ex) {
+                                System.out.println("can not read text in pdf file");
+                            }
+                        }
+                    }
+                }
+                DmsSearchService dmsSearchService = new DmsSearchService();
+//                String searchId = document.getDmsSearchId();
+//                String useElastic = paramService.getByParamName("USE_ELASTICSEARCH").getParamValue();
+
+              
+                   System.out.println("--search table--");
+                    //search table
+                    System.out.println("--------0001");
+                    String temp = dmsSearchService.changDocumntToSearchField(document);
+                    System.out.println("--------0002");
+                    temp = temp + attachName;
+                    temp = temp + fulltext;
+                    String temp1 = temp.replaceAll("null"," ");
+                    document.setFullText(temp1);
+
+                
+                System.out.println("---end");
+                  document = dmsDocumentService.update(document);
+                   dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
                 status = Response.Status.OK;
+                responseData.put("data", dmsDocumentService.tranformToModel(document));                 
+                responseData.put("message", "dmsDocument updeted by id success.");
+            } else {
+                status = Response.Status.OK;
+                responseData.put("data", "");
+//                dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
+//                document = dmsDocumentService.update(document);
+
+              
                 responseData.put("data", dmsDocumentService.tranformToModel(document));
                 responseData.put("message", "dmsDocument updeted by id success.");
             }
@@ -1921,10 +2258,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument move by id success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument move by id success."),
+        @ApiResponse(code = 404, message = "dmsDocument by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1973,8 +2308,25 @@ public class DmsDocumentResource {
                 dmsDocument = dmsDocumentService.update(dmsDocument);
 //                dmsDocumentService.saveLogForMove(dmsDocument, folderIdOld,httpHeaders.getHeaderString("clientIp"));
                 String searchId = dmsDocument.getDmsSearchId();
+
+//                if (searchId != null) {
+//                    DmsSearchModel resultTemp = dmsSearchService.getData(searchId);
+////                    System.out.println("resultTemp folder 1= "+resultTemp.getDocumentFolderId());
+//                    resultTemp.setDocumentFolderId(FolderId);
+////                    System.out.println("resultTemp folder = "+resultTemp.getDocumentFolderId());
+//                    DmsSearchModel result = dmsSearchService.updateDataMove(searchId, FolderId);
+//                } else {
+////                    DmsSearchService dmsSearchService = new DmsSearchService();
+//                    DmsSearchModel temp2 = dmsSearchService.changDocumntToSearch(dmsDocument);
+//                    temp2.setType("DOC");
+//                    DmsSearchModel result = dmsSearchService.addData(temp2);
+//                    dmsDocument.setDmsSearchId(result.getDmsSearchId());
+//                    dmsDocument = dmsDocumentService.update(dmsDocument);
+//
+//                }
             }
 
+//                dmsDocumentService.saveLogForRemove(dmsDocument, versionModel.getClientIp());
             status = Response.Status.OK;
             responseData.put("data", true);
             responseData.put("success", true);
@@ -1995,10 +2347,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument send email success.")
-        ,
-        @ApiResponse(code = 404, message = "Error!.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument send email success."),
+        @ApiResponse(code = 404, message = "Error!."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2027,11 +2377,14 @@ public class DmsDocumentResource {
 
             boolean debug = false;
             ArrayList<String> fileAttachPath = new ArrayList<>();//get real path
+//            System.out.println("sendEmail.getListAttachID() = " + sendEmail.getListAttachID());
             String[] attId = sendEmail.getListAttachID().split(",");
             FileAttachService fileAttachService = new FileAttachService();
+//             FileAttach FileAttach = new FileAttach();
             String FileAttach = "";
             for (int i = 0; i < attId.length; i++) {
                 FileAttach = fileAttachService.moveToTempPath(Integer.parseInt(attId[i]));
+//                 System.out.println("FileAttach path = "+FileAttach);
                 fileAttachPath.add(FileAttach);
             }
 
@@ -2043,6 +2396,7 @@ public class DmsDocumentResource {
             String mailType = "html";
             if (mailTo != null && mailTo != "") {
                 boolean result = Common.sendEmail(mailSubject, mailTo, mailToCC, mailToBCC, mailBody, fileAttachPath, mailType, debug);
+                System.out.println("mail result = " + result);
             }
 
             status = Response.Status.OK;
@@ -2065,10 +2419,8 @@ public class DmsDocumentResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "dmsDocument list success.")
-        ,
-        @ApiResponse(code = 404, message = "dmsDocument list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "dmsDocument list success."),
+        @ApiResponse(code = 404, message = "dmsDocument list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2115,10 +2467,8 @@ public class DmsDocumentResource {
             response = String.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "create dynamic report data success.")
-        ,
-        @ApiResponse(code = 404, message = "create dynamic report data not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "create dynamic report data success."),
+        @ApiResponse(code = 404, message = "create dynamic report data not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2127,8 +2477,7 @@ public class DmsDocumentResource {
     //@Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response createDynamicReportDataFromSearch(
             @BeanParam VersionModel versionModel,
-            ReportInputModel ReportInputModel
-    //        @ApiParam(name = "reportOutput", value = "ประเภทไฟล์ของรายงาน  XLS , PDF", required = true) 
+            ReportInputModel ReportInputModel //        @ApiParam(name = "reportOutput", value = "ประเภทไฟล์ของรายงาน  XLS , PDF", required = true) 
     //        @PathParam("reportOutput") String reportOutput,
     //        
     //        @ApiParam(name = "folderId", value = "folderId", required = true) 
@@ -2139,6 +2488,7 @@ public class DmsDocumentResource {
     //        
     //        @ApiParam(name = "docTypeDetialId", value = "id doctypeDetail = 1-2-3-4-5", required = true) 
     //        @PathParam("docTypeDetialId") String docTypeDetialId
+
     ) {
         LOG.debug("createReportDataFromSearch...");
         Gson gs = new GsonBuilder()
