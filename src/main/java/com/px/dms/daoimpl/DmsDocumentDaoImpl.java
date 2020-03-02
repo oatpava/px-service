@@ -95,7 +95,7 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
         //create Query
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsDocument.class);
         conjunction.add(disjunction);
-        
+
         criteria.add(conjunction);
         criteria.addOrder(Order.desc("this.createdDate"));
 //                .addOrder(Order.asc("dmsFolderId"));
@@ -115,6 +115,7 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
         //create Query
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsDocument.class);
+        System.out.println("");
 
         criteria.add(conjunction)
                 .addOrder(Order.asc("dmsFolderId"));
@@ -122,8 +123,6 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
         return this.listByCriteria(criteria);
 
     }
-    
-    
 
     @Override
     public List<DmsDocument> findListDocument(int folderId) {
@@ -190,7 +189,10 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
         try {
             Conjunction conjunction = createConjunctionFormSearchField(fieldSearchData, folderid, userId);
             DetachedCriteria criteria = DetachedCriteria.forClass(DmsDocument.class);
+
             criteria.add(conjunction);
+            System.out.println("criteria = " + criteria);
+
             return this.listByCriteria(criteria, offset, limit);
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
@@ -206,6 +208,8 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
             DetachedCriteria criteria = DetachedCriteria.forClass(DmsDocument.class);
 
             criteria.add(conjunction);
+            System.out.println("criteria = " + criteria);
+
             return this.listByCriteria(criteria, offset, limit);
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
@@ -240,17 +244,21 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
     @Override
     public Conjunction createConjunctionFormSearch(MultivaluedMap<String, String> queryParams, int folderID) {
         DmsFolderService dmsFolderService = new DmsFolderService();
+        System.out.println("-----a");
         String[] valueFolderParent = dmsFolderService.getListChildFolder(folderID);
+        System.out.println("-----b");
         UserProfileService userProfileService = new UserProfileService();
         Conjunction conjunction = Restrictions.conjunction();
         Disjunction disjunction = Restrictions.disjunction();
 
         for (String valueFolderParent1 : valueFolderParent) {
+//            System.out.println("valueFolderParent1 = " + valueFolderParent1);
             disjunction.add(Restrictions.eq("this.dmsFolderId", Integer.parseInt(valueFolderParent1)));
         }
 
         conjunction.add(Restrictions.eq("this.removedBy", 0));
         for (String key : queryParams.keySet()) {
+            System.out.println("key = " + key);
             if (fieldSearch.contains(key)) {
 
                 for (String value : queryParams.get(key)) {
@@ -289,11 +297,17 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
                                     disjunction.add(Restrictions.eq("this.createdBy", listUserProfile2.get(z).getUser().getId()));
                                 }
+
+//                             
                                 break;
                             case "documentExpireDateForm":
+                                System.out.println("--- documentExpireDateForm ---");
+                                System.out.println(dateThaiToLocalDateTime(valueArray[i]));
                                 conjunction.add(Restrictions.ge("this.dmsDocumentExpireDate", dateThaiToLocalDateTime(valueArray[i])));
                                 break;
                             case "documentExpireDateTo":
+                                System.out.println("--- documentExpireDateTo ---");
+                                System.out.println(dateThaiToLocalDateTime(valueArray[i]));
                                 conjunction.add(Restrictions.le("this.dmsDocumentExpireDate", dateThaiToLocalDateTime(valueArray[i])));
                                 break;
 
@@ -406,7 +420,9 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
                 }
             }
         }
+
         conjunction.add(disjunction);
+        System.out.println("conjunction = " + conjunction);
         return conjunction;
     }
 
@@ -1261,7 +1277,20 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
     public TempTable temptableForreport(List<DmsDocument> document, String jobType, String clientIp, int userID) {
         TempTable tempTable = new TempTable();
+//
+//        String computerName = clientIp;
+//        String jobtype = jobType;
+//
+//        UserProfileService userProfile = new UserProfileService();
+//        //create to tempTable
+//        tempTable.setCreatedBy(userID);
+//        tempTable.setComputerName(computerName);
+//        tempTable.setJobType(jobtype);
+//        System.out.println("---temptableForrepor----t");
         for (int i = 0; i < document.size(); i++) {
+//            System.out.println("--- i --- "+i);
+//            TempTable tempTable = new TempTable();
+
             String computerName = clientIp;
             String jobtype = jobType;
 
@@ -1346,11 +1375,14 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
     public Conjunction createConjunctionFormSearchField(FieldSearchModel fieldSearchData, int folderID, int userId) {
         DmsFolderService dmsFolderService = new DmsFolderService();
+        System.out.println("-----a");
         String[] valueFolderParent = dmsFolderService.getListChildFolder(folderID);
+        System.out.println("-----b");
         UserProfileService userProfileService = new UserProfileService();
         Conjunction conjunction = Restrictions.conjunction();
         Disjunction disjunction = Restrictions.disjunction();
 
+//        --------------------
         SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
         SubmoduleAuthService submoduleAuthService = new SubmoduleAuthService();
         List<DmsFolder> listFolderAll = dmsFolderService.getListChildFolderObj(folderID);
@@ -1360,7 +1392,12 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
         List<DmsFolder> listFolder2All = submoduleUserAuthService.getEntityFromTreeByUserProfileAuthority(submoduleAuth, userProfile, authority, listFolderAll);
 
+        System.out.println("listFolderAll size- " + listFolderAll.size());
+        System.out.println("'folderID - " + folderID);
+        System.out.println("listFolder2All size- " + listFolder2All.size());
+// ------------
         for (DmsFolder valueFolderParent1 : listFolder2All) {
+            System.out.println("valueFolderParent1.getId() - " + valueFolderParent1.getId());
             disjunction.add(Restrictions.eq("this.dmsFolderId", valueFolderParent1.getId()));
         }
 
@@ -1404,10 +1441,16 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
         }
         if (fieldSearchData.getDocumentExpireDateForm() != null && fieldSearchData.getDocumentExpireDateForm() != "") {
+            System.out.println("--- getDocumentExpireDateForm ---- ");
+            System.out.println(fieldSearchData.getDocumentExpireDateForm());
+            System.out.println(dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateForm()));
             conjunction.add(Restrictions.ge("this.dmsDocumentExpireDate", dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateForm())));
         }
 
         if (fieldSearchData.getDocumentExpireDateTo() != null && fieldSearchData.getDocumentExpireDateTo() != "") {
+            System.out.println("--- getDocumentExpireDateTo ---- ");
+            System.out.println(fieldSearchData.getDocumentExpireDateTo());
+            System.out.println(dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateTo()));
             conjunction.add(Restrictions.le("this.dmsDocumentExpireDate", dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateTo()).plusHours(23).plusMinutes(59)));
         }
 
@@ -1532,7 +1575,13 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
             conjunction.add(Restrictions.like("this.dmsDocumentVarchar10", fieldSearchData.getDocumentVarchar10(), MatchMode.ANYWHERE));
 
         }
+        
+        if (fieldSearchData.getFullText()!= null && fieldSearchData.getFullText() != "") {
+            conjunction.add(Restrictions.like("this.fullText", fieldSearchData.getFullText(), MatchMode.ANYWHERE));
+
+        }
         conjunction.add(disjunction);
+        System.out.println("conjunction = " + conjunction);
         return conjunction;
     }
 
@@ -1563,6 +1612,7 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
         List<DmsFolder> listFolder = dmsFolderService.getListChildFolderObj(folderId);
         SubmoduleAuthService SubmoduleAuthService = new SubmoduleAuthService();
         SubmoduleAuth submoduleAuth = SubmoduleAuthService.getBySubmoduleAuthCode("DMS_OF");
+        System.out.println("submoduleAuth = " + submoduleAuth.getId());
         UserProfileService UserProfileService = new UserProfileService();
         UserProfile userProfile = UserProfileService.getById(userID);
         SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
@@ -1644,6 +1694,7 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
         conjunction.add(Restrictions.eq("this.removedBy", 0));
 
         if (fieldSearchData.getDocumentName() != null && fieldSearchData.getDocumentName() != "") {
+            System.out.println("documentName  search = " + fieldSearchData.getDocumentName());
             conjunction.add(Restrictions.like("this.dmsDocumentName", fieldSearchData.getDocumentName(), MatchMode.ANYWHERE));
         }
 
@@ -1680,10 +1731,16 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
         }
         if (fieldSearchData.getDocumentExpireDateForm() != null && fieldSearchData.getDocumentExpireDateForm() != "") {
+            System.out.println("--- getDocumentExpireDateForm ---- ");
+            System.out.println(fieldSearchData.getDocumentExpireDateForm());
+            System.out.println(dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateForm()));
             conjunction.add(Restrictions.ge("this.dmsDocumentExpireDate", dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateForm())));
         }
 
         if (fieldSearchData.getDocumentExpireDateTo() != null && fieldSearchData.getDocumentExpireDateTo() != "") {
+            System.out.println("--- getDocumentExpireDateTo ---- ");
+            System.out.println(fieldSearchData.getDocumentExpireDateTo());
+            System.out.println(dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateTo()));
             conjunction.add(Restrictions.le("this.dmsDocumentExpireDate", dateThaiToLocalDateTime(fieldSearchData.getDocumentExpireDateTo()).plusHours(23).plusMinutes(59)));
         }
 
@@ -1809,6 +1866,7 @@ public class DmsDocumentDaoImpl extends GenericDaoImpl<DmsDocument, Integer> imp
 
         }
         conjunction.add(disjunction);
+        System.out.println("conjunction = " + conjunction);
         return conjunction;
     }
 

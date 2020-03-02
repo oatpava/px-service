@@ -1423,5 +1423,53 @@ public class DmsSearchService {
 //        System.out.println("result add data = " + result);
         return result;
     }
+    
+     public String changDocumntToSearchField(DmsDocument document) {
+        String returnData = "";
+        returnData = returnData + document.getDmsDocumentName()+" ";
+
+        returnData = returnData + document.getDmsDocumentFloat01()+" ";
+        returnData = returnData + document.getDmsDocumentFloat02()+" ";
+
+        returnData = returnData + document.getDmsDocumentVarchar01()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar02()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar03()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar04()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar05()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar06()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar07()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar08()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar09()+" ";
+        returnData = returnData + document.getDmsDocumentVarchar10()+" ";
+
+
+        returnData = returnData + document.getDmsDocumentText01()+" ";
+        returnData = returnData + document.getDmsDocumentText02()+" ";
+        returnData = returnData + document.getDmsDocumentText03()+" ";
+        returnData = returnData + document.getDmsDocumentText04()+" ";
+        returnData = returnData + document.getDmsDocumentText05()+" ";
+
+
+        returnData = returnData + document.getDmsDocumentInt01()+" ";
+        returnData = returnData + document.getDmsDocumentInt02()+" ";
+        returnData = returnData + document.getDmsDocumentInt03()+" ";
+        returnData = returnData + document.getDmsDocumentInt04()+" ";
+
+
+        UserProfileService userProfileService = new UserProfileService();
+        UserProfile userProfile = new UserProfile();
+
+        if (document.getCreatedBy() > 0) {
+            userProfile = userProfileService.getById(document.getCreatedBy());
+             returnData = returnData + userProfile.getUserProfileFullName();
+        }
+        if (document.getUpdatedBy() > 0) {
+            userProfile = userProfileService.getById(document.getUpdatedBy());
+            returnData = returnData + userProfile.getUserProfileFullName();
+        }
+
+        return returnData;
+
+    }
 
 }
