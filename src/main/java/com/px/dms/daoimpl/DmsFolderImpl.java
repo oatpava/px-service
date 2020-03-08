@@ -422,18 +422,18 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
         }
     }
 
-    public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
+    public List<DmsFolder> findListByFolderParentIdLazyback(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("dmsFolderParentId", folderId));
-//        System.out.println("dmsFolderParentId - "+folderId);
+
         Disjunction disjunction = Restrictions.disjunction();
 
         if (temp.getDisableList().length() > 0) {
             String[] listDms = temp.getDisableList().split(",");
             for (String folder : listDms) {
                 //mustNot
-//                System.out.println("mustNot - "+folder);
+
                 disjunction.add(Restrictions.not(Restrictions.like("dmsFolderParentKey", '฿' + folder + '฿', MatchMode.ANYWHERE)));
             }
         }
@@ -442,20 +442,17 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
             String[] listDms = temp.getEnableList().split(",");
             for (String folder : listDms) {
                 //must
-//                System.out.println("must - "+folder);
+
                 disjunction.add(Restrictions.like("dmsFolderParentKey", "฿" + folder + "฿", MatchMode.ANYWHERE));
             }
         }
-//        System.out.println("temp.getDisableList().length() - " + temp.getDisableList().length());
-//        System.out.println("temp.getEnableList().length() - " + temp.getEnableList().length());
+
         conjunction.add(disjunction);
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
         criteria.add(conjunction)
                 .addOrder(Order.asc("dmsFolderType"))
                 .addOrder(Order.asc("dmsFolderOrderId"));
-//        System.out.println("aaaaaaaaaaaaaaaaaaaaa");
 
-//            System.out.println("criteria - "+criteria);
         if (temp.getDisableList().length() == 0 && temp.getEnableList().length() == 0) {
             List<DmsFolder> a = new ArrayList<>();
             return a;
@@ -464,4 +461,52 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
         }
     }
 
+    
+     public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("parentId", folderId));
+//        System.out.println("dmsFolderParentId - "+folderId);
+        Disjunction disjunction = Restrictions.disjunction();
+        Disjunction disjunctionNot = Restrictions.disjunction();
+        boolean haveCondition = false;
+        if (temp.getDisableList().length() > 0) {
+
+            String[] listDms = temp.getDisableList().split(",");
+
+            for (String folder : listDms) {
+                //mustNot
+
+//                System.out.println("mustNot - "+folder);
+//                disjunction.add(Restrictions.not(Restrictions.like("parentKey", '฿' + folder + '฿', MatchMode.ANYWHERE)));
+                disjunctionNot.add(Restrictions.like("parentKey", '฿' + folder + '฿', MatchMode.ANYWHERE));
+            }
+            conjunction.add(Restrictions.not(disjunctionNot));
+        }
+
+        if (temp.getEnableList().length() > 0) {
+            String[] listDms = temp.getEnableList().split(",");
+
+            for (String folder : listDms) {
+                //must
+//                System.out.println("must - "+folder);
+//                disjunction.add(Restrictions.like("parentKey", "฿" + folder + "฿", MatchMode.ANYWHERE));
+                disjunction.add(Restrictions.like("parentKey", "฿" + folder + "฿", MatchMode.ANYWHERE));
+            }
+            conjunction.add(disjunction);
+            haveCondition = true;
+        }
+        if (!haveCondition) {
+            conjunction.add(Restrictions.eq("removedBy", -77));
+        }
+//        conjunction.add(disjunction);
+        DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
+        criteria.add(conjunction)
+                .addOrder(Order.asc("dmsFolderType"))
+                .addOrder(Order.asc("dmsFolderOrderId"));
+//        System.out.println("aaaaaaaaaaaaaaaaaaaaa");
+
+//            System.out.println("criteria - "+criteria);
+        return this.listByCriteria(criteria, offset, limit);
+    }
 }
