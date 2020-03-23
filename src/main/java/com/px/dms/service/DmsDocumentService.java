@@ -190,7 +190,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
             dmsDocumentModel.setDmsSearchId(t.getDmsSearchId());
             dmsDocumentModel.setFullPathName(t.getFullPathName());
             dmsDocumentModel.setBorrowStatus(t.getBorrowStatus());
-
+            dmsDocumentModel.setCheckInout(t.getCheckInout());
         }
 //        System.out.println("tranformToModel dmsDocumentModel = "+dmsDocumentModel.getDocumentName());
         return dmsDocumentModel;
@@ -254,6 +254,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
             dmsDocumentModel.setDmsSearchId(t.getDmsSearchId());
             dmsDocumentModel.setFullPathName(t.getFullPathName());
             dmsDocumentModel.setBorrowStatus(t.getBorrowStatus());
+            dmsDocumentModel.setCheckInout(t.getCheckInout());
 
             if (t.getCreatedBy() != 0 && t.getCreatedBy() != -1) {
                 userProfile = userProfileService.getById(t.getCreatedBy());

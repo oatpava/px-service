@@ -84,12 +84,12 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Path("v1/fileAttachs")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class FileAttachResource {
-
+    
     private static final Logger LOG = Logger.getLogger(FileAttachResource.class);
-
+    
     @Context
     HttpHeaders httpHeaders;
-
+    
     @ApiOperation(
             value = "Method for create FileAttach",
             notes = "สร้างข้อมูลเอกสารแนบ",
@@ -161,7 +161,7 @@ public class FileAttachResource {
             fileAttach.setLinkId(linkId);
             fileAttach.setReferenceId(0);
             fileAttach.setSecrets(secrets);
-
+            
             FileAttachService fileAttachService = new FileAttachService();
             fileAttach = fileAttachService.create(fileAttach);
             if (fileAttach != null) {
@@ -173,9 +173,9 @@ public class FileAttachResource {
                 LOG.debug("fileSave = " + fileSave);
                 tempFile = fileSave;
                 fileAttachService.saveFile(uploadInputStream, fileSave);
-
+                
                 fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
-
+                
                 File file = new File(fileSave);
                 fileAttach.setFileAttachSize(file.length());
                 fileAttach = fileAttachService.update(fileAttach);
@@ -193,11 +193,11 @@ public class FileAttachResource {
                     oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     oldFileAttach.setReferenceId(fileAttach.getId());
                     oldFileAttach = fileAttachService.update(oldFileAttach);
-
+                    
                     fileAttach.setOrderNo(oldFileAttach.getOrderNo());
                     fileAttach = fileAttachService.update(fileAttach);
                 }
-
+                
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String url = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
@@ -206,7 +206,7 @@ public class FileAttachResource {
                 newFileAttachModel.setUrl(url);
                 newFileAttachModel.setThumbnailUrl(thumbnailUrl);
                 responseData.put("data", newFileAttachModel);
-
+                
             }
             ///แคะ text
             DmsSearchModel result;
@@ -233,7 +233,7 @@ public class FileAttachResource {
                 File file = new File(tempFile);
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String sCurrentLine;
-
+                
                 while ((sCurrentLine = br.readLine()) != null) {
                     fulltext.add(sCurrentLine);
                 }
@@ -249,7 +249,7 @@ public class FileAttachResource {
                     String text = extractor.stripFields(rawText);
                     fulltext.add(text);
                 }
-
+                
             } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
                 POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(tempFile));
                 HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -306,7 +306,7 @@ public class FileAttachResource {
                 fulltext.add(parsedText);
                 pdDoc.close();
             }
-
+            
             if (searchId == null) {
                 DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
                 temp.setFileAttachName(attachName);
@@ -331,7 +331,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for create FileAttach from ActiveX",
             notes = "สร้างข้อมูลเอกสารแนบจาก ActiveX",
@@ -378,7 +378,7 @@ public class FileAttachResource {
             String str = new String(attachNameInput.getBytes(), StandardCharsets.UTF_8);
             String fileName = new String(attachNameInput.getBytes("iso-8859-1"), "UTF-8");
             fileName = attachNameInput;
-
+            
             InputStream uploadInputStream = formData.getBodyParts().get(0).getEntityAs(InputStream.class);
             ParamService paramService = new ParamService();
             FileAttach fileAttach = new FileAttach();
@@ -389,7 +389,7 @@ public class FileAttachResource {
             fileAttach.setLinkId(linkId);
             fileAttach.setReferenceId(referenceId);
             fileAttach.setSecrets(secrets);
-
+            
             FileAttachService fileAttachService = new FileAttachService();
             fileAttach = fileAttachService.create(fileAttach);
             if (fileAttach != null) {
@@ -404,7 +404,7 @@ public class FileAttachResource {
                 File file2 = new File(fileSave);
                 fileAttach.setFileAttachSize(file2.length());
                 fileAttach = fileAttachService.update(fileAttach);
-
+                
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String url2 = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url2);
@@ -413,7 +413,7 @@ public class FileAttachResource {
                 newFileAttachModel.setThumbnailUrl(thumbnailUrl);
                 newFileAttachModel.setUrlNoName(urlNoName);
                 responseData.put("data", newFileAttachModel);
-
+                
                 DmsSearchModel result;
                 int id = linkId;
                 DmsSearchService dmsSearchService = new DmsSearchService();
@@ -443,7 +443,7 @@ public class FileAttachResource {
                     File file = new File(url);
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     String sCurrentLine;
-
+                    
                     while ((sCurrentLine = br.readLine()) != null) {
                         fulltext.add(sCurrentLine);
                     }
@@ -459,12 +459,12 @@ public class FileAttachResource {
                     File file = new File(url);
                     NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
                     WordExtractor extractor = new WordExtractor(fs.getRoot());
-
+                    
                     for (String rawText : extractor.getParagraphText()) {
                         String text = extractor.stripFields(rawText);
                         fulltext.add(text);
                     }
-
+                    
                 }
                 if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
                     File file = new File(url);
@@ -475,10 +475,10 @@ public class FileAttachResource {
                     HSSFCell cell;
                     int rows; // No of rows
                     rows = sheet.getPhysicalNumberOfRows();
-
+                    
                     int cols = 0; // No of columns
                     int tmp = 0;
-
+                    
                     for (int i = 0; i < 10 || i < rows; i++) {
                         row = sheet.getRow(i);
                         if (row != null) {
@@ -500,7 +500,7 @@ public class FileAttachResource {
                             }
                         }
                     }
-
+                    
                 }
                 if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
                     File file = new File(url);
@@ -508,15 +508,15 @@ public class FileAttachResource {
 
                     InputStream ExcelFileToRead = new FileInputStream(url);
                     XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
-
+                    
                     XSSFWorkbook test = new XSSFWorkbook();
-
+                    
                     XSSFSheet sheet = wb.getSheetAt(0);
                     XSSFRow row;
                     XSSFCell cell;
-
+                    
                     Iterator rows = sheet.rowIterator();
-
+                    
                     while (rows.hasNext()) {
                         row = (XSSFRow) rows.next();
                         Iterator cells = row.cellIterator();
@@ -526,11 +526,11 @@ public class FileAttachResource {
                                 fulltext.add(cell.getStringCellValue());
                             } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
                             }
-
+                            
                         }
-
+                        
                     }
-
+                    
                 }
 //            }
 
@@ -547,7 +547,7 @@ public class FileAttachResource {
                     temp.setFullText(fulltext);
                     result = dmsSearchService.updateData(searchId, temp);
                 }
-
+                
             }
             status = Response.Status.CREATED;
             responseData.put("success", true);
@@ -558,7 +558,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for create FileAttach from Base64String",
             notes = "สร้างข้อมูลเอกสารแนบ",
@@ -611,7 +611,7 @@ public class FileAttachResource {
                 File file = new File(fileSave);
                 fileAttach.setFileAttachSize(file.length());
                 fileAttach = fileAttachService.update(fileAttach);
-
+                
                 FileAttachModel fileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String url = pathDocumentHttp + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
@@ -630,7 +630,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for get FileAttach by id",
             notes = "ขอข้อมูลเอกสารแนบ ด้วย รหัสเอกสารแนบ",
@@ -688,7 +688,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for update FileAttach.",
             notes = "แก้ไขข้อมูลเอกสารแนบ",
@@ -734,7 +734,7 @@ public class FileAttachResource {
                 fileAttach.setLinkId(fileAttachModel.getLinkId());
                 fileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 fileAttach = fileAttachService.update(fileAttach);
-
+                
                 String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
@@ -756,7 +756,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for update FileAttach with version control.",
             notes = "แก้ไขข้อมูลเอกสารแนบแบบมี version control",
@@ -802,7 +802,7 @@ public class FileAttachResource {
 //                fileAttach.setLinkId(fileAttachModel.getLinkId());
                 fileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 fileAttach = fileAttachService.update(fileAttach);
-
+                
                 FileAttach fileAttachVersionControl = new FileAttach();
                 fileAttachVersionControl.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 fileAttachVersionControl.setFileAttachName(fileDetail.getFileName());
@@ -811,7 +811,7 @@ public class FileAttachResource {
                 fileAttachVersionControl.setLinkId(fileAttachModel.getLinkId());
                 fileAttachVersionControl.setReferenceId(id);
                 fileAttachVersionControl = fileAttachService.create(fileAttachVersionControl);
-
+                
                 String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttachVersionControl);
                 String fileSave = fileAttachService.moveToTempPath(fileAttachVersionControl.getId());
@@ -833,7 +833,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for delete FileAttach by id.",
             notes = "ลบข้อมูลเอกสารแนบ",
@@ -881,7 +881,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for list FileAttach.",
             notes = "รายการเอกสารประกอบ",
@@ -959,7 +959,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for get PlugIn",
             notes = "ขอข้อมูล PlugIn",
@@ -993,13 +993,13 @@ public class FileAttachResource {
             ParamService paramService = new ParamService();
             String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
             String filePlugIn = pathDocumentHttp + File.separator + "PlugIn.EXE";
-
+            
             FileAttachService fileAttachService = new FileAttachService();
             FileAttach fileAttach = new FileAttach();
             FileAttachModel fileAttachModel = fileAttachService.tranformToModel(fileAttach);
             fileAttachModel.setUrl(filePlugIn);
             fileAttachModel.setThumbnailUrl(null);
-
+            
             status = Response.Status.OK;
             responseData.put("data", fileAttachModel);
             responseData.put("message", "");
@@ -1011,7 +1011,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for Download File",
             notes = "Download File",
@@ -1069,7 +1069,7 @@ public class FileAttachResource {
                 //                .setCharacterEncoding("utf-8")
                 .build();
     }
-
+    
     @ApiOperation(
             value = "Method for update FileAttach.",
             notes = "แก้ไขเอกสารแนบ",
@@ -1123,7 +1123,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for create FullText from file attach",
             notes = "FullText File",
@@ -1260,7 +1260,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for get FileAttach by id",
             notes = "ขอข้อมูลเอกสารแนบ ด้วย รหัสเอกสารแนบ",
@@ -1545,10 +1545,10 @@ public class FileAttachResource {
         responseData.put("message", "Folder by id not found in the database.");
         responseData.put("errorMessage", "");
         try {
-
+            
             FileAttachService fileAttachService = new FileAttachService();
             FileAttach fileAttach = fileAttachService.getById(fileAttachModel.getId());
-
+            
             if (fileAttach != null) {
                 if (ecms != 1) {
                     fileAttach.setSecrets(fileAttachModel.getSecrets());
@@ -1564,7 +1564,7 @@ public class FileAttachResource {
                 responseData.put("data ", fileAttachService.tranformToModel(fileAttach));
                 responseData.put("message", "FileAttach updeted by id success.");
             }
-
+            
             responseData.put("success", true);
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
@@ -1705,10 +1705,10 @@ public class FileAttachResource {
             int partPos = name.lastIndexOf(".");
             String nameAfterType[] = name.substring(partPos).split(",");// xxx.fileType,secret,refId (xxx.txt,1,144)
             name = name.substring(0, partPos);
-
+            
             ParamService paramService = new ParamService();
             FileAttachService fileAttachService = new FileAttachService();
-
+            
             FileAttach fileAttach = new FileAttach();
             fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
             fileAttach.setFileAttachName(name + nameAfterType[0]);
@@ -1727,26 +1727,26 @@ public class FileAttachResource {
                 LOG.debug("fileSave = " + fileSave);
                 tempFile = fileSave;
                 fileAttachService.saveFile(uploadInputStream, fileSave);
-
+                
                 fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
-
+                
                 File file = new File(fileSave);
                 fileAttach.setFileAttachSize(file.length());
                 fileAttach = fileAttachService.update(fileAttach);
                 LOG.debug("fileAttach Id = " + fileAttach.getId());
-
+                
                 if (Integer.parseInt(nameAfterType[2]) > 0) {//upload edit file
                     isAdd = false;
-
+                    
                     FileAttach oldFileAttach = fileAttachService.getByIdNotRemoved(Integer.parseInt(nameAfterType[2]));
                     oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     oldFileAttach.setReferenceId(fileAttach.getId());
                     oldFileAttach = fileAttachService.update(oldFileAttach);
-
+                    
                     fileAttach.setOrderNo(oldFileAttach.getOrderNo());
                     fileAttach = fileAttachService.update(fileAttach);
                 }
-
+                
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String url = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
@@ -1961,7 +1961,7 @@ public class FileAttachResource {
                 String searchId = content.getWfContentStr01();
                 if (searchId != null && !searchId.equalsIgnoreCase("")) {//null is ok -> not upload FA yet
                     WfContentESModel searchModel = wfSearchService.getData(searchId);
-
+                    
                     searchModel.setFolderId(content.getWfContentFolderId());
                     wfSearchService.updateData(searchId, searchModel);
                 }
@@ -1978,7 +1978,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for update FileAttach referenceId.",
             notes = "แก้ไขเอกสารแนบ เฉพาะ referenceId",
@@ -2018,13 +2018,13 @@ public class FileAttachResource {
             FileAttachService fileAttachService = new FileAttachService();
             FileAttach fileAttach = fileAttachService.getById(fileAttachId);
             FileAttach fileAttachNew = fileAttachService.getById(referenceId);
-
+            
             if (fileAttach != null) {
                 if (fileAttachNew != null) {
                     fileAttachNew.setOrderNo(fileAttach.getOrderNo());
                     fileAttachService.update(fileAttachNew);
                 }
-
+                
                 fileAttach.setReferenceId(referenceId);
 //                fileAttach.setReferenceId(fileAttachModel.getReferenceId());
                 fileAttach = fileAttachService.update(fileAttach);
@@ -2076,10 +2076,10 @@ public class FileAttachResource {
         responseData.put("message", "FileAttach not found in the database.");
         responseData.put("errorMessage", "");
         try {
-
+            
             FileAttachService fileAttachService = new FileAttachService();
             List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("wfe", linkId, "", "");
-
+            
             if (!listFileAttach.isEmpty()) {
                 if (outboxId == 0) {
                     for (FileAttach fileAttach : listFileAttach) {
@@ -2105,7 +2105,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for check have file .",
             notes = "ตรวจสอบว่าเอกสารแนบเกิดหรือยัง",
@@ -2145,7 +2145,7 @@ public class FileAttachResource {
             String pathFile = pathDocument + filePath;
             String data = "false";
             File f = new File(pathFile);
-
+            
             if (f.exists() && !f.isDirectory()) {
                 // found
                 data = "true";
@@ -2153,11 +2153,11 @@ public class FileAttachResource {
                 // not found
                 data = "false";
             }
-
+            
             status = Response.Status.OK;
             responseData.put("data", data);
             responseData.put("message", "FileAttach success.");
-
+            
             responseData.put("success", true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -2167,7 +2167,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for create FileAttach from Base64String V2",
             notes = "สร้างข้อมูลเอกสารแนบ V2 รับ attach เพิ่ม",
@@ -2198,15 +2198,21 @@ public class FileAttachResource {
         try {
             ParamService paramService = new ParamService();
             FileAttachService fileAttachService = new FileAttachService();
+
             FileAttach fileAttach = fileAttachService.getById(fileAttachBase64Model.getFileAttachId());
-            fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+ 
+//            System.out.println(" id - "+httpHeaders.getHeaderString("userID"));
+//            fileAttach.setCreatedBy(1);
+            fileAttach.setUpdatedBy(1);
+
             fileAttach.setFileAttachName(fileAttachBase64Model.getFileAttachName() + fileAttachBase64Model.getFileAttachType().toLowerCase());
+
             fileAttach.setFileAttachType(fileAttachBase64Model.getFileAttachType());
             fileAttach.setLinkType(fileAttachBase64Model.getLinkType());
             fileAttach.setLinkId(fileAttachBase64Model.getLinkId());
             fileAttach.setSecrets(fileAttachBase64Model.getSecrets());
             fileAttach.setReferenceId(fileAttachBase64Model.getReferenceId());
-
+            
             fileAttach = fileAttachService.update(fileAttach);
             if (fileAttach != null) {
                 String pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
@@ -2220,7 +2226,7 @@ public class FileAttachResource {
                 File file = new File(fileSave);
                 fileAttach.setFileAttachSize(file.length());
                 fileAttach = fileAttachService.update(fileAttach);
-
+                
                 FileAttachModel fileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String url = pathDocumentHttp + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
@@ -2239,7 +2245,7 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
     @ApiOperation(
             value = "Method for create FileAttach",
             notes = "สร้างข้อมูลเอกสารแนบ",
@@ -2262,7 +2268,7 @@ public class FileAttachResource {
             @PathParam("referenceId") int referenceId
     ) throws UnsupportedEncodingException {
         LOG.debug("createEmptyData...");
-
+        
         Gson gs = new GsonBuilder()
                 .setVersion(versionModel.getVersion())
                 .excludeFieldsWithoutExposeAnnotation()
@@ -2291,5 +2297,5 @@ public class FileAttachResource {
         responseData.put("message", "FileAttach created successfully.");
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
+    
 }
