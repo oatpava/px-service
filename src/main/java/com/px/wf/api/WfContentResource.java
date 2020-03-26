@@ -1504,19 +1504,25 @@ public class WfContentResource {
                     tableHeader = "ทะเบียนส่วนกลาง";
                 }
 
-                String dateBegin = "ตั้งแต่วันที่ ";
+                String dateHeader = " ";
                 String start = contentSearchModel.getWfContentContentStartDate();
-                if (start != null && !"".equals(start)) {
-                    dateBegin += contentService.getDateRange(start);
-                } else {
-                    dateBegin += "-";
-                }
-                String dateEnd = " ถึงวันที่ ";
                 String end = contentSearchModel.getWfContentContentEndDate();
-                if (end != null && !"".equals(end)) {
-                    dateEnd += contentService.getDateRange(end);
-                } else {
-                    dateEnd += "-";
+                boolean startNotNull = (start != null && !"".equals(start));
+                boolean endNotNull = (end != null && !"".equals(end));
+                if (startNotNull || endNotNull) {
+                    String dateBegin = "ตั้งแต่วันที่ ";
+                    if (startNotNull) {
+                        dateBegin += contentService.getDateRange(start);
+                    } else {
+                        dateBegin += "-";
+                    }
+                    String dateEnd = " ถึงวันที่ ";
+                    if (endNotNull) {
+                        dateEnd += contentService.getDateRange(end);
+                    } else {
+                        dateEnd += "-";
+                    }
+                    dateHeader = dateBegin + dateEnd;
                 }
 //                System.out.println(contentService.getDateRange("01/05/2560"));
 //                System.out.println("start " + start);
@@ -1547,7 +1553,7 @@ public class WfContentResource {
                     tempTable.setStr05(header);
                     tempTable.setText05(tableHeader);
                     //tempTable.setDate01(content.getCreatedDate());
-                    tempTable.setText06(dateBegin + dateEnd);
+                    tempTable.setText06(dateHeader);
                     tempTableService.create(tempTable);
                 }
             }
@@ -1640,19 +1646,25 @@ public class WfContentResource {
                     header = "รายงานสถานะการดำเนินงานหนังสือ-ยกเลิกเรื่อง";
                 }
 
-                String dateBegin = "ตั้งแต่วันที่ ";
+                String dateHeader = " ";
                 String start = contentSearchModel.getWfContentContentStartDate();
-                if (start != null && !"".equals(start)) {
-                    dateBegin += contentService.getDateRange(start);
-                } else {
-                    dateBegin += "-";
-                }
-                String dateEnd = " ถึงวันที่ ";
                 String end = contentSearchModel.getWfContentContentEndDate();
-                if (end != null && !"".equals(end)) {
-                    dateEnd += contentService.getDateRange(end);
-                } else {
-                    dateEnd += "-";
+                boolean startNotNull = (start != null && !"".equals(start));
+                boolean endNotNull = (end != null && !"".equals(end));
+                if (startNotNull || endNotNull) {
+                    String dateBegin = "ตั้งแต่วันที่ ";
+                    if (startNotNull) {
+                        dateBegin += contentService.getDateRange(start);
+                    } else {
+                        dateBegin += "-";
+                    }
+                    String dateEnd = " ถึงวันที่ ";
+                    if (endNotNull) {
+                        dateEnd += contentService.getDateRange(end);
+                    } else {
+                        dateEnd += "-";
+                    }
+                    dateHeader = dateBegin + dateEnd;
                 }
 
                 TempTableService tempTableService = new TempTableService();
@@ -1675,7 +1687,7 @@ public class WfContentResource {
                         tempTable.setStr05(header);
                         tempTable.setText05(tableHeader);
                         //tempTable.setDate01(content.getCreatedDate());
-                        tempTable.setText06(dateBegin + dateEnd);
+                        tempTable.setText06(dateHeader);
                         tempTableService.create(tempTable);
                     }
                 }
@@ -1802,19 +1814,25 @@ public class WfContentResource {
             int count22_f = 0;
             int count23_f = 0;
 
-            String dateBegin = "ตั้งแต่วันที่ ";
+            String dateHeader = " ";
             String start = contentSearchModel.getWfContentContentStartDate();
-            if (start != null && !"".equals(start)) {
-                dateBegin += contentService.getDateRange(start);
-            } else {
-                dateBegin += "-";
-            }
-            String dateEnd = " ถึงวันที่ ";
             String end = contentSearchModel.getWfContentContentEndDate();
-            if (end != null && !"".equals(end)) {
-                dateEnd += contentService.getDateRange(end);
-            } else {
-                dateEnd += "-";
+            boolean startNotNull = (start != null && !"".equals(start));
+            boolean endNotNull = (end != null && !"".equals(end));
+            if (startNotNull || endNotNull) {
+                String dateBegin = "ตั้งแต่วันที่ ";
+                if (startNotNull) {
+                    dateBegin += contentService.getDateRange(start);
+                } else {
+                    dateBegin += "-";
+                }
+                String dateEnd = " ถึงวันที่ ";
+                if (endNotNull) {
+                    dateEnd += contentService.getDateRange(end);
+                } else {
+                    dateEnd += "-";
+                }
+                dateHeader = dateBegin + dateEnd;
             }
             //System.out.println(dateBegin + dateEnd);
 
@@ -1879,7 +1897,7 @@ public class WfContentResource {
             tempTable.setInt08(count23_f);
             tempTable.setText02(name);
             tempTable.setText05(tableHeader);
-            tempTable.setText06(dateBegin + dateEnd);
+            tempTable.setText06(dateHeader);
             tempTableService.create(tempTable);
             status = Response.Status.OK;
             responseData.put("data", null);
