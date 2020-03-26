@@ -1,7 +1,6 @@
 package com.px.wf.service;
 
 import com.px.wf.daoimpl.WfContentDaoImpl;
-import com.px.admin.entity.UserProfile;
 import com.px.wf.entity.WfReserveContentNo;
 import com.px.wf.entity.WfContent;
 import com.px.wf.entity.WfFolder;
@@ -23,15 +22,36 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.px.mwp.service.WorkflowService;
 import com.px.share.entity.LogData;
 import com.px.share.entity.Param;
-import com.px.share.entity.TempTable;
 import com.px.share.service.LogDataService;
 import com.px.share.service.ParamService;
-import com.px.share.service.TempTableService;
 import com.px.mwp.entity.Workflow;
 import com.px.share.entity.FileAttach;
 import com.px.share.service.FileAttachService;
 import com.px.wf.model.WfContentSearchModel;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.Iterator;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
  *
@@ -1369,9 +1389,9 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         int bookNoFormat = Integer.parseInt(paramservice.getByParamName("BOOKNOFORMAT").getParamValue());
 
         //int chkRepeatBookNoMsg = 0;
-        int wfBookNumber = getMaxContentNo(null, folderId, year) -1;//cause created shared
+        int wfBookNumber = getMaxContentNo(null, folderId, year) - 1;//cause created shared
         String wfContentBookNo = convertBookNo(year, wfBookNumber, wfContentBookPoint, wfContentBookPre, bookNoFormat, wfFolderBookNoType, wfFolderAutorun);
-        
+
         HashMap<String, String> checkMaxBookNo = new HashMap<String, String>();
         //checkMaxBookNo.put("chkRepeatBookNoMsg", String.valueOf(chkRepeatBookNoMsg));
         checkMaxBookNo.put("wfContentBookNo", wfContentBookNo);
@@ -1379,9 +1399,119 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
 
         return checkMaxBookNo;
     }
-    
+
     public List<WfContent> listByBookNo(String bookNo, int folderId, int year) {
         return WfContentDaoImpl.listByBookNo(bookNo, folderId, year);
+    }
+
+    public String genFullText(int documentId) throws IOException {
+        String result;
+        List<String> listFileAttachName = new ArrayList<String>();
+        List<String> fulltext = new ArrayList<String>();
+        FileAttachService fileAttachService = new FileAttachService();
+        List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", documentId, "createdDate", "asc");
+        if (!listFileAttach.isEmpty()) {
+            for (FileAttach fileAttach : listFileAttach) {
+                String pathDocumentHttp = new ParamService().getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+                String url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+                listFileAttachName.add(fileAttach.getFileAttachName());
+                if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
+                    File file = new File(url);
+                    BufferedReader br = new BufferedReader(new FileReader(file));
+                    String sCurrentLine;
+                    while ((sCurrentLine = br.readLine()) != null) {
+                        fulltext.add(sCurrentLine);
+                    }
+                }
+                if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
+                    InputStream in = new FileInputStream(url);
+                    XWPFDocument doc = new XWPFDocument(in);
+                    XWPFWordExtractor ex = new XWPFWordExtractor(doc);
+                    String text = ex.getText();
+                    fulltext.add(text);
+                }
+                if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
+                    File file = new File(url);
+                    NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
+                    WordExtractor extractor = new WordExtractor(fs.getRoot());
+                    for (String rawText : extractor.getParagraphText()) {
+                        String text = extractor.stripFields(rawText);
+                        fulltext.add(text);
+                    }
+                }
+                if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
+                    File file = new File(url);
+                    POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+                    HSSFWorkbook wb = new HSSFWorkbook(fs);
+                    HSSFSheet sheet = wb.getSheetAt(0);
+                    HSSFRow row;
+                    HSSFCell cell;
+                    int rows; // No of rows
+                    rows = sheet.getPhysicalNumberOfRows();
+                    int cols = 0; // No of columns
+                    int tmp = 0;
+                    for (int i = 0; i < 10 || i < rows; i++) {
+                        row = sheet.getRow(i);
+                        if (row != null) {
+                            tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                            if (tmp > cols) {
+                                cols = tmp;
+                            }
+                        }
+                    }
+                    for (int r = 0; r < rows; r++) {
+                        row = sheet.getRow(r);
+                        if (row != null) {
+                            for (int c = 0; c < cols; c++) {
+                                cell = row.getCell((short) c);
+                                if (cell != null) {
+                                    fulltext.add(cell.toString());
+                                }
+                            }
+                        }
+                    }
+                }
+                if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
+                    InputStream ExcelFileToRead = new FileInputStream(url);
+                    XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+                    XSSFSheet sheet = wb.getSheetAt(0);
+                    XSSFRow row;
+                    XSSFCell cell;
+                    Iterator rows = sheet.rowIterator();
+                    while (rows.hasNext()) {
+                        row = (XSSFRow) rows.next();
+                        Iterator cells = row.cellIterator();
+                        while (cells.hasNext()) {
+                            cell = (XSSFCell) cells.next();
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                fulltext.add(cell.getStringCellValue());
+                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                            }
+                        }
+                    }
+                }
+                if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
+                    File myFile = new File(url);
+                    try (PDDocument doc = PDDocument.load(myFile)) {
+                        PDFTextStripper stripper = new PDFTextStripper();
+                        String text = stripper.getText(doc);
+                        fulltext.add(text);
+                    } catch (Exception ex) {
+                        System.out.println("can not read text in pdf file");
+                    }
+                }
+            }
+        }
+        String tmp = "";
+        tmp = tmp + listFileAttachName;
+        tmp = tmp + fulltext;
+        result = tmp.replaceAll("null", " ");
+        return result;
+    }
+
+    public List<WfContent> listByDocumentId(int documentId) {
+        checkNotNull(documentId, "documentId must not be null");
+        return WfContentDaoImpl.listByDocumentId(documentId);
     }
 
 }
