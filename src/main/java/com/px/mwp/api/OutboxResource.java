@@ -440,7 +440,6 @@ public class OutboxResource {
                     tempTable.setComputerName(httpHeaders.getHeaderString("clientIp"));
                     tempTable.setJobType(jobType);
 
-                    tempTable.setStr02(outboxModel.getOutboxStr03());
                     tempTable.setText01(outboxModel.getOutboxTo());
                     tempTable.setText02(outboxModel.getOutboxTitle());
                     tempTable.setStr01(outboxModel.getOutboxSendDate());
@@ -448,6 +447,7 @@ public class OutboxResource {
                     tempTable.setText04(outboxModel.getOutboxDescription());
                     tempTable.setText05(colHeader);
                     tempTable.setText06(dateBegin + dateEnd);
+                    tempTable.setStr03(outboxModel.getOutboxStr03());
                     tempTableService.create(tempTable);
                 }
             }

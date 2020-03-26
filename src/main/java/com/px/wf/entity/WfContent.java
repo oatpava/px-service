@@ -1,4 +1,3 @@
-
 package com.px.wf.entity;
 
 import com.px.share.entity.BaseEntity;
@@ -240,18 +239,21 @@ public class WfContent extends BaseEntity {
 
     @Column(name = "WF_CONTENT_DATE10", nullable = true)
     private LocalDateTime wfContentDate10;
-    
+
     @Column(name = "F_TRANS_MAIN_ID", columnDefinition = "int default '0'")
     private Integer fTransMainId;
-    
+
     @Column(name = "F_ORG_ID", columnDefinition = "int default '0'")
     private Integer fOrgId;
-     
+
     @Column(name = "F_TYPE", columnDefinition = "int default '0'")
     private Integer fType;
-    
+
     @Column(name = "CONVERT_ID", columnDefinition = "int default '0'")
     private Integer convertId;
+
+    @Column(name = "FULL_TEXT", columnDefinition = "TEXT")
+    private String fullText;
 
     public WfContent() {
     }
@@ -835,5 +837,12 @@ public class WfContent extends BaseEntity {
     public void setConvertId(Integer convertId) {
         this.convertId = convertId;
     }
-    
+
+    public String getFullText() {
+        return fullText;
+    }
+
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
+    }
 }

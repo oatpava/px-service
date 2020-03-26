@@ -935,6 +935,7 @@ public class InboxResource {
                     tempTable.setStr02(inboxModel.getInboxOpenFlag() == 0 ? "ยังไม่เปิดอ่าน" : "เปิดอ่านแล้ว");
                     tempTable.setText05(colHeader);
                     tempTable.setText06(dateBegin + dateEnd);
+                    tempTable.setStr03(inboxModel.getInboxStr03());
                     tempTableService.create(tempTable);
                 }
             }

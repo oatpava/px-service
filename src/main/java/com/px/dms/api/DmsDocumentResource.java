@@ -7,6 +7,8 @@ package com.px.dms.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.px.admin.entity.UserProfile;
+import com.px.admin.model.UserProfileModel;
 import com.px.admin.service.UserProfileService;
 import com.px.dms.entity.DmsDocument;
 import com.px.dms.entity.DmsFolder;
@@ -328,7 +330,7 @@ public class DmsDocumentResource {
                 }
 
 //                document.setRemovedBy(0);
-                 List<String> attachName = new ArrayList<String>();
+                List<String> attachName = new ArrayList<String>();
                 List<String> fulltext = new ArrayList<String>();
                 ParamService paramService = new ParamService();
                 FileAttachService fileAttachService = new FileAttachService();
@@ -453,27 +455,24 @@ public class DmsDocumentResource {
 //                String searchId = document.getDmsSearchId();
 //                String useElastic = paramService.getByParamName("USE_ELASTICSEARCH").getParamValue();
 
-              
-                   System.out.println("--search table--");
-                    //search table
-                    System.out.println("--------0001");
-                    String temp = dmsSearchService.changDocumntToSearchField(document);
-                    System.out.println("--------0002");
-                    temp = temp + attachName;
-                    temp = temp + fulltext;
-                    String temp1 = temp.replaceAll("null"," ");
-                    document.setFullText(temp1);
+                System.out.println("--search table--");
+                //search table
+                System.out.println("--------0001");
+                String temp = dmsSearchService.changDocumntToSearchField(document);
+                System.out.println("--------0002");
+                temp = temp + attachName;
+                temp = temp + fulltext;
+                String temp1 = temp.replaceAll("null", " ");
+                document.setFullText(temp1);
 
-                
                 System.out.println("---end");
-                
+
                 DmsDocument documentNew = dmsDocumentService.update(document);
                 //log update
                 if (document.getRemovedBy() != -1) {
                     dmsDocumentService.saveLogForUpdate(document, documentNew, httpHeaders.getHeaderString("clientIp"));
 
                 }
-
 
                 status = Response.Status.OK;
                 responseData.put("data", dmsDocumentService.tranformToModel(documentNew));
@@ -2215,23 +2214,21 @@ public class DmsDocumentResource {
 //                String searchId = document.getDmsSearchId();
 //                String useElastic = paramService.getByParamName("USE_ELASTICSEARCH").getParamValue();
 
-              
-                   System.out.println("--search table--");
-                    //search table
-                    System.out.println("--------0001");
-                    String temp = dmsSearchService.changDocumntToSearchField(document);
-                    System.out.println("--------0002");
-                    temp = temp + attachName;
-                    temp = temp + fulltext;
-                    String temp1 = temp.replaceAll("null"," ");
-                    document.setFullText(temp1);
+                System.out.println("--search table--");
+                //search table
+                System.out.println("--------0001");
+                String temp = dmsSearchService.changDocumntToSearchField(document);
+                System.out.println("--------0002");
+                temp = temp + attachName;
+                temp = temp + fulltext;
+                String temp1 = temp.replaceAll("null", " ");
+                document.setFullText(temp1);
 
-                
                 System.out.println("---end");
-                  document = dmsDocumentService.update(document);
-                   dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
+                document = dmsDocumentService.update(document);
+                dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
                 status = Response.Status.OK;
-                responseData.put("data", dmsDocumentService.tranformToModel(document));                 
+                responseData.put("data", dmsDocumentService.tranformToModel(document));
                 responseData.put("message", "dmsDocument updeted by id success.");
             } else {
                 status = Response.Status.OK;
@@ -2239,7 +2236,6 @@ public class DmsDocumentResource {
 //                dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
 //                document = dmsDocumentService.update(document);
 
-              
                 responseData.put("data", dmsDocumentService.tranformToModel(document));
                 responseData.put("message", "dmsDocument updeted by id success.");
             }
@@ -2522,6 +2518,128 @@ public class DmsDocumentResource {
             responseData.put("errorMessage", ex.getMessage());
         }
 
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "Method for CkeckIn CheckOut.",
+            notes = "จองเอกสาร",
+            responseContainer = "List",
+            response = DmsDocumentModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "CkeckIn CheckOut success."),
+        @ApiResponse(code = 404, message = "dmsDocument  not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/checkInOut/{id}")
+    public Response checkInOut(
+            @HeaderParam("userID") int userID,
+            @ApiParam(name = "id", value = "รหัสที่เก็บเอกสาร", required = true)
+            @PathParam("id") int id
+    ) {
+        LOG.info("list exp ...");
+        LOG.info("id = " + id);
+        Gson gs = new Gson();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "dmsDocument  not found in the database.");
+        responseData.put("errorMessage", "");
+        try {
+            DmsDocumentService DmsDocumentService = new DmsDocumentService();
+            DmsDocument doc = DmsDocumentService.getById(id);
+
+            if (doc != null) {
+                int dataReturn = 1; // 0 - ckeckOut 1-checkIn 
+                String dataReturnString = "";
+                if (doc.getCheckInout() > 0) {
+                    doc.setCheckInout(0);
+                    doc.setUpdatedBy(userID);
+                    DmsDocumentService.update(doc);
+                    dataReturn = 1;
+                    dataReturnString = "checkIn";
+                } else {
+
+                    doc.setCheckInout(userID);
+                    doc.setUpdatedBy(userID);
+                    DmsDocumentService.update(doc);
+                    dataReturn = 0;
+                    dataReturnString = "ckeckOut";
+                }
+
+                status = Response.Status.OK;
+                responseData.put("data", dataReturn);
+                responseData.put("dataReturnString", dataReturnString);
+                responseData.put("message", "CkeckIn CheckOut success.");
+            }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+//            log.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "Method for CkeckIn CheckOut user.",
+            notes = "ตรวจสอบผู้ใช้งาน",
+            responseContainer = "List",
+            response = DmsDocumentModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "CkeckIn CheckOut success."),
+        @ApiResponse(code = 404, message = "dmsDocument  not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/checkInOutUser/{id}")
+    public Response checkInOutUser(
+            @HeaderParam("userID") int userID,
+            @ApiParam(name = "id", value = "checkInOutUser", required = true)
+            @PathParam("id") int id
+    ) {
+        LOG.info("list exp ...");
+        LOG.info("id = " + id);
+        Gson gs = new Gson();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "dmsDocument  not found in the database.");
+        responseData.put("errorMessage", "");
+        try {
+//            DmsDocumentService DmsDocumentService = new DmsDocumentService();
+//            DmsDocument doc = DmsDocumentService.getById(id);
+
+            UserProfileService userProfileService = new UserProfileService();
+            List<UserProfile> listUserProfile = userProfileService.listByUserId(id, "createdDate", "desc");
+            ArrayList<UserProfileModel> listUserProfileModel = new ArrayList<>();
+            int stutas = 0; // 0 = owner , 1 = not owner
+            String name = "";
+            String dataString = "owner";
+            if (userID != id) {
+                dataString = "not owner";
+                 stutas = 1;
+                if (!listUserProfile.isEmpty()) {              
+                    name = listUserProfile.get(0).getUserProfileFullName();
+                }
+
+            }
+
+            status = Response.Status.OK;
+            responseData.put("stutas", stutas);
+            responseData.put("name", name);
+            responseData.put("message", dataString);
+            responseData.put("success", true);
+        } catch (Exception ex) {
+//            log.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
