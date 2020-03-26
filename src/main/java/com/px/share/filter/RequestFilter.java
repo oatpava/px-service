@@ -88,7 +88,7 @@ public class RequestFilter implements ContainerRequestFilter {
                 && !path.startsWith("v1/users/checkEmail")
                 && !path.startsWith("v1/users/changePass")
                 && !path.startsWith("v1/users/sendEmail")
-                && !path.startsWith("swagger.json")
+                && !path.startsWith("swagger.json")                 
                 && !path.startsWith("v1/users/getMocktoken")) {
             if (token != null) {
                 try {

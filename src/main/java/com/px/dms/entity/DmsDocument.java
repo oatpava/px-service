@@ -167,6 +167,9 @@ public class DmsDocument extends BaseEntity {
 
     @Column(name = "BORROW_STATUS", nullable = true, columnDefinition = "int default '0'")
     private int borrowStatus;
+    
+     @Column(name = "CHECK_IN_OUT", nullable = true, columnDefinition = "int default '0'")
+    private int checkInout;
 
     @Column(name = "FULL_TEXT", columnDefinition = "TEXT")
     private String fullText;
@@ -572,6 +575,16 @@ public class DmsDocument extends BaseEntity {
     public void setFullText(String fullText) {
         this.fullText = fullText;
     }
+
+    public int getCheckInout() {
+        return checkInout;
+    }
+
+    public void setCheckInout(int checkInout) {
+        this.checkInout = checkInout;
+    }
+    
+    
     
     
 

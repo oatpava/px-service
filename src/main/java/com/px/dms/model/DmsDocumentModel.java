@@ -33,13 +33,13 @@ public class DmsDocumentModel extends VersionModel {
     @Expose
     @Since(1.0)
     private int id;
-    
+
     @XmlElement(name = "createdDate")
     @ApiParam(name = "createdDate", example = "01/01/2559 07:30:45", value = "วันที่สร้าง", defaultValue = "01/01/2559 07:30:45", hidden = true, required = false)
     @Since(1.0)
     @Expose
     private String createdDate;
-    
+
     @XmlElement(name = "createdBy")
     @ApiParam(name = "createdBy", example = "0", value = "id ผู้สร้าง", required = false)
     @Since(1.0)
@@ -57,8 +57,8 @@ public class DmsDocumentModel extends VersionModel {
     @Since(1.0)
     @Expose
     private int removedBy;
-    
-     @XmlElement(name = "updatedDate")
+
+    @XmlElement(name = "updatedDate")
     @ApiParam(name = "updatedDate", example = "01/01/2559 07:30:45", value = "วันที่สร้าง", defaultValue = "01/01/2559 07:30:45", hidden = true, required = false)
     @Since(1.0)
     @Expose
@@ -69,7 +69,7 @@ public class DmsDocumentModel extends VersionModel {
     @Since(1.0)
     @Expose
     private int updatedBy;
-    
+
     @XmlElement(name = "documentPublicDate")
     @ApiParam(name = "documentPublicDate", example = "01/01/2559 07:30:45", value = "documentPublicDate", defaultValue = "01/01/2559 07:30:45", hidden = true, required = false)
     @Expose
@@ -81,7 +81,7 @@ public class DmsDocumentModel extends VersionModel {
     @Expose
     @Since(1.0)
     private String documentExpireDate;
-    
+
     @XmlElement(name = "dmsDocumentPreExpireDate")
     @ApiParam(name = "dmsDocumentPreExpireDate", example = "01/01/2559 07:30:45", value = "วันก่อนวันหมดอายุ", defaultValue = "01/01/2559 07:30:45", hidden = true, required = false)
     @Expose
@@ -225,19 +225,19 @@ public class DmsDocumentModel extends VersionModel {
     @Since(1.0)
     @Expose
     private String documentText03;
-    
+
     @XmlElement(name = "documentText04")
     @ApiParam(name = "documentText04", value = "documentText04", required = false)
     @Since(1.0)
     @Expose
     private String documentText04;
-    
+
     @XmlElement(name = "documentText05")
     @ApiParam(name = "documentText05", value = "documentText05", required = false)
     @Since(1.0)
     @Expose
     private String documentText05;
-    
+
     @XmlElement(name = "documentInt01")
     @ApiParam(name = "documentInt01", value = "documentInt01", required = false)
     @Since(1.0)
@@ -285,64 +285,66 @@ public class DmsDocumentModel extends VersionModel {
     @Since(1.0)
     @Expose
     private int expNumber;
-    
-    
+
     @XmlElement(name = "userProfileCreate")
     @ApiParam(name = "userProfileCreate", value = "userProfileCreate", required = false)
     @Expose
     @Since(1.0)
     private UserProfileModel userProfileCreate;
-    
+
     @XmlElement(name = "userProfileUpdate")
     @ApiParam(name = "userProfileUpdate", value = "userProfileUpdate", required = false)
     @Expose
     @Since(1.0)
     private UserProfileModel userProfileUpdate;
-    
+
     @XmlElement(name = "userProfileDel")
     @ApiParam(name = "userProfileDel", value = "userProfileDel", required = false)
     @Expose
     @Since(1.0)
     private UserProfileModel userProfileDel;
-    
-    
+
     @XmlElement(name = "isExp")
     @ApiParam(name = "isExp", example = "N", value = "Y= เอกสารหมดอายุ,N= เอกสารยังไม่ไหมอายุ", hidden = true, required = false)
     @Expose
     @Since(1.0)
     private String isExp;
-    
+
     @XmlElement(name = "wfTypeId")
     @ApiParam(name = "wfTypeId", value = "wfTypeId", required = false)
     @Since(1.0)
     @Expose
     private int wfTypeId;
-    
+
     @XmlElement(name = "flowId")
     @ApiParam(name = "flowId", value = "flowId", required = false)
     @Since(1.0)
     @Expose
     private int flowId;
-    
+
     @XmlElement(name = "dmsSearchId")
     @ApiParam(name = "dmsSearchId", value = "dmsSearchId", required = false)
     @Since(1.0)
     @Expose
     private String dmsSearchId;
-    
+
     @XmlElement(name = "fullPathName")
     @ApiParam(name = "fullPathName", value = "fullPathName", required = false)
     @Since(1.0)
     @Expose
     private String fullPathName;
-    
+
     @XmlElement(name = "borrowStatus")
     @ApiParam(name = "borrowStatus", value = "borrowStatus", required = false)
     @Since(1.0)
     @Expose
     private int borrowStatus;
-    
-    
+
+    @XmlElement(name = "checkInout")
+    @ApiParam(name = "checkInout", value = "checkInout", required = false)
+    @Since(1.0)
+    @Expose
+    private int checkInout;
 
     public DmsDocumentModel() {
     }
@@ -364,14 +366,12 @@ public class DmsDocumentModel extends VersionModel {
     public void setDocumentPublicDate(String documentPublicDate) {
         this.documentPublicDate = documentPublicDate;
     }
-       
-       
 
     public String getDocumentExpireDate() {
         return documentExpireDate;
     }
 
-    @ApiModelProperty(name = "documentExpireDate", example = "01/01/2559 07:30:45", dataType = "string", value = "documentExpireDate",  required = false)
+    @ApiModelProperty(name = "documentExpireDate", example = "01/01/2559 07:30:45", dataType = "string", value = "documentExpireDate", required = false)
     public void setDocumentExpireDate(String documentExpireDate) {
         this.documentExpireDate = documentExpireDate;
     }
@@ -407,7 +407,7 @@ public class DmsDocumentModel extends VersionModel {
         return documentDate04;
     }
 
-    @ApiModelProperty(name = "documentDate04", example = "01/01/2559 07:30:45", dataType = "string", value = "documentDate04",  required = false)
+    @ApiModelProperty(name = "documentDate04", example = "01/01/2559 07:30:45", dataType = "string", value = "documentDate04", required = false)
     public void setDocumentDate04(String documentDate04) {
         this.documentDate04 = documentDate04;
     }
@@ -591,7 +591,7 @@ public class DmsDocumentModel extends VersionModel {
     public void setDocumentText04(String documentText04) {
         this.documentText04 = documentText04;
     }
-    
+
     public String getDocumentText05() {
         return documentText05;
     }
@@ -672,8 +672,8 @@ public class DmsDocumentModel extends VersionModel {
     public void setExpNumber(int expNumber) {
         this.expNumber = expNumber;
     }
-    
-     public String getCreatedDate() {
+
+    public String getCreatedDate() {
         return createdDate;
     }
 
@@ -695,7 +695,7 @@ public class DmsDocumentModel extends VersionModel {
         return createdBy;
     }
 
-     @ApiModelProperty(name = "createdBy", example = "0", dataType = "int", value = "createBy", required = false)
+    @ApiModelProperty(name = "createdBy", example = "0", dataType = "int", value = "createBy", required = false)
     public void setCreatedBy(int createdBy) {
         this.createdBy = createdBy;
     }
@@ -709,7 +709,6 @@ public class DmsDocumentModel extends VersionModel {
         this.removedBy = removedBy;
     }
 
-    
     public String getUpdatedDate() {
         return updatedDate;
     }
@@ -759,7 +758,7 @@ public class DmsDocumentModel extends VersionModel {
         return dmsDocumentPreExpireDate;
     }
 
-    @ApiModelProperty(name = "dmsDocumentPreExpireDate", example = "01/01/2559 07:30:45", dataType = "string", value = "วันก่อนวันหมดอายุ",  required = false)
+    @ApiModelProperty(name = "dmsDocumentPreExpireDate", example = "01/01/2559 07:30:45", dataType = "string", value = "วันก่อนวันหมดอายุ", required = false)
     public void setDmsDocumentPreExpireDate(String dmsDocumentPreExpireDate) {
         this.dmsDocumentPreExpireDate = dmsDocumentPreExpireDate;
     }
@@ -768,7 +767,7 @@ public class DmsDocumentModel extends VersionModel {
         return isExp;
     }
 
-     @ApiModelProperty(name = "isExp", example = "N", dataType = "string", value = "Y= เอกสารหมดอายุ,N= เอกสารยังไม่ไหมอายุ", required = false)
+    @ApiModelProperty(name = "isExp", example = "N", dataType = "string", value = "Y= เอกสารหมดอายุ,N= เอกสารยังไม่ไหมอายุ", required = false)
     public void setIsExp(String isExp) {
         this.isExp = isExp;
     }
@@ -786,7 +785,7 @@ public class DmsDocumentModel extends VersionModel {
         return flowId;
     }
 
-     @ApiModelProperty(name = "flowId", example = "1", dataType = "int", value = "work flow Id", required = false)
+    @ApiModelProperty(name = "flowId", example = "1", dataType = "int", value = "work flow Id", required = false)
     public void setFlowId(int flowId) {
         this.flowId = flowId;
     }
@@ -795,7 +794,7 @@ public class DmsDocumentModel extends VersionModel {
         return dmsSearchId;
     }
 
-     @ApiModelProperty(name = "dmsSearchId", example = "111", dataType = "string", value = "dmsSearchId", required = false)
+    @ApiModelProperty(name = "dmsSearchId", example = "111", dataType = "string", value = "dmsSearchId", required = false)
     public void setDmsSearchId(String dmsSearchId) {
         this.dmsSearchId = dmsSearchId;
     }
@@ -813,24 +812,19 @@ public class DmsDocumentModel extends VersionModel {
         return borrowStatus;
     }
 
-     @ApiModelProperty(name = "borrowStatus", example = "0", dataType = "int", value = "borrowStatus 0 = ว่าง , 1 = ถูกยืม", required = false)
+    @ApiModelProperty(name = "borrowStatus", example = "0", dataType = "int", value = "borrowStatus 0 = ว่าง , 1 = ถูกยืม", required = false)
     public void setBorrowStatus(int borrowStatus) {
         this.borrowStatus = borrowStatus;
     }
-    
-    
-    
-    
-    
-    
-    
 
-   
+    public int getCheckInout() {
+        return checkInout;
+    }
+  @ApiModelProperty(name = "checkInout", example = "0", dataType = "int", value = "checkInout 0 = ว่าง , userID = ถูกยืม", required = false)
+    public void setCheckInout(int checkInout) {
+        this.checkInout = checkInout;
+    }
     
     
-    
-    
-    
-
 
 }

@@ -427,7 +427,8 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         String userName = wfContentSearchModel.getUserName();
         String wfContentDescription = wfContentSearchModel.getWfContentDescription();
         String wfContentStr03 = wfContentSearchModel.getWfContentStr03();
-        int contentTimeRange = wfContentSearchModel.getContentTimeRange();
+        //int contentTimeRange = wfContentSearchModel.getContentTimeRange();
+        String fullText = wfContentSearchModel.getFileAttachText();
 
         conjunction.add(Restrictions.eq("this.removedBy", 0));
         if (folderId > 0) {
@@ -492,6 +493,10 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
 //                case 1: 
 //            }
 //        }
+        if (fullText != null && fullText != "") {
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.fullText", fullText, null, "&", "|", "!", "^", null));
+
+        }
         return conjunction;
     }
 
@@ -555,5 +560,14 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         criteria.add(conjunction);
         criteria.addOrder(Order.desc("orderNo"));
         return this.listByCriteria(criteria, 0, 1);
+    }
+
+    public List<WfContent> listByDocumentId(int documentId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("wfDocumentId", documentId));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfContent.class);
+        criteria.add(conjunction);
+        return this.listByCriteria(criteria);
     }
 }
