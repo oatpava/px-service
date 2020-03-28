@@ -414,19 +414,25 @@ public class OutboxResource {
             int usereProfileFolderId = userProfileFolderService.getByUserProfileId(Integer.parseInt(httpHeaders.getHeaderString("userID")), "O").getId();
 
             String colHeader = "เจ้าหน้าที่: " + new UserProfileService().getById(Integer.parseInt(httpHeaders.getHeaderString("userID"))).getUserProfileFullName();
-            String dateBegin = "ตั้งแต่วันที่ ";
+            String dateHeader = " ";
             String start = outboxSearchModel.getOutboxStartDate();
-            if (start != null && !"".equals(start)) {
-                dateBegin += outboxService.getDateRange(start);
-            } else {
-                dateBegin += "-";
-            }
-            String dateEnd = " ถึงวันที่ ";
             String end = outboxSearchModel.getOutboxEndDate();
-            if (end != null && !"".equals(end)) {
-                dateEnd += outboxService.getDateRange(end);
-            } else {
-                dateEnd += "-";
+            boolean startNotNull = (start != null && !"".equals(start));
+            boolean endNotNull = (end != null && !"".equals(end));
+            if (startNotNull || endNotNull) {
+                String dateBegin = "ตั้งแต่วันที่ ";
+                if (startNotNull) {
+                    dateBegin += outboxService.getDateRange(start);
+                } else {
+                    dateBegin += "-";
+                }
+                String dateEnd = " ถึงวันที่ ";
+                if (endNotNull) {
+                    dateEnd += outboxService.getDateRange(end);
+                } else {
+                    dateEnd += "-";
+                }
+                dateHeader = dateBegin + dateEnd;
             }
 
             List<Outbox> listOutbox = outboxService.searchUserOutboxByModel(usereProfileFolderId, outboxSearchModel, listOptionModel.getSort(), listOptionModel.getDir());
@@ -446,7 +452,7 @@ public class OutboxResource {
                     tempTable.setText03(outboxModel.getOutboxNote());
                     tempTable.setText04(outboxModel.getOutboxDescription());
                     tempTable.setText05(colHeader);
-                    tempTable.setText06(dateBegin + dateEnd);
+                    tempTable.setText06(dateHeader);
                     tempTable.setStr03(outboxModel.getOutboxStr03());
                     tempTableService.create(tempTable);
                 }
