@@ -518,7 +518,7 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
             conjunction.add(Restrictions.like("this.outboxStr04", outboxStr04, MatchMode.ANYWHERE));
         }
         if (outboxStr03 != null && outboxStr03 != "") {
-            conjunction.add(Restrictions.like("this.outboxStr03", outboxStr04, MatchMode.ANYWHERE));
+            conjunction.add(Restrictions.like("this.outboxStr03", outboxStr03, MatchMode.ANYWHERE));
         }
         return conjunction;
     }
