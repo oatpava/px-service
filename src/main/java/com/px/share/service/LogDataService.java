@@ -92,7 +92,7 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
             if(userCreated <= 0) {
                 userCreated = 1;
             }
-            logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+            logDataModel.setUserProfileName(userProfileService.listByUserId(userCreated, "createdDate", "asc").get(0).getUserProfileFullName());
 //            if(logData.getType() == 4){
 //                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
 //            }else{

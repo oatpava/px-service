@@ -977,7 +977,7 @@ public class WfContentResource {
             response = WfContentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "content list success."),
+        @ApiResponse(code = 200, message = "search content success."),
         @ApiResponse(code = 404, message = "content list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
@@ -1000,7 +1000,7 @@ public class WfContentResource {
         Response.Status status = Response.Status.NOT_FOUND;
         responseData.put("data", null);
         responseData.put("success", false);
-        responseData.put("message", "inbox list not found in the database.");
+        responseData.put("message", "content list not found in the database.");
         responseData.put("errorMessage", "");
         try {
             WfContentService contentService = new WfContentService();
@@ -1010,20 +1010,16 @@ public class WfContentResource {
             listWfContent = contentService.searchByModel(contentSearchModel.getWfContentFolderId(), contentSearchModel, listOptionModel.getSort(), listOptionModel.getDir());
             if (!listWfContent.isEmpty()) {
                 for (WfContent content : listWfContent) {
-                    WfContentModel_groupWfContentAndWorkflowfinish tmp = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, true, true);
-                    if (contentSearchModel.getStatus() > 0) {
-                        if (tmp.getStatus() == contentSearchModel.getStatus()) {
-                            listWfContentModel.add(tmp);
-                        }
-                    } else {
-                        listWfContentModel.add(tmp);
+                    WfContentModel_groupWfContentAndWorkflowfinish contentModel = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, true, true);
+                    if (contentModel.getStatus() == contentSearchModel.getStatus()) {
+                        listWfContentModel.add(contentModel);
                     }
                 }
                 listWfContentModel.trimToSize();
             }
             status = Response.Status.OK;
             responseData.put("data", listWfContentModel);
-            responseData.put("message", "inbox list success.");
+            responseData.put("message", "search content success.");
             responseData.put("success", true);
 
         } catch (Exception ex) {

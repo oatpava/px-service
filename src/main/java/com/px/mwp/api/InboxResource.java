@@ -901,19 +901,25 @@ public class InboxResource {
 
                 colHeader = "เจ้าหน้าที่: " + new UserProfileService().getById(inboxSearchModel.getUserId()).getUserProfileFullName();
             }
-            String dateBegin = "ตั้งแต่วันที่ ";
+            String dateHeader = " ";
             String start = inboxSearchModel.getInboxStartDate();
-            if (start != null && !"".equals(start)) {
-                dateBegin += inboxService.getDateRange(start);
-            } else {
-                dateBegin += "-";
-            }
-            String dateEnd = " ถึงวันที่ ";
             String end = inboxSearchModel.getInboxEndDate();
-            if (end != null && !"".equals(end)) {
-                dateEnd += inboxService.getDateRange(end);
-            } else {
-                dateEnd += "-";
+            boolean startNotNull = (start != null && !"".equals(start));
+            boolean endNotNull = (end != null && !"".equals(end));
+            if (startNotNull || endNotNull) {
+                String dateBegin = "ตั้งแต่วันที่ ";
+                if (startNotNull) {
+                    dateBegin += inboxService.getDateRange(start);
+                } else {
+                    dateBegin += "-";
+                }
+                String dateEnd = " ถึงวันที่ ";
+                if (endNotNull) {
+                    dateEnd += inboxService.getDateRange(end);
+                } else {
+                    dateEnd += "-";
+                }
+                dateHeader = dateBegin + dateEnd;
             }
 
             List<Inbox> listInbox = inboxService.searchInboxByModel(search, folderId, inboxSearchModel, listOptionModel.getSort(), listOptionModel.getDir());
@@ -934,7 +940,7 @@ public class InboxResource {
                     tempTable.setText04(inboxModel.getInboxDescription());
                     tempTable.setStr02(inboxModel.getInboxOpenFlag() == 0 ? "ยังไม่เปิดอ่าน" : "เปิดอ่านแล้ว");
                     tempTable.setText05(colHeader);
-                    tempTable.setText06(dateBegin + dateEnd);
+                    tempTable.setText06(dateHeader);
                     tempTable.setStr03(inboxModel.getInboxStr03());
                     tempTableService.create(tempTable);
                 }
@@ -950,7 +956,7 @@ public class InboxResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "updateข้อมูลการส่งกล่องหนังสือเข้า",
             notes = "uodateข้อมูลการส่งกล่องหนังสือเข้า",
