@@ -147,11 +147,11 @@ public class WfContentSearchModel extends VersionModel {
     @Expose
     private String wfContentStr03;
 
-    @XmlElement(name = "contentTimeRange")
-    @ApiParam(name = "contentTimeRange", value = "contentTimeRange", required = true)
+    @XmlElement(name = "sendingStatus")
+    @ApiParam(name = "sendingStatus", value = "สถานะการส่ง", required = true)
     @Since(1.0)
     @Expose
-    private int contentTimeRange;
+    private int sendingStatus;
 
     public int getWfContentFolderId() {
         return wfContentFolderId;
@@ -314,12 +314,12 @@ public class WfContentSearchModel extends VersionModel {
         this.wfContentStr03 = wfContentStr03;
     }
 
-    public int getContentTimeRange() {
-        return contentTimeRange;
+    public int getSendingStatus() {
+        return sendingStatus;
     }
 
-    public void seContentTimeRange(int contentTimeRange) {
-        this.contentTimeRange = contentTimeRange;
+    public void seะtSendingStatuse(int sendingStatus) {
+        this.sendingStatus = sendingStatus;
     }
 
 }
