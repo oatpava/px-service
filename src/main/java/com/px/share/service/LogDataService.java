@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.log4j.Logger;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.px.admin.entity.UserProfile;
 import com.px.share.daoimpl.LogDataDaoImpl;
 import com.px.share.entity.LogData;
 import com.px.share.entity.RecycleBin;
@@ -92,7 +93,9 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
             if(userCreated <= 0) {
                 userCreated = 1;
             }
-            logDataModel.setUserProfileName(userProfileService.listByUserId(userCreated, "createdDate", "asc").get(0).getUserProfileFullName());
+            List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
+            String name = (listUserProfile != null) ? listUserProfile.get(0).getUserProfileFullName() : "-";
+            logDataModel.setUserProfileName(name);
 //            if(logData.getType() == 4){
 //                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
 //            }else{
