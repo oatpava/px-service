@@ -94,7 +94,7 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
                 userCreated = 1;
             }
             List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
-            String name = (listUserProfile != null) ? listUserProfile.get(0).getUserProfileFullName() : "-";
+            String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
             logDataModel.setUserProfileName(name);
 //            if(logData.getType() == 4){
 //                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
