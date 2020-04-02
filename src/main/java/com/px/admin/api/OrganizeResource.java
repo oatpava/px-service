@@ -420,23 +420,21 @@ public class OrganizeResource {
             OrganizeService organizeService = new OrganizeService();
             if (id != 0) {
                 Organize organize = organizeService.getById(id);
-                if (!code.equals(organize.getOrganizeCode()) || !name.equals(organize.getOrganizeName())) {
-                    boolean result = organizeService.checkDup(code,name);
-                    if (result) {
-                        authenticationModel = new AuthenticationModel(result);
-                        responseData.put("message", "");
-                    }
+                if (code.equalsIgnoreCase(organize.getOrganizeCode()) && name.equalsIgnoreCase(organize.getOrganizeName())) {
+                    authenticationModel = new AuthenticationModel(true);
                 } else {
                     authenticationModel = new AuthenticationModel(false);
                 }
                 responseData.put("data", authenticationModel);
-            } else {
-                boolean result = organizeService.checkDup(code,name);
-                if (result) {
-                    authenticationModel = new AuthenticationModel(result);
-                    responseData.put("data", authenticationModel);
-                    responseData.put("message", "");
+                responseData.put("message", "");
+            } else {               
+                if (organizeService.checkDup(code, null)) {
+                    authenticationModel = new AuthenticationModel(true);
+                } else {
+                   authenticationModel = new AuthenticationModel(organizeService.checkDup(null, name)); 
                 }
+                responseData.put("data", authenticationModel);
+                responseData.put("message", "");
             }
             status = Response.Status.OK;
             responseData.put("success", true);

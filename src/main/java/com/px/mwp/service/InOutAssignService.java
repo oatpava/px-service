@@ -120,10 +120,15 @@ public class InOutAssignService implements GenericService<InOutAssign, InOutAssi
         inOutAssignModel.setInOutAssignStartDate(Common.localDateTimeToString(inOutAssign.getInOutAssignStartDate()));
         inOutAssignModel.setInOutAssignEndDate(Common.localDateTimeToString(inOutAssign.getInOutAssignEndDate()));
         if (inOutAssign.getInOutAssignOwnerType() == 0) {
-            inOutAssignModel.setOwnerName(new UserProfileService().getById(inOutAssign.getInOutAssignOwnerId()).getUserProfileFullName());
+            UserProfile userProfile = new UserProfileService().getById(inOutAssign.getInOutAssignOwnerId());
+            inOutAssignModel.setOwnerName(userProfile.getUserProfileFullName());
         } else {
             inOutAssignModel.setOwnerName(new StructureService().getById(inOutAssign.getInOutAssignOwnerId()).getStructureName());
         }
+        UserProfile userProfile = new UserProfileService().getById(inOutAssign.getInOutAssignAssignId());
+        inOutAssignModel.setAssignName(userProfile.getUserProfileFullName());
+        inOutAssignModel.setAssignStructure(userProfile.getStructure().getStructureName());
+        inOutAssignModel.setAssignPosition(userProfile.getPosition().getPositionName());
         return inOutAssignModel;
     }
 

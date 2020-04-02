@@ -76,11 +76,11 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
             logDataModel = new LogDataModel();
             logDataModel.setId(logData.getId());            
             if(logData.getType()==1){
-                logType = "เพิ่ม "+logData.getDescription();
+                logType = logData.getDescription();
             }else if(logData.getType()==2){
-                logType = "แก้ไข "+logData.getDescription();
+                logType = logData.getDescription();
             }else if(logData.getType()==3){
-                logType = "ลบ "+logData.getDescription();
+                logType = logData.getDescription();
             }else{
                 logType = logData.getDescription();
             }
@@ -93,9 +93,13 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
             if(userCreated <= 0) {
                 userCreated = 1;
             }
-            List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
-            String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
-            logDataModel.setUserProfileName(name);
+            if (!logData.getModuleName().equals(LogData.MODULE_ADMIN)) {
+                logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+            } else {
+                List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
+                String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
+                logDataModel.setUserProfileName(name);
+            }
 //            if(logData.getType() == 4){
 //                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
 //            }else{
