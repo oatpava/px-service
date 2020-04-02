@@ -1011,7 +1011,7 @@ public class WfContentResource {
             if (!listWfContent.isEmpty()) {
                 for (WfContent content : listWfContent) {
                     WfContentModel_groupWfContentAndWorkflowfinish contentModel = contentService.tranformToModelGroupWfContentAndWorkflowfinish(content, true, true);
-                    if (contentModel.getStatus() == contentSearchModel.getStatus()) {
+                    if (contentModel.getStatus() == 0 || contentModel.getStatus() == contentSearchModel.getStatus()) {
                         listWfContentModel.add(contentModel);
                     }
                 }
