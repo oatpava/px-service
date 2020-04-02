@@ -92,6 +92,18 @@ public class InOutAssignModel extends VersionModel {
     @Expose
     private String ownerName;
 
+    @XmlElement(name = "assignName")
+    @Expose
+    private String assignName;
+
+    @XmlElement(name = "assignStructure")
+    @Expose
+    private String assignStructure;
+
+    @XmlElement(name = "assignPosition")
+    @Expose
+    private String assignPosition;
+
     public InOutAssignModel() {
     }
 
@@ -223,6 +235,30 @@ public class InOutAssignModel extends VersionModel {
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+    }
+
+    public String getAssignName() {
+        return assignName;
+    }
+
+    public void setAssignName(String assignName) {
+        this.assignName = assignName;
+    }
+
+    public String getAssignStructure() {
+        return assignStructure;
+    }
+
+    public void setAssignStructure(String assignStructure) {
+        this.assignStructure = assignStructure;
+    }
+
+    public String getAssignPosition() {
+        return assignPosition;
+    }
+
+    public void setAssignPosition(String assignPosition) {
+        this.assignPosition = assignPosition;
     }
 
 }
