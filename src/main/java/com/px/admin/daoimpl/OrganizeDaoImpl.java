@@ -40,15 +40,22 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
     }
 
     public Integer countDup(String code, String name) {
-        Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.disjunction()
-                .add(Restrictions.eq("organizeCode", code))
-                .add(Restrictions.eq("organizeName", name))
-        );
+        Conjunction conjunction = createConjunction(code, name);
         DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
+    }
+    
+    private Conjunction createConjunction(String code, String name) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        if (code != null && code != "") {
+            conjunction.add(Restrictions.eq("organizeCode", code));
+        }
+        if (name != null && name != "") {
+            conjunction.add(Restrictions.eq("organizeName", name));
+        }
+        return conjunction;
     }
 
     @Override
