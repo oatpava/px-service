@@ -105,6 +105,11 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         return dmsFolderDaoImpl.countAll(ParentId);
     }
 
+    public int countAll(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
+        return dmsFolderDaoImpl.countAll(folderId, offset, limit, temp);
+
+    }
+
     @Override
     public List<DmsFolder> search(MultivaluedMap<String, String> queryParams, int limit, int offset, String sort, String dir) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -704,11 +709,11 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
 
 //        folderMove = dmsFolderDaoImpl.update(folderMove);
         // update search
-         DmsFolderService dmsFolderService = new DmsFolderService();
+        DmsFolderService dmsFolderService = new DmsFolderService();
         String searchId = folderMove.getDmsSearchId();
         String folderParentKeyTemp = folderMove.getParentKey();
-            String fullPath = dmsFolderService.getFullPathName(folderMove.getParentKey());
-            folderMove.setFullPathName(fullPath);
+        String fullPath = dmsFolderService.getFullPathName(folderMove.getParentKey());
+        folderMove.setFullPathName(fullPath);
 //        if (searchId != null) {
 //            DmsSearchService dmsSearchService = new DmsSearchService();
 //           
@@ -847,8 +852,8 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
 
         return result;
     }
-    
-    public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit,AuthEnableDisableIdListModel data) {
+
+    public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit, AuthEnableDisableIdListModel data) {
         checkNotNull(folderId, "folderId  must not be null");
         return dmsFolderDaoImpl.findListByFolderParentIdLazy(folderId, offset, limit, data);
     }

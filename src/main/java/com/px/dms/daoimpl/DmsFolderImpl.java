@@ -461,8 +461,7 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
         }
     }
 
-    
-     public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
+    public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", folderId));
@@ -508,5 +507,44 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
 //            System.out.println("criteria - "+criteria);
         return this.listByCriteria(criteria, offset, limit);
+    }
+
+    public int countAll(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("parentId", folderId));
+
+        Disjunction disjunction = Restrictions.disjunction();
+        Disjunction disjunctionNot = Restrictions.disjunction();
+        boolean haveCondition = false;
+        if (temp.getDisableList().length() > 0) {
+
+            String[] listDms = temp.getDisableList().split(",");
+
+            for (String folder : listDms) {
+                //mustNot
+                disjunctionNot.add(Restrictions.like("parentKey", '฿' + folder + '฿', MatchMode.ANYWHERE));
+            }
+            conjunction.add(Restrictions.not(disjunctionNot));
+        }
+
+        if (temp.getEnableList().length() > 0) {
+            String[] listDms = temp.getEnableList().split(",");
+
+            for (String folder : listDms) {
+                //must
+                disjunction.add(Restrictions.like("parentKey", "฿" + folder + "฿", MatchMode.ANYWHERE));
+            }
+            conjunction.add(disjunction);
+            haveCondition = true;
+        }
+        if (!haveCondition) {
+            conjunction.add(Restrictions.eq("removedBy", -77));
+        }
+
+        DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
+        criteria.add(conjunction);
+
+        return this.countAll(criteria);
     }
 }
