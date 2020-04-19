@@ -56,8 +56,7 @@ public class WorkflowResource {
             response = WorkflowModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Workflow created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Workflow created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -143,10 +142,8 @@ public class WorkflowResource {
             response = WorkflowModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Workflow by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Workflow by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Workflow by id success."),
+        @ApiResponse(code = 404, message = "Workflow by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -193,10 +190,8 @@ public class WorkflowResource {
             response = WorkflowModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Workflow updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Workflow by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Workflow updeted by id success."),
+        @ApiResponse(code = 404, message = "Workflow by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -268,10 +263,8 @@ public class WorkflowResource {
             response = WorkflowModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Workflow deleted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Workflow by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Workflow deleted by id success."),
+        @ApiResponse(code = 404, message = "Workflow by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -319,10 +312,8 @@ public class WorkflowResource {
             response = WorkflowModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Workflow list success.")
-        ,
-        @ApiResponse(code = 404, message = "Workflow list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Workflow list success."),
+        @ApiResponse(code = 404, message = "Workflow list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -350,8 +341,8 @@ public class WorkflowResource {
             //MUST GET removed by, cause show both F and E
             List<Workflow> listWorkflow = workflowService.listByLinkIdGetRemoved(linkId, listOptionModel.getSort(), listOptionModel.getDir());
             if (!listWorkflow.isEmpty()) {
-                List<WorkflowModel> listWorkflowModel = new ArrayList<>();               
-                for (Workflow workflow : listWorkflow) {                                       
+                List<WorkflowModel> listWorkflowModel = new ArrayList<>();
+                for (Workflow workflow : listWorkflow) {
                     listWorkflowModel.add(workflowService.tranformToModelWithDetail(workflow));
                 }
                 status = Response.Status.OK;
@@ -368,17 +359,15 @@ public class WorkflowResource {
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
-        @ApiOperation(
+    @ApiOperation(
             value = "Method for list workFlow for Image.",
             notes = "รายการข้อมูลผังการไหลแบบรูปภาพ",
             responseContainer = "List",
             response = WorkflowModel_groupFlow.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Workflow list success.")
-        ,
-        @ApiResponse(code = 404, message = "Workflow list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Workflow list success."),
+        @ApiResponse(code = 404, message = "Workflow list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -419,7 +408,7 @@ public class WorkflowResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for get workflow list by documentId",
             notes = "Method for get workflow list by documentId",
@@ -427,10 +416,8 @@ public class WorkflowResource {
             response = WorkflowModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Workflow list success.")
-        ,
-        @ApiResponse(code = 404, message = "Workflow list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Workflow list success."),
+        @ApiResponse(code = 404, message = "Workflow list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -458,13 +445,61 @@ public class WorkflowResource {
             //MUST GET removed by, cause show both F and E
             List<Workflow> listWorkflow = workflowService.listByLinkIdGetRemoved(linkId, listOptionModel.getSort(), listOptionModel.getDir());
             if (!listWorkflow.isEmpty()) {
-                List<WorkflowModel> listWorkflowModel = new ArrayList<>();               
-                for (Workflow workflow : listWorkflow) {                                       
+                List<WorkflowModel> listWorkflowModel = new ArrayList<>();
+                for (Workflow workflow : listWorkflow) {
                     listWorkflowModel.add(workflowService.tranformToModel(workflow));
                 }
                 status = Response.Status.OK;
                 responseData.put("data", listWorkflowModel);
             }
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "Method for get last workflow type A by created by",
+            notes = "Method for get last workflow type A by created by",
+            responseContainer = "List",
+            response = WorkflowModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Workflow list success."),
+        @ApiResponse(code = 404, message = "Workflow list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/getLastReply")
+    public Response getLastReply(
+            @BeanParam VersionModel versionModel
+    ) {
+        LOG.info("getLastReply...");
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "Workflow by id not found in the database.");
+        try {
+            WorkflowService workflowService = new WorkflowService();
+            WorkflowModel workflowModel = null;
+            List<Workflow> listWorkflow = workflowService.listLastReply(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+            if (!listWorkflow.isEmpty()) {
+                workflowModel = workflowService.tranformToModel(listWorkflow.get(0));
+            }
+            status = Response.Status.OK;
+            responseData.put("data", workflowModel);
             responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {

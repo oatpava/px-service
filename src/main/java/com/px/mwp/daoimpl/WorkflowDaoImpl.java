@@ -62,7 +62,7 @@ public class WorkflowDaoImpl extends GenericDaoImpl<Workflow, Integer> implement
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
-    
+
     public List<Workflow> listByLinkIdAndLinkId3(int linkId, int linkId3, String type) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
@@ -99,6 +99,17 @@ public class WorkflowDaoImpl extends GenericDaoImpl<Workflow, Integer> implement
             criteria.addOrder(Order.desc("this.createdDate"));
         }
         return criteria;
+    }
+
+    public List<Workflow> listLastReply(int createdBy) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("workflowActionType", "A"));
+        conjunction.add(Restrictions.eq("createdBy", createdBy));
+        conjunction.add(Restrictions.eq("workflowActionId", createdBy));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Workflow.class);
+        criteria.add(conjunction);
+        criteria.addOrder(Order.desc("createdDate"));
+        return this.listByCriteria(criteria, 0, 1);
     }
 
 }
