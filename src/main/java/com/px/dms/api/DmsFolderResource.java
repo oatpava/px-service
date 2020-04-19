@@ -97,8 +97,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -180,10 +179,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Folder updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Folder updeted by id success."),
+        @ApiResponse(code = 404, message = "Folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -227,7 +224,7 @@ public class DmsFolderResource {
 
                 String searchId = folder.getDmsSearchId();
                 String folderParentKey = folder.getDmsFolderParentKey();
-                
+
 //                if (searchId != null) {
 //                    DmsSearchService dmsSearchService = new DmsSearchService();
 //                    DmsSearchModel temp = dmsSearchService.changFolderToSearch(folder);
@@ -239,7 +236,6 @@ public class DmsFolderResource {
 //                    DmsSearchModel result = dmsSearchService.addDataFolder(temp, folderParentKey);
 //                    folder.setDmsSearchId(result.getDmsSearchId());
 //                }
-                
                 String fullPath = dmsFolderService.getFullPathName(folderParentKey);
                 folder.setFullPathName(fullPath);
                 DmsFolder folderNew = dmsFolderService.update(folder);
@@ -267,10 +263,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Folder by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Folder by id success."),
+        @ApiResponse(code = 404, message = "Folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -322,10 +316,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "folder deleted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "folder deleted by id success."),
+        @ApiResponse(code = 404, message = "folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -391,10 +383,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "folder list success.")
-        ,
-        @ApiResponse(code = 404, message = "folder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "folder list success."),
+        @ApiResponse(code = 404, message = "folder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -461,10 +451,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "folder list success.")
-        ,
-        @ApiResponse(code = 404, message = "folder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "folder list success."),
+        @ApiResponse(code = 404, message = "folder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -527,10 +515,8 @@ public class DmsFolderResource {
             response = DmsDocumentModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "check success.")
-        ,
-        @ApiResponse(code = 404, message = "folderid not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "check success."),
+        @ApiResponse(code = 404, message = "folderid not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -581,10 +567,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Folder move success.")
-        ,
-        @ApiResponse(code = 404, message = "Folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Folder move success."),
+        @ApiResponse(code = 404, message = "Folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -732,10 +716,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Folder order updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Folder order updeted by id success."),
+        @ApiResponse(code = 404, message = "Folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -800,8 +782,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -900,10 +881,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "folder list success.")
-        ,
-        @ApiResponse(code = 404, message = "folder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "folder list success."),
+        @ApiResponse(code = 404, message = "folder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -971,8 +950,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder copy successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder copy successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1225,10 +1203,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "docType form param success.")
-        ,
-        @ApiResponse(code = 404, message = "docType form param found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "docType form param success."),
+        @ApiResponse(code = 404, message = "docType form param found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1275,8 +1251,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder copy successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder copy successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1493,8 +1468,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1587,73 +1561,73 @@ public class DmsFolderResource {
 
                 // addlog add
                 dmsFolderService.saveLogForCreate(result2, httpHeaders.getHeaderString("clientIp"));
-                               
+
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DMS_OF");
                 submoduleUserAuth.setAuthority("1");
                 submoduleUserAuth.setLinkId(result2.getId());
                 submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuth.setUserProfile(userProfile);
                 submoduleUserAuth.setCreatedBy(userID);
-                 submoduleUserAuthService.create(submoduleUserAuth);
-             
-                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("F_CRE");                            
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
                 submoduleUserAuthService.create(submoduleUserAuth);
-             
+
+                submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("F_CRE");
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
+                submoduleUserAuthService.create(submoduleUserAuth);
+
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("F_EDIT");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("F_DEL");
-               submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("D_CRE");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("D_EDIT");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("D_DEL");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_CRE");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_EDIT");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_DEL");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DMS_AUTH");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("D_OPEN");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_SEC1");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_SEC2");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_SEC3");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_SEC4");
-                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);               
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
 
             }
@@ -1677,10 +1651,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Folder by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Folder by id success."),
+        @ApiResponse(code = 404, message = "Folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1766,10 +1738,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Template of DmsFolder list success.")
-        ,
-        @ApiResponse(code = 404, message = "Template of DmsFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Template of DmsFolder list success."),
+        @ApiResponse(code = 404, message = "Template of DmsFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1827,10 +1797,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "SubmoduleUserAuth Of dmsFolder list success.")
-        ,
-        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "SubmoduleUserAuth Of dmsFolder list success."),
+        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1895,10 +1863,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "SubmoduleUserAuth created successfully.")
-        ,
-        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "SubmoduleUserAuth created successfully."),
+        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1966,10 +1932,8 @@ public class DmsFolderResource {
     }
 
     @ApiResponses({
-        @ApiResponse(code = 200, message = "SubmoduleUserAuth created successfully.")
-        ,
-        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "SubmoduleUserAuth created successfully."),
+        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2048,10 +2012,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "folder list success.")
-        ,
-        @ApiResponse(code = 404, message = "folder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "folder list success."),
+        @ApiResponse(code = 404, message = "folder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2081,12 +2043,12 @@ public class DmsFolderResource {
         responseData.put("errorMessage", "");
 
         try {
-            
+
             DmsFolderService dmsFolderService = new DmsFolderService();
             SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
             SubmoduleAuthService submoduleAuthService = new SubmoduleAuthService();
             UserProfileService userProfileService = new UserProfileService();
-            List<DmsFolder> listFolderAll = dmsFolderService.listFolderByparenID(folderId, listOptionModel.getOffset(), listOptionModel.getLimit());     
+            List<DmsFolder> listFolderAll = dmsFolderService.listFolderByparenID(folderId, listOptionModel.getOffset(), listOptionModel.getLimit());
             SubmoduleAuth submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DMS_OF");
             UserProfile userProfile = userProfileService.getById(userID);
             String authority = "1";
@@ -2126,10 +2088,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Folder updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Folder by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Folder updeted by id success."),
+        @ApiResponse(code = 404, message = "Folder by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -2190,10 +2150,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "SubmoduleUserAuth Of dmsFolder list success.")
-        ,
-        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "SubmoduleUserAuth Of dmsFolder list success."),
+        @ApiResponse(code = 404, message = "SubmoduleUserAuth Of dmsFolder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2271,8 +2229,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder copy successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder copy successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2331,8 +2288,7 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "dmsFolder copy successfully.")
-        ,
+        @ApiResponse(code = 201, message = "dmsFolder copy successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2547,15 +2503,14 @@ public class DmsFolderResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for add report to temp table",
             notes = "Method for add report to temp table",
             response = TempTableModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "TempTable created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "TempTable created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -2622,7 +2577,7 @@ public class DmsFolderResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for list folder by folder parenID + new auth + lazyload .",
             notes = "รายการที่เก็บเอกสาร ด้วย folder parenID +auth ",
@@ -2630,10 +2585,8 @@ public class DmsFolderResource {
             response = DmsFolderModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "folder list success.")
-        ,
-        @ApiResponse(code = 404, message = "folder list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "folder list success."),
+        @ApiResponse(code = 404, message = "folder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2710,12 +2663,10 @@ public class DmsFolderResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
-      @ApiResponses({
-        @ApiResponse(code = 200, message = "folder list success.")
-        ,
-        @ApiResponse(code = 404, message = "folder list not found in the database.")
-        ,
+
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "folder list success."),
+        @ApiResponse(code = 404, message = "folder list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2747,7 +2698,18 @@ public class DmsFolderResource {
         try {
 
             DmsFolderService dmsFolderService = new DmsFolderService();
-            int countAll = dmsFolderService.countAll(folderId);
+            SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
+            SubmoduleAuthService submoduleAuthService = new SubmoduleAuthService();
+            UserProfileService userProfileService = new UserProfileService();
+            SubmoduleAuth submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DMS_OF");
+            UserProfile userProfile = userProfileService.getById(userID);
+//            System.out.println("submoduleAuth - "+submoduleAuth.getId());
+//            System.out.println("userProfile - "+userProfile.getId());
+
+            AuthEnableDisableIdListModel temp = submoduleUserAuthService.getEnableDisableIdListByUserProfile(submoduleAuth, userProfile);
+
+            int countAll= dmsFolderService.countAll(folderId, 0, 10000, temp);
+
             status = Response.Status.OK;
             responseData.put("data", countAll);
             responseData.put("message", "folder list success.");
@@ -2761,5 +2723,5 @@ public class DmsFolderResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
 }
