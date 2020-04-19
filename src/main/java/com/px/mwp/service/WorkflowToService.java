@@ -1,6 +1,8 @@
 package com.px.mwp.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.px.admin.entity.Structure;
+import com.px.admin.service.StructureService;
 import com.px.share.service.GenericService;
 import com.px.share.util.Common;
 import com.px.mwp.daoimpl.WorkflowToDaoImpl;
@@ -146,6 +148,9 @@ public class WorkflowToService implements GenericService<WorkflowTo, WorkflowToM
             workflowToModel.setWorkflowToActionFlag(workflowTo.getWorkflowToActionFlag());
             workflowToModel.setWorkflowToFinishDate(Common.localDateTimeToString(workflowTo.getWorkflowToFinishDate()));
             workflowToModel.setWorkflowToFinishFlag(workflowTo.getWorkflowToFinishFlag());
+            StructureService structureService = new StructureService();
+            Structure structure = structureService.getById(workflowTo.getStructureId());
+            workflowToModel.setStructure((structure != null) ? structureService.tranformToModel(structure) : null);
         }
         return workflowToModel;
     }
