@@ -1,8 +1,8 @@
-
 package com.px.mwp.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.Since;
+import com.px.admin.model.StructureModel;
 import com.px.share.model.VersionModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,26 +20,44 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "WorkflowTo")
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "การส่งข้อมูล")
-public class WorkflowToModel  extends VersionModel {
+public class WorkflowToModel extends VersionModel {
 
     private static final long serialVersionUID = -2443067835898627821L;
 
     @XmlElement(name = "id")
-    @Expose @Since(1.0) private int id;
+    @Expose
+    @Since(1.0)
+    private int id;
     @XmlElement(name = "workflow")
-    @Expose @Since(1.0) private WorkflowModel workflow;
-    @Expose @Since(1.0) private int createdBy;
-    @Expose @Since(1.0) private String createdDate;
-    @Expose @Since(1.0) private float orderNo;
-    @Expose @Since(1.0) private int removedBy;
-    @Expose @Since(1.0) private String removedDate;
-    @Expose @Since(1.0) private int updatedBy;
-    @Expose @Since(1.0) private String updatedDate;
+    @Expose
+    @Since(1.0)
+    private WorkflowModel workflow;
+    @Expose
+    @Since(1.0)
+    private int createdBy;
+    @Expose
+    @Since(1.0)
+    private String createdDate;
+    @Expose
+    @Since(1.0)
+    private float orderNo;
+    @Expose
+    @Since(1.0)
+    private int removedBy;
+    @Expose
+    @Since(1.0)
+    private String removedDate;
+    @Expose
+    @Since(1.0)
+    private int updatedBy;
+    @Expose
+    @Since(1.0)
+    private String updatedDate;
 //    @Expose @Since(1.0) private int workflowToReceiveFlag;
 //    @Expose @Since(1.0) private int workflowToOpenFlag;
 //    @Expose @Since(1.0) private int workflowToActionFlag;
 //    @Expose @Since(1.0) private int workflowToFinishFlag;
-    
+
     @XmlElement(name = "workflowId")
     @ApiParam(name = "workflowId", value = "รหัสผังการทำงาน", required = true)
     private int workflowId;
@@ -47,73 +65,85 @@ public class WorkflowToModel  extends VersionModel {
     @XmlElement(name = "userProfileId")
     @ApiParam(name = "userProfileId", value = "รหัสผู้รับข้อมูล", required = true)
     @Since(1.0)
-    @Expose private int userProfileId;
-    
+    @Expose
+    private int userProfileId;
+
     @XmlElement(name = "structureId")
     @ApiParam(name = "structureId", value = "รหัสหน่วยงานรับข้อมูล", required = true)
     @Since(1.0)
-    @Expose private int structureId;
+    @Expose
+    private int structureId;
 
     @XmlElement(name = "userProfileFullName")
     @ApiParam(name = "userProfileFullName", value = "ชื่อผู้รับข้อมูล", required = true)
     @Size(max = 255)
     @Since(1.0)
-    @Expose private String userProfileFullName;
+    @Expose
+    private String userProfileFullName;
 
     @XmlElement(name = "userProfilePosition")
     @ApiParam(name = "userProfilePosition", value = "ตำแหน่งผู้รับข้อมูล", required = true)
     @Size(max = 255)
     @Since(1.0)
-    @Expose private String userProfilePosition;
-    
+    @Expose
+    private String userProfilePosition;
+
     @XmlElement(name = "workflowToReceiveFlag")
     @ApiParam(name = "workflowToReceiveFlag", value = "", required = true)
     @Since(1.0)
-    @Expose private int workflowToReceiveFlag;
-    
+    @Expose
+    private int workflowToReceiveFlag;
+
     @XmlElement(name = "workflowToOpenFlag")
     @ApiParam(name = "workflowToOpenFlag", value = "", required = true)
     @Since(1.0)
-    @Expose private int workflowToOpenFlag;
-      
+    @Expose
+    private int workflowToOpenFlag;
+
     @XmlElement(name = "workflowToActionFlag")
     @ApiParam(name = "workflowToActionFlag", value = "", required = true)
     @Since(1.0)
-    @Expose private int workflowToActionFlag;
-       
+    @Expose
+    private int workflowToActionFlag;
+
     @XmlElement(name = "workflowToFinishFlag")
     @ApiParam(name = "workflowToFinishFlag", value = "", required = true)
     @Since(1.0)
-    @Expose private int workflowToFinishFlag;
-    
+    @Expose
+    private int workflowToFinishFlag;
+
     @XmlElement(name = "workflowToReceiveDate")
     @ApiParam(name = "workflowToReceiveDate", value = "วันที่ได้รับ", required = true)
     @Size(max = 50)
-    @Expose 
+    @Expose
     @Since(1.0)
     private String workflowToReceiveDate;
 
     @XmlElement(name = "workflowToOpenDate")
     @ApiParam(name = "workflowToOpenDate", value = "วันที่เปิด", required = false)
     @Size(max = 50)
-    @Expose 
+    @Expose
     @Since(1.0)
     private String workflowToOpenDate;
-    
+
     @XmlElement(name = "workflowToActionDate")
     @ApiParam(name = "workflowToActionDate", value = "วันที่กระทำ", required = false)
     @Size(max = 50)
-    @Expose 
+    @Expose
     @Since(1.0)
     private String workflowToActionDate;
 
     @XmlElement(name = "workflowToFinishDate")
     @ApiParam(name = "workflowToFinishDate", value = "วันที่เสร็จ", required = false)
     @Size(max = 50)
-    @Expose 
+    @Expose
     @Since(1.0)
     private String workflowToFinishDate;
-    
+
+    @XmlElement(name = "structure")
+    @Expose
+    private StructureModel structure;
+
     public WorkflowToModel() {
     }
 
@@ -124,7 +154,7 @@ public class WorkflowToModel  extends VersionModel {
     public int getId() {
         return id;
     }
-    
+
     @ApiModelProperty(position = 1, name = "id", value = "รหัสการส่งข้อมูล", required = true)
     public void setId(int id) {
         this.id = id;
@@ -297,5 +327,13 @@ public class WorkflowToModel  extends VersionModel {
     public void setWorkflowToFinishDate(String workflowToFinishDate) {
         this.workflowToFinishDate = workflowToFinishDate;
     }
-    
+
+    public StructureModel getStructure() {
+        return structure;
+    }
+
+    public void setStructure(StructureModel structure) {
+        this.structure = structure;
+    }
+
 }

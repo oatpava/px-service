@@ -515,18 +515,16 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                             keyAddedNode = (String) hashAddedNode.get(key);
                             String keyForMap = workflow.getId() + "-" + workflowTo.getUserProfileFullName();
 
-                            
-                                node = new WorkflowModel_groupNodeFlow();
-                                node.setCategory("");
-                                node.setKey(key);
-                                node.setName(workflowTo.getUserProfileFullName());
-                                node.setText("");
-                                node.setSource((String) hashImg.get("0"));
-                                node.setKeyForMap(keyForMap);
-                                listNode.add(node);
-                                hashAddedNode.put(key, "0");
-                                listNodeSBeforeD.add(node);
-                            
+                            node = new WorkflowModel_groupNodeFlow();
+                            node.setCategory("");
+                            node.setKey(key);
+                            node.setName(workflowTo.getUserProfileFullName());
+                            node.setText("");
+                            node.setSource((String) hashImg.get("0"));
+                            node.setKeyForMap(keyForMap);
+                            listNode.add(node);
+                            hashAddedNode.put(key, "0");
+                            listNodeSBeforeD.add(node);
 
                             link = new WorkflowModel_groupLinkFlow();
                             link.setCategory("");
@@ -550,18 +548,16 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                                 keyAddedNode = (String) hashAddedNode.get(key);
                                 String keyForMap = workflow.getId() + "-" + workflowCc.getUserProfileFullName();
 
-                               
-                                    node = new WorkflowModel_groupNodeFlow();
-                                    node.setCategory("");
-                                    node.setKey(key);
-                                    node.setName(workflowCc.getUserProfileFullName());
-                                    node.setText("");
-                                    node.setSource((String) hashImg.get("0"));
-                                    node.setKeyForMap(workflow.getId() + "-" + workflowCc.getUserProfileFullName());
-                                    listNode.add(node);
-                                    hashAddedNode.put(key, "0");
-                                    listNodeSBeforeD.add(node);
-                                
+                                node = new WorkflowModel_groupNodeFlow();
+                                node.setCategory("");
+                                node.setKey(key);
+                                node.setName(workflowCc.getUserProfileFullName());
+                                node.setText("");
+                                node.setSource((String) hashImg.get("0"));
+                                node.setKeyForMap(workflow.getId() + "-" + workflowCc.getUserProfileFullName());
+                                listNode.add(node);
+                                hashAddedNode.put(key, "0");
+                                listNodeSBeforeD.add(node);
 
                                 link = new WorkflowModel_groupLinkFlow();
                                 link.setCategory("");
@@ -634,6 +630,11 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             }
         }
         return userId;
+    }
+
+    public List<Workflow> listLastReply(int createdBy) {
+        checkNotNull(createdBy, "createdBy by must not be null");
+        return workflowDaoImpl.listLastReply(createdBy);
     }
 
 }
