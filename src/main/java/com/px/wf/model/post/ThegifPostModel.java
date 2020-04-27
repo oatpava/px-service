@@ -146,7 +146,21 @@ public class ThegifPostModel extends VersionModel {
     @Size(max = 255)
     @Since(1.0)
     @Expose private String thegifFilePath;
-    
+     
+    @XmlElement(name = "thegifFrom") 
+    @ApiParam(name = "thegifFrom", value = "thegifFrom", required = false) 
+    @FormParam("thegifFrom") 
+    @Size(max = 1000) 
+    @Since(1.0) 
+    @Expose private String thegifFrom; 
+ 
+    @XmlElement(name = "thegifTo") 
+    @ApiParam(name = "thegifTo", value = "thegifTo", required = false) 
+    @FormParam("thegifTo") 
+    @Size(max = 1000) 
+    @Since(1.0) 
+    @Expose private String thegifTo; 
+     
     public ThegifPostModel() {
     }
 
@@ -293,5 +307,21 @@ public class ThegifPostModel extends VersionModel {
     public void setThegifFilePath(String thegifFilePath) {
         this.thegifFilePath = thegifFilePath;
     }
-
+    
+    public String getThegifFrom() { 
+        return thegifFrom; 
+    } 
+ 
+    public void setThegifFrom(String thegifFrom) { 
+        this.thegifFrom = thegifFrom; 
+    } 
+ 
+    public String getThegifTo() { 
+        return thegifTo; 
+    } 
+ 
+    public void setThegifTo(String thegifTo) { 
+        this.thegifTo = thegifTo; 
+    } 
+ 
 }

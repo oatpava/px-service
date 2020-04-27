@@ -66,6 +66,7 @@ import com.px.wf.ecms.Secret;
 import com.px.wf.ecms.Speed;
 import com.px.wf.ecms.WsecmsService;
 import com.px.wf.ecms.WsecmsService_Service;
+import com.px.wf.model.post.ThegifStatusSendModel;
 import java.time.LocalDateTime;
 import javax.ws.rs.core.HttpHeaders;
 
@@ -1148,7 +1149,7 @@ log.info("tmpECMSService = "+tmpECMSService);
             //list fileAttach
             FileAttachService fileAttachService = new FileAttachService();
             List<FileAttach> listFileAttach = new ArrayList();
-            List<FileAttach> listFileAttach1 = fileAttachService.listAllByLinkTypeLinkId("dms", wfContent.getWfDocumentId(), listOptionModel.getSort(), listOptionModel.getDir());
+            List<FileAttach> listFileAttach1 = fileAttachService.listAllByLinkTypeLinkId("dms", wfContent.getWfDocumentId(), "createdDate", "asc");
             System.out.println("listFileAttach1.Size="+listFileAttach1.size());
             if (!listFileAttach1.isEmpty()) {
                 for (FileAttach fileAttach : listFileAttach1) {
@@ -1162,11 +1163,8 @@ log.info("tmpECMSService = "+tmpECMSService);
 //            System.out.println("userProfile="+userProfile);
 //            if(userProfile != null) System.out.println("userProfileFullname="+userProfile.getUserProfileFullName());
             //ผู้ส่ง
-            System.out.println("xxxxxx1");
             ThegifDepartmentService thegifDepartmentService = new ThegifDepartmentService();
-            System.out.println("xxxxx2");
             ThegifModel_ECMSOfficer thegifModel_ECMSOfficerSender = new ThegifModel_ECMSOfficer();
-            System.out.println("xxxx3");
             ThegifDepartment thegifDepartment = thegifDepartmentService.getByThegifDepartmentCode(tmpECMSdepCode);
             System.out.println("thegifDepartment="+thegifDepartment);
             if (thegifDepartment != null) {
@@ -1174,16 +1172,25 @@ log.info("tmpECMSService = "+tmpECMSService);
             System.out.println("SenderthegifDepartmentCode="+thegifDepartment.getThegifDepartmentCode());
                 ThegifDepartment thegifDepartmentParent = thegifDepartmentService.getById(thegifDepartment.getParentId());
                 
-                thegifModel_ECMSOfficerSender.setName(thegifDepartment.getThegifDepartmentName());
-                thegifModel_ECMSOfficerSender.setlName(thegifDepartmentParent.getThegifDepartmentName());
-                thegifModel_ECMSOfficerSender.setTitle(userProfile.getUserProfileFullName());
+//                thegifModel_ECMSOfficerSender.setName(thegifDepartment.getThegifDepartmentName()); //ของเก่า
+//                thegifModel_ECMSOfficerSender.setlName(thegifDepartmentParent.getThegifDepartmentName());
+//                thegifModel_ECMSOfficerSender.setTitle(userProfile.getUserProfileFullName());
+
+                thegifModel_ECMSOfficerSender.setName(""); // ชื่อผู้ส่ง userProfile.getUserProfileFirstName() use This
+                thegifModel_ECMSOfficerSender.setlName(""); // นามสกุลผู้ส่ง userProfile.getUserProfileLastName() use This
+//                thegifModel_ECMSOfficerSender.setName(wfContent.getWfContentFrom()); // ชื่อผู้ส่ง userProfile.getUserProfileFirstName() For test ecms
+//                thegifModel_ECMSOfficerSender.setlName(wfContent.getWfContentFrom()); // นามสกุลผู้ส่ง userProfile.getUserProfileLastName() For test ecms               
+                thegifModel_ECMSOfficerSender.setTitle(wfContent.getWfContentFrom()); // จาก
                 thegifModel_ECMSOfficerSender.setDeptId(tmpECMSdepCode);
                 thegifModel_ECMSOfficerSender.setMinistryId(thegifDepartmentParent.getThegifDepartmentCode());
                 thegifModel_ECMSOfficerSender.setWSURL(thegifDepartment.getThegifDepartmentServiceName());
             }else{
-                thegifModel_ECMSOfficerSender.setName("");
-                thegifModel_ECMSOfficerSender.setlName("");
-                thegifModel_ECMSOfficerSender.setTitle(userProfile.getUserProfileFullName());
+                thegifModel_ECMSOfficerSender.setName(""); //use this
+                thegifModel_ECMSOfficerSender.setlName(""); //use this
+//                thegifModel_ECMSOfficerSender.setTitle(userProfile.getUserProfileFullName());
+//                thegifModel_ECMSOfficerSender.setName(wfContent.getWfContentFrom()); //for test ecms
+//                thegifModel_ECMSOfficerSender.setlName(wfContent.getWfContentFrom()); //for test ecms
+                thegifModel_ECMSOfficerSender.setTitle(wfContent.getWfContentFrom());
                 thegifModel_ECMSOfficerSender.setDeptId(tmpECMSdepCode);
                 thegifModel_ECMSOfficerSender.setMinistryId("");
                 thegifModel_ECMSOfficerSender.setWSURL("");
@@ -1196,9 +1203,11 @@ log.info("tmpECMSService = "+tmpECMSService);
             ThegifDepartment thegifDepartmentParent1 = thegifDepartmentService.getById(thegifDepartment1.getParentId());
             System.out.println("thegifDepartmentParent1="+thegifDepartmentParent1);
             ThegifModel_ECMSOfficer thegifModel_ECMSOfficerReceiver = new ThegifModel_ECMSOfficer();
-            thegifModel_ECMSOfficerReceiver.setName(thegifDepartment1.getThegifDepartmentName());
-            thegifModel_ECMSOfficerReceiver.setlName(thegifDepartmentParent1.getThegifDepartmentName());
-            thegifModel_ECMSOfficerReceiver.setTitle("");
+            thegifModel_ECMSOfficerReceiver.setName(""); // thegifDepartment1.getThegifDepartmentName() // use this
+            thegifModel_ECMSOfficerReceiver.setlName("");  // thegifDepartmentParent1.getThegifDepartmentName() //use this
+//            thegifModel_ECMSOfficerReceiver.setName(wfContent.getWfContentTo()); // thegifDepartment1.getThegifDepartmentName()
+//            thegifModel_ECMSOfficerReceiver.setlName(wfContent.getWfContentTo());  // thegifDepartmentParent1.getThegifDepartmentName()            
+            thegifModel_ECMSOfficerReceiver.setTitle(wfContent.getWfContentTo()); // เดิมว่าง ใส่เป็นช่อง ถึง หรือเรียน แทน
             thegifModel_ECMSOfficerReceiver.setDeptId(deptId);
             thegifModel_ECMSOfficerReceiver.setMinistryId(thegifDepartmentParent1.getThegifDepartmentCode());
             thegifModel_ECMSOfficerReceiver.setWSURL(thegifDepartment1.getThegifDepartmentServiceName());
@@ -2285,4 +2294,60 @@ log.info("tmpECMSService = "+tmpECMSService);
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
+    
+    @ApiOperation(
+            value = "Method for get Thegif by BookNo",
+            notes = "รายการสถานะการส่งหนังสือรายเรื่อง",
+            response = ThegifStatusSendModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Thegif by id success."),
+        @ApiResponse(code = 404, message = "Thegif by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/listStatusSend/{id}")
+    public Response listStatusSend(
+            @ApiParam(name = "id", value = "รหัส THeGifId", required = true)
+            @PathParam("id") int id
+    ) {
+        log.info("listStatusSend...");
+        log.info("id = " + id);
+        Gson gs = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "Thegif by id not found in the database.");
+        try {
+            ThegifService thegifService = new ThegifService();
+            Thegif thegif = thegifService.getById(id);
+
+            List<ThegifStatusSendModel> listThegifStatusSendModel = new ArrayList<>();
+            if (thegif != null) {
+                List<Thegif> listthegif = thegifService.listByBookNo(thegif.getThegifBookNo(), "SendLetter", "",0, 1000, "thegifReceiverDepartmentCode", "asc"); //bookno,elementype,depcode
+                if (!listthegif.isEmpty()) {
+                    for(Thegif tmpthegif : listthegif){
+                        ThegifStatusSendModel tmp = thegifService.tranformToThegifStatusSendModel(tmpthegif);
+                        listThegifStatusSendModel.add(tmp);
+                    }
+                }
+                
+                status = Response.Status.OK;
+                responseData.put("data", listThegifStatusSendModel);
+                responseData.put("message", "");
+            }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            log.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }        
 }

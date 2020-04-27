@@ -56,6 +56,7 @@ import com.px.wf.ecms.Secret;
 import com.px.wf.ecms.Speed;
 import com.px.wf.ecms.WsecmsService;
 import com.px.wf.ecms.WsecmsService_Service;
+import com.px.wf.model.post.ThegifStatusSendModel;
 
 /**
  *
@@ -125,6 +126,14 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
         return thegifDaoImpl.listByElementType(elementType, offset, limit, sort, dir);
     }
 
+    public List<Thegif> listByBookNo(String bookNo, String elementType, String depCode, int offset, int limit, String sort, String dir) {
+        checkNotNull(offset, "offset must not be null");
+        checkNotNull(limit, "limit must not be null");
+        checkNotNull(sort, "sort must not be null");
+        checkNotNull(dir, "dir must not be null");
+        return thegifDaoImpl.listByBookNo(bookNo, elementType, depCode, offset, limit, sort, dir);
+    }     
+    
     public List<Thegif> listByElementType(String elementType) {
         return thegifDaoImpl.listByElementType(elementType);
     }
@@ -175,10 +184,86 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             thegifModel.setThegifAttachment(thegif.getThegifAttachment());
             thegifModel.setThegifReference(thegif.getThegifReference());
             thegifModel.setThegifFilePath(thegif.getThegifFilePath());
+            thegifModel.setThegifFrom(thegif.getThegifFrom());
+            thegifModel.setThegifTo(thegif.getThegifTo());            
         }
         return thegifModel;
     }
 
+    public ThegifStatusSendModel tranformToThegifStatusSendModel(Thegif thegif) {
+        ThegifStatusSendModel thegifModel = null;
+        if (thegif != null) {
+            thegifModel = new ThegifStatusSendModel();
+            thegifModel.setId(thegif.getId());
+            thegifModel.setCreatedBy(thegif.getCreatedBy());
+            thegifModel.setCreatedDate(Common.localDateTimeToString(thegif.getCreatedDate()));
+            thegifModel.setOrderNo((float) thegif.getOrderNo());
+            thegifModel.setUpdatedBy(thegif.getUpdatedBy());
+            thegifModel.setUpdatedDate(Common.localDateTimeToString(thegif.getUpdatedDate()));
+            thegifModel.setRemovedBy(thegif.getRemovedBy());
+            thegifModel.setRemovedDate(Common.localDateTimeToString(thegif.getRemovedDate()));
+            thegifModel.setThegifElementType(thegif.getThegifElementType());
+            thegifModel.setThegifProcessId(thegif.getThegifProcessId());
+            thegifModel.setThegifSendDate(thegif.getThegifSendDate());
+            thegifModel.setThegifBookNo(thegif.getThegifBookNo());
+            thegifModel.setThegifBookDate(thegif.getThegifBookDate());
+            thegifModel.setThegifSpeed(thegif.getThegifSpeed());
+            thegifModel.setThegifSecret(thegif.getThegifSecret());
+            thegifModel.setThegifSenderDepartmentCode(thegif.getThegifSenderDepartmentCode());
+            thegifModel.setThegifReceiverDepartmentCode(thegif.getThegifReceiverDepartmentCode());
+            thegifModel.setThegifAcceptDate(thegif.getThegifAcceptDate());
+            thegifModel.setThegifAcceptId(thegif.getThegifAcceptId());
+            thegifModel.setThegifAcceptDepartmentCode(thegif.getThegifAcceptDepartmentCode());
+            thegifModel.setThegifLetterStatus(thegif.getThegifLetterStatus());
+            thegifModel.setThegifSubject(thegif.getThegifSubject());
+            thegifModel.setThegifDescription(thegif.getThegifDescription());
+            thegifModel.setThegifAttachment(thegif.getThegifAttachment());
+            thegifModel.setThegifReference(thegif.getThegifReference());
+            thegifModel.setThegifFilePath(thegif.getThegifFilePath());
+            thegifModel.setThegifFrom(thegif.getThegifFrom());
+            thegifModel.setThegifTo(thegif.getThegifTo());
+
+            String thegifStatusSend = "";
+            String thegifAcceptNo = "";
+            String thegifDepName = "";
+            String thegifStatusAcceptDate = "";            
+
+            String elementType = "";
+//            String elementType = "ReceiveLetterNotifier,AcceptLetterNotifier";
+            ThegifDepartmentService thegifDepartmentService = new ThegifDepartmentService();
+            ThegifService thegifService = new ThegifService();
+            List<Thegif> listthegif = thegifService.listByBookNo(thegif.getThegifBookNo(), elementType, thegif.getThegifReceiverDepartmentCode(),0, 10, "createdDate", "desc"); //bookno,elementype,depcode
+            ThegifDepartment thegifDepartment = thegifDepartmentService.getByThegifDepartmentCode(thegif.getThegifReceiverDepartmentCode());
+                if(thegifDepartment != null){
+                    thegifDepName = thegifDepartment.getThegifDepartmentName();
+                }else {
+                    thegifDepName = thegif.getThegifReceiverDepartmentCode();
+                }
+            
+                if (!listthegif.isEmpty()) {
+                    for(Thegif tmpthegif : listthegif){
+                        thegifStatusSend = tmpthegif.getThegifElementType();
+                        thegifAcceptNo = tmpthegif.getThegifAcceptId();
+                        String acceptDate = thegifService.changeDateToFormat(tmpthegif.getThegifAcceptDate(), 1);
+                        thegifStatusAcceptDate = acceptDate; //.replace("T", " ");
+                        if(thegifAcceptNo == null || thegifAcceptNo.equals("")) thegifAcceptNo = "";
+                        thegifStatusSend = getDataLetterStatus(thegifStatusSend);
+                        break;
+                    }
+                }else {
+                    thegifStatusSend = "ส่งหนังสือ";
+                    String sendDate = thegifService.changeDateToFormat(thegif.getThegifSendDate(), 1);
+                    thegifStatusAcceptDate = sendDate;
+                }       
+                
+            thegifModel.setThegifStatusSend(thegifStatusSend);
+            thegifModel.setThegifAcceptNo(thegifAcceptNo);
+            thegifModel.setThegifDepName(thegifDepName);
+            thegifModel.setThegifStatusAcceptDate(thegifStatusAcceptDate);
+        }
+        return thegifModel;
+    }    
+    
     public ThegifModel_groupShowList tranformToModelGroupShowList(String fieldName, String data, int thegifId, String fieldDescription, String fieldType, int listWidth, int fieldLength) {
         ThegifModel_groupShowList thegifModel_groupShowList = null;
         if (fieldName != null) {
@@ -228,6 +313,8 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             thegifModel_groupShowList2.setThegifFilePath(thegif.getThegifFilePath());
             thegifModel_groupShowList2.setTd(listThegif); 
             thegifModel_groupShowList2.setWfFileAttach(listFileAttach);
+            thegifModel_groupShowList2.setThegifFrom(thegif.getThegifFrom());
+            thegifModel_groupShowList2.setThegifTo(thegif.getThegifTo());              
         }
         return thegifModel_groupShowList2;
     }
@@ -274,6 +361,8 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             thegifModel.setThegifAttachment(thegif.getThegifAttachment());
             thegifModel.setThegifReference(thegif.getThegifReference());
             thegifModel.setThegifFilePath(thegif.getThegifFilePath());
+            thegifModel.setThegifFrom(thegif.getThegifFrom());
+            thegifModel.setThegifTo(thegif.getThegifTo()); 
         }
         return thegifModel;
     }
@@ -321,6 +410,14 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                 listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("hasFile", "false", thegifId, "", "BOOLEAN", 50, 0));
             }
             //========================
+            String from = thegifService.checkStringNull(thegif.getThegifFrom());
+            System.out.println("1from="+from);
+            listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifFrom", from, thegifId, "จาก", "TEXT", 100, 1000));
+            //========================
+            String to = thegifService.checkStringNull(thegif.getThegifTo());
+            System.out.println("1to="+to);
+            listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifTo", to, thegifId, "ถึง/เรียน", "TEXT", 100, 1000));
+            
         } else {
             String elementType2 = thegifService.getDataLetterStatus(thegif.getThegifElementType());//elementType
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifElementType", elementType2, thegifId, "สถานะ", "TEXT", 100, 50));
@@ -335,26 +432,50 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             String acceptId = thegifService.checkStringNull(thegif.getThegifAcceptId());
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifAcceptId", acceptId, thegifId, "เลขที่รับ", "TEXT", 100, 255));
             String department2 = thegifService.getDataDepartment(thegif.getThegifAcceptDepartmentCode());
+//            System.out.println("department2="+department2);
+//            System.out.println("thegif.getThegifLetterStatus()="+thegif.getThegifLetterStatus());
+//            System.out.println("thegif.getThegifElementType()="+thegif.getThegifElementType());
+            if(thegif.getThegifElementType() != null && thegif.getThegifElementType().equals("SendLetter")){
+                department2 = thegifService.getDataDepartment(thegif.getThegifReceiverDepartmentCode());
+//                System.out.println("department2department2="+department2);
+            }            
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifAcceptDepartmentCode", department2, thegifId, "หน่วยงานที่รับ", "TEXT", 200, 255));
             String letterStatus = thegifService.getDataLetterStatus3(thegif.getThegifLetterStatus(), thegif.getThegifElementType());
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifLetterStatus", letterStatus, thegifId, "สถานะหนังสือ", "TEXT", 100, 255));
             String SendDate = thegifService.changeDateToFormat(thegif.getThegifSendDate(), 1);
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifLetterStatus", SendDate, thegifId, "วันเวลาที่ส่ง", "DATETIME", 100, 0));
+            String from = thegifService.checkStringNull(thegif.getThegifFrom());
+            System.out.println("2from="+from);
+            listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifFrom", from, thegifId, "จาก", "TEXT", 100, 1000));
+            //========================
+            String to = thegifService.checkStringNull(thegif.getThegifTo());
+            System.out.println("2to="+to);
+            listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifTo", to, thegifId, "ถึง/เรียน", "TEXT", 100, 1000));
+            //========================            
         }
 
         return listThegifModel_groupShowList;
     }
 
     public String getDataDepartment(String departmentCode) {
-        String department = "";
-        ThegifDepartmentService thegifDepartmentService = new ThegifDepartmentService();
-        if (departmentCode != null && !departmentCode.equals("")) {
-            ThegifDepartment thegifDepartment = thegifDepartmentService.getByThegifDepartmentCode(departmentCode);
-            department = thegifDepartment.getThegifDepartmentName();
-        } else {
-            department = "";
+        try {
+            String department = "";
+            ThegifDepartmentService thegifDepartmentService = new ThegifDepartmentService();
+            if (departmentCode != null && !departmentCode.equals("")) {
+                ThegifDepartment thegifDepartment = thegifDepartmentService.getByThegifDepartmentCode(departmentCode);
+                if(thegifDepartment != null){
+                department = thegifDepartment.getThegifDepartmentName();
+                } else {
+                    department = "";
+                }
+            } else {
+                department = "";
+            }
+            return department;
+        } catch (Exception e) {
+//            log.error("Exception : " + e);
         }
-        return department;
+        return "";
     }
 
     public String getDataSpeed(String speed) {
@@ -1002,7 +1123,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
             System.out.println("Result First = " + result);
-            result = result.replaceFirst("C:", "Z:");
+//            result = result.replaceFirst("C:", "Z:");
             System.out.println("Result Replace = " + result);
 
 //            status = port.getValinTagNameService2(result, "ECMSDeleteGovernmentDocumentRequest");
@@ -1205,7 +1326,9 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
         String attachmime = "";
         String attachfiletype = "";
         int attachtype = 0;
-
+        String from = "";
+        String to = "";
+        
         try { // Call Web Service Operation
             WsecmsService_Service service = new com.px.wf.ecms.WsecmsService_Service();
             WsecmsService port = service.getWsecmsServicePort();
@@ -1253,7 +1376,29 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                 acceptid = checkEscChar("2", acceptid);
                 description = checkEscChar("2", description);
                 attachmenttext = checkEscChar("2", attachmenttext);
+                if(letter.getSenderName() != null && !letter.getSenderName().equals("")){
+                    from += letter.getSenderName();
+                        if(letter.getSenderLname() != null && !letter.getSenderLname().equals("")){
+                            from += " "+letter.getSenderLname();
+                        }
+                }
 
+                if(letter.getSenderTitle()!= null && !letter.getSenderTitle().equals("")){
+                    from = letter.getSenderTitle();
+                }
+                
+                
+                if(letter.getReceiverName() != null && !letter.getReceiverName().equals("")){
+                    to += letter.getReceiverName();
+                    if(letter.getReceiverLname() != null && !letter.getReceiverLname().equals("")){
+                        to += " "+letter.getReceiverLname();
+                    }
+                }
+                if(letter.getReceiverTitle() != null && !letter.getReceiverTitle().equals("")){
+                    from = letter.getReceiverTitle();
+                }
+                
+                
                 for (int ref = 0; ref < letter.getReference().size(); ref++) {
                     reference = letter.getReference().get(ref);
                     referenceid = reference.getLetterNumber();
@@ -1302,6 +1447,8 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                 referencetext = changeDateInReferenceThegif(referencetext);
                 thegif.setThegifReference(referencetext);
                 thegif.setThegifFilePath(pathfile);
+                thegif.setThegifFrom(from); //tum add
+                thegif.setThegifTo(to); //tum add                
                 thegif = thegifService.create(thegif);
 
                 thegif.setUpdatedBy(userID);
@@ -1314,20 +1461,19 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                 String documentName = subject;
                 int thegifId = thegif.getId();
 
-//                DmsDocument document = new DmsDocument();
+                DmsDocument document = new DmsDocument();
                 SubmoduleService submoduleService = new SubmoduleService();
                 int submoduleId = submoduleService.getBySubmoduleCode("thegif").getId();
-//                DmsDocumentService dmsDocumentService = new DmsDocumentService();
-//                DocumentFile documentFile = new DocumentFile();
-//                DocumentFileService documentFileService = new DocumentFileService();
+                DmsDocumentService dmsDocumentService = new DmsDocumentService();
+                DocumentFile documentFile = new DocumentFile();
+                DocumentFileService documentFileService = new DocumentFileService();
                 ParamService paramService = new ParamService();
                 FileAttach fileAttach = new FileAttach();
                 FileAttachService fileAttachService = new FileAttachService();
-                String paramPath = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
-                System.out.println("xxxxparamPath="+paramPath);
-//                document = dmsDocumentService.createForWf(userID, documentName);
-//                int docId = document.getId();
-                int docId = thegif.getId();
+                String paramPath = paramService.getByParamName("THEGIF_PAHT").getParamValue();
+
+                document = dmsDocumentService.createForWf(userID, documentName);
+                int docId = document.getId();
                 //--todox insert into pc_thegif_docfile
                 for (int att = 0; att < letter.getAttachment().size(); att++) {
                     attach = letter.getAttachment().get(att);
@@ -1374,25 +1520,24 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
                     String thegifType = thegifDocFile.getThegifDocFileLetterType();
                     String tempPath = paramPath + Integer.toString(thegifId) + "_" + thegifIdStr + thegifType;
-                    System.out.println("zzzztempPath="+tempPath);
                     String docFileName = thegifDocFile.getThegifDocFileLetter();
 
-//                    documentFile.setDocumentFileName(docFileName);
-//                    documentFile.setModuleId(submoduleId);
-//                    documentFile.setLinkId(docId);
-//                    documentFile.setLinkId2(3);
-//                    documentFile.setCreatedBy(userID);
-//                    documentFile.setDocumentFileType(thegifType);
+                    documentFile.setDocumentFileName(docFileName);
+                    documentFile.setModuleId(submoduleId);
+                    documentFile.setLinkId(docId);
+                    documentFile.setLinkId2(3);
+                    documentFile.setCreatedBy(userID);
+                    documentFile.setDocumentFileType(thegifType);
                     ThegifDocFile thegifDocFile1 = thegifDocFileService.getById(thegifDocFile.getId());
                     thegifDocFile1.setDmsDocumentId(docId);
                     thegifDocFileService.update(thegifDocFile1);
-//                    int documentFileId = documentFileService.createDocumentFile(documentFile);
+                    int documentFileId = documentFileService.createDocumentFile(documentFile);
 
                     fileAttach.setCreatedBy(userID);
                     fileAttach.setFileAttachName(docFileName);
                     fileAttach.setFileAttachType(thegifType);
                     fileAttach.setLinkType("thegif");
-                    fileAttach.setLinkId(thegifId);
+                    fileAttach.setLinkId(documentFileId);
                     fileAttach = fileAttachService.create(fileAttach);
 
                     if (fileAttach != null) {
@@ -1481,6 +1626,8 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                 thegif.setThegifAttachment(attachmenttext);
                 thegif.setThegifReference(referencetext);
                 thegif.setThegifFilePath(pathfile);
+                thegif.setThegifFrom(from); //tum add
+                thegif.setThegifTo(to); //tum add                  
                 thegif = thegifService.create(thegif);
 
                 thegif.setUpdatedBy(userID);
@@ -1571,17 +1718,19 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             letter.setSpeedCode(ECMSFormatCode(wfContent.getWfContentSpeed()));
             letter.setSenderName(checkEscChar("1", sender_givenname));
             letter.setSenderLname(checkEscChar("1", sender_familyname));
-            letter.setSenderTitle(checkEscChar("1", sender_jobtitle));
+            letter.setSenderTitle(checkEscChar("1", sender_jobtitle)); //ตำแหน่ง,ชื่อหน่วยงาน
             letter.setSenderMinistryId(sender_ministryid);
             letter.setSenderDeptId(sender_departmentid);
             letter.setReceiverName(checkEscChar("1", receiver_givenname));
             letter.setReceiverLname(checkEscChar("1", receiver_familyname));
-            letter.setReceiverTitle(checkEscChar("1", receiver_jobtitle));
+            letter.setReceiverTitle(checkEscChar("1", receiver_jobtitle)); //ตำแหน่ง,ชื่อหน่วยงาน
             letter.setReceiverMinistryId(receiver_ministryid);
             letter.setReceiverDeptId(receiver_departmentid);
             letter.setAttachmentText(checkEscChar("1", wfContent.getWfContentAttachment()));
             letter.setSendDate(ECMSNowDate());
-            letter.setDescription(checkEscChar("1", wfContent.getWfContentDescription()));
+            letter.setDescription(checkEscChar("1", wfContent.getWfContentDescription())); 
+//            letter.setDescription(checkEscChar("1", wfContent.getWfContentText01()));
+
             reference = wfContent.getWfContentReference();
             if (reference != null && !reference.equals("")) {
                 Reference obj_reference = new Reference();
@@ -2129,7 +2278,8 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             return ".PNG";
         }
         if (fname.equalsIgnoreCase("image/tiff")) {
-            return ".TIF";
+//            return ".TIF";
+            return ".TIFF";
         }
         if (fname.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.presentationml.presentation")) {
             return ".PPTX";
