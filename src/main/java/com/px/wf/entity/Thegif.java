@@ -75,7 +75,13 @@ public class Thegif extends BaseEntity {
     
     @Column(name = "THEGIF_FILEPATH", length = 255)
     private String thegifFilePath; 
-
+     
+    @Column(name = "THEGIF_FROM", length = 1000) 
+    private String thegifFrom;      
+ 
+    @Column(name = "THEGIF_TO", length = 1000) 
+    private String thegifTo;       
+ 
     public Thegif() {
     }
 
@@ -222,5 +228,21 @@ public class Thegif extends BaseEntity {
     public void setThegifFilePath(String thegifFilePath) {
         this.thegifFilePath = thegifFilePath;
     }
-  
+   
+    public String getThegifFrom() { 
+        return thegifFrom; 
+    } 
+ 
+    public void setThegifFrom(String thegifFrom) { 
+        this.thegifFrom = thegifFrom; 
+    } 
+ 
+    public String getThegifTo() { 
+        return thegifTo; 
+    } 
+ 
+    public void setThegifTo(String thegifTo) { 
+        this.thegifTo = thegifTo; 
+    } 
+   
 }
