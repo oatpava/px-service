@@ -55,6 +55,27 @@ public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements Th
         criteria = Common.createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria, offset, limit);
     }
+    
+    public List<Thegif> listByBookNo(String bookNo, String elementType, String depCode, int offset, int limit, String sort, String dir) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("thegifBookNo", bookNo));
+        
+        if(elementType.indexOf(",") >-1){
+           String[]  listelementType = elementType.split(",");
+             conjunction.add(Restrictions.in("this.thegifElementType", listelementType));
+        }else if(elementType != null && !elementType.equals("")) {
+             conjunction.add(Restrictions.eq("this.thegifElementType", elementType));
+        }
+
+        if(depCode != null && !depCode.equals("")){
+            conjunction.add(Restrictions.eq("this.thegifAcceptDepartmentCode", depCode));
+        }       
+        
+        DetachedCriteria criteria = DetachedCriteria.forClass(Thegif.class);
+        criteria.add(conjunction);
+        criteria = Common.createOrder(criteria, sort, dir);
+        return this.listByCriteria(criteria, offset, limit);
+    }    
 
     @Override
     public List<Thegif> listByElementType(String elementType) {
