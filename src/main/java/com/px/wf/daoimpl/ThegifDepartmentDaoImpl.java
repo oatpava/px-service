@@ -17,6 +17,7 @@ import org.hibernate.criterion.MatchMode;
  * @author Mali
  */
 public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment, Integer> implements ThegifDepartmentDao {
+
     private final String fieldSearch;
 
     public ThegifDepartmentDaoImpl() {
@@ -57,7 +58,7 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
         criteria = Common.createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
-    
+
     @Override
     public int countSearchThegifDepartment(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = createConjunctionFormSearchThegifDepartment(queryParams);
@@ -69,30 +70,29 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
 
         return this.listByCriteria(criteria).size();
     }
-    
+
     @Override
     public Conjunction createConjunctionFormSearchThegifDepartment(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = Restrictions.conjunction();
-//        conjunction.add(Restrictions.eq("this.removedBy", 0));
-//        conjunction.add(Restrictions.isNotNull("this.thegifDepartmentServiceName"));
-//        conjunction.add(Restrictions.isNotEmpty("this.thegifDepartmentServiceName"));
-        System.out.println("queryParams="+queryParams);
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
+        conjunction.add(Restrictions.isNotNull("this.thegifDepartmentServiceName"));
+        conjunction.add(Restrictions.ne("this.thegifDepartmentServiceName", ""));
+
         for (String key : queryParams.keySet()) {
             if (fieldSearch.contains(key)) {
                 for (String value : queryParams.get(key)) {
                     String[] valueArray = value.split(",");
                     int i = 0;
                     for (i = 0; i < valueArray.length; i++) {
-                        System.out.println("valueArray[i]="+valueArray[i]);
                         switch (key) {
                             case "thegifDepartmentName":
-                                if(valueArray[i] != null && !valueArray[i].equals("")){
-                                conjunction.add(Restrictions.like("this.thegifDepartmentName", valueArray[i], MatchMode.ANYWHERE));
+                                if (valueArray[i] != null && !valueArray[i].equals("")) {
+                                    conjunction.add(Restrictions.like("this.thegifDepartmentName", valueArray[i], MatchMode.ANYWHERE));
                                 }
                                 break;
                             case "thegifDepartmentCode":
-                                if(valueArray[i] != null && !valueArray[i].equals("")){
-                                conjunction.add(Restrictions.like("this.thegifDepartmentCode", valueArray[i], MatchMode.ANYWHERE));
+                                if (valueArray[i] != null && !valueArray[i].equals("")) {
+                                    conjunction.add(Restrictions.like("this.thegifDepartmentCode", valueArray[i], MatchMode.ANYWHERE));
                                 }
                                 break;
                         }
@@ -106,7 +106,7 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
     @Override
     public List<ThegifDepartment> listByThegifDepartmentName(String thegifDepartmentName) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.like("thegifDepartmentName", thegifDepartmentName,MatchMode.ANYWHERE));
+        conjunction.add(Restrictions.like("thegifDepartmentName", thegifDepartmentName, MatchMode.ANYWHERE));
         DetachedCriteria criteria = DetachedCriteria.forClass(ThegifDepartment.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
