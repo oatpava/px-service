@@ -377,6 +377,24 @@
                         <id>wsimport-generate-wsecmsService</id>
                         <phase>generate-sources</phase>
                     </execution>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>10.20.12.72_8080/wsecms/wsecmsService.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>com.px.wf.ecms</packageName>
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                            <wsdlLocation>http://10.20.12.72:8080/wsecms/wsecmsService?wsdl</wsdlLocation>
+                            <staleFile>${project.build.directory}/jaxws/stale/wsecmsService_1.stale</staleFile>
+                        </configuration>
+                        <id>wsimport-generate-wsecmsService_1</id>
+                        <phase>generate-sources</phase>
+                    </execution>
                 </executions>
                 <dependencies>
                     <dependency>

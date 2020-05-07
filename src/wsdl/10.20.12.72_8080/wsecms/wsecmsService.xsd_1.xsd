@@ -1,0 +1,386 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2-hudson-740-. --><xs:schema xmlns:tns="http://service.ws/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://service.ws/">
+
+<xs:element name="Exception" type="tns:Exception" />
+
+<xs:element name="GetError" type="tns:GetError" />
+
+<xs:element name="GetErrorResponse" type="tns:GetErrorResponse" />
+
+<xs:element name="GetLetterDataService" type="tns:GetLetterDataService" />
+
+<xs:element name="GetLetterDataServiceResponse" type="tns:GetLetterDataServiceResponse" />
+
+<xs:element name="GetMimeCodeService" type="tns:GetMimeCodeService" />
+
+<xs:element name="GetMimeCodeServiceResponse" type="tns:GetMimeCodeServiceResponse" />
+
+<xs:element name="GetMinistryService" type="tns:GetMinistryService" />
+
+<xs:element name="GetMinistryServiceResponse" type="tns:GetMinistryServiceResponse" />
+
+<xs:element name="GetOrganizationService" type="tns:GetOrganizationService" />
+
+<xs:element name="GetOrganizationServiceResponse" type="tns:GetOrganizationServiceResponse" />
+
+<xs:element name="GetOtherLetterDataService" type="tns:GetOtherLetterDataService" />
+
+<xs:element name="GetOtherLetterDataServiceResponse" type="tns:GetOtherLetterDataServiceResponse" />
+
+<xs:element name="GetSecretService" type="tns:GetSecretService" />
+
+<xs:element name="GetSecretServiceResponse" type="tns:GetSecretServiceResponse" />
+
+<xs:element name="GetSpeedService" type="tns:GetSpeedService" />
+
+<xs:element name="GetSpeedServiceResponse" type="tns:GetSpeedServiceResponse" />
+
+<xs:element name="GetValinTagNameService2" type="tns:GetValinTagNameService2" />
+
+<xs:element name="GetValinTagNameService2Response" type="tns:GetValinTagNameService2Response" />
+
+<xs:element name="OtherLetterService" type="tns:OtherLetterService" />
+
+<xs:element name="OtherLetterServiceResponse" type="tns:OtherLetterServiceResponse" />
+
+<xs:element name="ReceiveLetterService" type="tns:ReceiveLetterService" />
+
+<xs:element name="ReceiveLetterServiceResponse" type="tns:ReceiveLetterServiceResponse" />
+
+<xs:element name="SendLetterService" type="tns:SendLetterService" />
+
+<xs:element name="SendLetterServiceResponse" type="tns:SendLetterServiceResponse" />
+
+<xs:element name="hello" type="tns:hello" />
+
+<xs:element name="helloResponse" type="tns:helloResponse" />
+
+<xs:element name="main" type="tns:main" />
+
+<xs:element name="mainResponse" type="tns:mainResponse" />
+
+<xs:element name="version2.0.1" type="tns:version2.0.1" />
+
+<xs:element name="version2.0.1Response" type="tns:version2.0.1Response" />
+
+<xs:complexType name="ReceiveLetterService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReceiveLetterServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:Letter" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Letter">
+<xs:sequence>
+<xs:element name="serialVersionUID" type="xs:string" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="letterCPK" type="xs:string" minOccurs="0" />
+<xs:element name="letterNumber" type="xs:string" minOccurs="0" />
+<xs:element name="processId" type="xs:string" minOccurs="0" />
+<xs:element name="processTime" type="xs:string" minOccurs="0" />
+<xs:element name="correspondenceDate" type="xs:string" minOccurs="0" />
+<xs:element name="subject" type="xs:string" minOccurs="0" />
+<xs:element name="secretCode" type="xs:string" minOccurs="0" />
+<xs:element name="speedCode" type="xs:string" minOccurs="0" />
+<xs:element name="senderName" type="xs:string" minOccurs="0" />
+<xs:element name="receiverName" type="xs:string" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="acceptId" type="xs:string" minOccurs="0" />
+<xs:element name="acceptDate" type="xs:string" minOccurs="0" />
+<xs:element name="acceptDeptCode" type="xs:string" minOccurs="0" />
+<xs:element name="senderDeptCode" type="xs:string" minOccurs="0" />
+<xs:element name="sendDate" type="xs:string" minOccurs="0" />
+<xs:element name="status" type="xs:int" />
+<xs:element name="type" type="xs:int" />
+<xs:element name="senderTitle" type="xs:string" minOccurs="0" />
+<xs:element name="receiverTitle" type="xs:string" minOccurs="0" />
+<xs:element name="senderLname" type="xs:string" minOccurs="0" />
+<xs:element name="receiverLname" type="xs:string" minOccurs="0" />
+<xs:element name="senderDeptId" type="xs:string" minOccurs="0" />
+<xs:element name="receiverDeptId" type="xs:string" minOccurs="0" />
+<xs:element name="senderDept" type="xs:string" minOccurs="0" />
+<xs:element name="receiverDept" type="xs:string" minOccurs="0" />
+<xs:element name="receiverMinistry" type="xs:string" minOccurs="0" />
+<xs:element name="senderMinistry" type="xs:string" minOccurs="0" />
+<xs:element name="receiverMinistryId" type="xs:string" minOccurs="0" />
+<xs:element name="senderMinistryId" type="xs:string" minOccurs="0" />
+<xs:element name="isUpdate" type="xs:boolean" />
+<xs:element name="isManualLetter" type="xs:boolean" />
+<xs:element name="attachment" type="tns:Attachment" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="attachmentText" type="xs:string" minOccurs="0" />
+<xs:element name="refLetterNumber" type="xs:string" minOccurs="0" />
+<xs:element name="refCorrespondenceDate" type="xs:string" minOccurs="0" />
+<xs:element name="refSubject" type="xs:string" minOccurs="0" />
+<xs:element name="typeLetter" type="xs:string" minOccurs="0" />
+<xs:element name="typeLetter2" type="xs:string" minOccurs="0" />
+<xs:element name="errorCode" type="xs:string" minOccurs="0" />
+<xs:element name="errorDescription" type="xs:string" minOccurs="0" />
+<xs:element name="reference" type="tns:Reference" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Attachment">
+<xs:sequence>
+<xs:element name="serialVersionUID" type="xs:string" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="filename" type="xs:string" minOccurs="0" />
+<xs:element name="uri" type="xs:string" minOccurs="0" />
+<xs:element name="mime" type="xs:string" minOccurs="0" />
+<xs:element name="type" type="xs:int" />
+<xs:element name="letter" type="tns:Letter" minOccurs="0" />
+<xs:element name="base64" type="xs:string" minOccurs="0" />
+<xs:element name="filetype" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Reference">
+<xs:sequence>
+<xs:element name="serialVersionUID" type="xs:string" minOccurs="0" />
+<xs:element name="letterNumber" type="xs:string" minOccurs="0" />
+<xs:element name="correspondenceDate" type="xs:string" minOccurs="0" />
+<xs:element name="subject" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Exception">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="hello">
+<xs:sequence>
+<xs:element name="txt" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="helloResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="OtherLetterService">
+<xs:sequence>
+<xs:element name="fromDepCode" type="xs:string" minOccurs="0" />
+<xs:element name="fromWsurl" type="xs:string" minOccurs="0" />
+<xs:element name="toWsurl" type="xs:string" minOccurs="0" />
+<xs:element name="tagLetter1" type="xs:string" minOccurs="0" />
+<xs:element name="tagLetter2" type="xs:string" minOccurs="0" />
+<xs:element name="letterother" type="tns:LetterOther" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LetterOther">
+<xs:sequence>
+<xs:element name="processId" type="xs:string" minOccurs="0" />
+<xs:element name="processTime" type="xs:string" minOccurs="0" />
+<xs:element name="letterId" type="xs:string" minOccurs="0" />
+<xs:element name="correspondenceDate" type="xs:string" minOccurs="0" />
+<xs:element name="subject" type="xs:string" minOccurs="0" />
+<xs:element name="acceptId" type="xs:string" minOccurs="0" />
+<xs:element name="acceptDate" type="xs:string" minOccurs="0" />
+<xs:element name="acceptDeptCode" type="xs:string" minOccurs="0" />
+<xs:element name="senderDeptCode" type="xs:string" minOccurs="0" />
+<xs:element name="errorCode" type="xs:string" minOccurs="0" />
+<xs:element name="errorDescription" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="OtherLetterServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetSecretService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetSecretServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:Secret" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Secret">
+<xs:sequence>
+<xs:element name="secretValue" type="xs:string" minOccurs="0" />
+<xs:element name="secretDescription" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetLetterDataService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+<xs:element name="tag1" type="xs:string" minOccurs="0" />
+<xs:element name="tag2" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetLetterDataServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetSpeedService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetSpeedServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:Speed" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Speed">
+<xs:sequence>
+<xs:element name="speedValue" type="xs:string" minOccurs="0" />
+<xs:element name="speedDescription" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SendLetterService">
+<xs:sequence>
+<xs:element name="messageId" type="xs:string" minOccurs="0" />
+<xs:element name="toWsurl" type="xs:string" minOccurs="0" />
+<xs:element name="fromWsurl" type="xs:string" minOccurs="0" />
+<xs:element name="letter" type="tns:Letter" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SendLetterServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetOtherLetterDataService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+<xs:element name="tagletter1" type="xs:string" minOccurs="0" />
+<xs:element name="tagletter2" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetOtherLetterDataServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:LetterOther" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetMimeCodeService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetMimeCodeServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:MimeCode" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MimeCode">
+<xs:sequence>
+<xs:element name="fileExtension" type="xs:string" minOccurs="0" />
+<xs:element name="contentType" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetValinTagNameService2">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+<xs:element name="tagname" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetValinTagNameService2Response">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetOrganizationService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetOrganizationServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:Organization" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Organization">
+<xs:sequence>
+<xs:element name="organizationENName" type="xs:string" minOccurs="0" />
+<xs:element name="organizationTHName" type="xs:string" minOccurs="0" />
+<xs:element name="ECMSURL" type="xs:string" minOccurs="0" />
+<xs:element name="organizationID" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetError">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetErrorResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="main">
+<xs:sequence>
+<xs:element name="arg0" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="mainResponse">
+<xs:sequence />
+</xs:complexType>
+
+<xs:complexType name="version2.0.1">
+<xs:sequence>
+<xs:element name="txt" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="version2.0.1Response">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetMinistryService">
+<xs:sequence>
+<xs:element name="filepath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GetMinistryServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:Ministry" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Ministry">
+<xs:sequence>
+<xs:element name="ministryTHName" type="xs:string" minOccurs="0" />
+<xs:element name="ministryID" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

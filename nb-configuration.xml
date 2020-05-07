@@ -28,5 +28,6 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>Tomcat</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
         <org-netbeans-modules-maven-jaxws._5f_C_5f_wsecmsService>http://localhost:8080/wsecms/wsecmsService?wsdl</org-netbeans-modules-maven-jaxws._5f_C_5f_wsecmsService>
         <netbeans.hint.jdkPlatform>JDK_1.8</netbeans.hint.jdkPlatform>
+        <org-netbeans-modules-maven-jaxws._5f_C_5f_wsecmsService_5f_1>http://10.20.12.72:8080/wsecms/wsecmsService?wsdl</org-netbeans-modules-maven-jaxws._5f_C_5f_wsecmsService_5f_1>
     </properties>
 </project-shared-configuration>
