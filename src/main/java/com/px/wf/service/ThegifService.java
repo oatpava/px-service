@@ -411,11 +411,11 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             }
             //========================
             String from = thegifService.checkStringNull(thegif.getThegifFrom());
-            System.out.println("1from="+from);
+            //System.out.println("1from="+from);
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifFrom", from, thegifId, "จาก", "TEXT", 100, 1000));
             //========================
             String to = thegifService.checkStringNull(thegif.getThegifTo());
-            System.out.println("1to="+to);
+            //System.out.println("1to="+to);
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifTo", to, thegifId, "ถึง/เรียน", "TEXT", 100, 1000));
             
         } else {
@@ -445,11 +445,11 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             String SendDate = thegifService.changeDateToFormat(thegif.getThegifSendDate(), 1);
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifLetterStatus", SendDate, thegifId, "วันเวลาที่ส่ง", "DATETIME", 100, 0));
             String from = thegifService.checkStringNull(thegif.getThegifFrom());
-            System.out.println("2from="+from);
+            //System.out.println("2from="+from);
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifFrom", from, thegifId, "จาก", "TEXT", 100, 1000));
             //========================
             String to = thegifService.checkStringNull(thegif.getThegifTo());
-            System.out.println("2to="+to);
+            //System.out.println("2to="+to);
             listThegifModel_groupShowList.add(thegifService.tranformToModelGroupShowList("thegifTo", to, thegifId, "ถึง/เรียน", "TEXT", 100, 1000));
             //========================            
         }
@@ -735,9 +735,9 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
         String toWsurl = toWsurlP;
         String tagLetter1 = "GetMinistryOrganizationList";
         String tagLetter2 = "";
-        System.out.println("fromDepCode = " + fromDepCode);
-        System.out.println("fromWsurl = " + fromWsurl);
-        System.out.println("toWsurl = " + toWsurl);
+        //System.out.println("fromDepCode = " + fromDepCode);
+        //System.out.println("fromWsurl = " + fromWsurl);
+        //System.out.println("toWsurl = " + toWsurl);
         try { // Call Web Service Operation
             com.px.wf.ecms.LetterOther letterother = null;
             // TODO process result here
@@ -783,7 +783,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             com.px.wf.ecms.LetterOther letterother = new com.px.wf.ecms.LetterOther();
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -814,12 +814,12 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             com.px.wf.ecms.LetterOther letterother = new com.px.wf.ecms.LetterOther();
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
             
             listSpeed = port.getSpeedService(result);
-            System.out.println("listSpeed="+listSpeed);
+            //System.out.println("listSpeed="+listSpeed);
         } catch (Exception ex) {
             // TODO handle custom exceptions here
         } finally {
@@ -845,7 +845,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             com.px.wf.ecms.LetterOther letterother = new com.px.wf.ecms.LetterOther();
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -876,7 +876,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             com.px.wf.ecms.LetterOther letterother = new com.px.wf.ecms.LetterOther();
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -907,7 +907,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             com.px.wf.ecms.LetterOther letterother = new com.px.wf.ecms.LetterOther();
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -936,34 +936,34 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             String fromWsurlP, String toWsurlP) {
         ArrayList<ThegifModel_ECMSResult> listThegifModel_ECMSResult = new ArrayList();
         String status = "";
-        System.out.println("--------------getECMSTimeCheck--------------");
+        //System.out.println("--------------getECMSTimeCheck--------------");
         try { // Call Web Service Operation
-            System.out.println("Call Web Service Operation");
+            //System.out.println("Call Web Service Operation");
             WsecmsService_Service service = new com.px.wf.ecms.WsecmsService_Service();
-            System.out.println("service="+service);
+            //System.out.println("service="+service);
             WsecmsService port = service.getWsecmsServicePort();
-            System.out.println("port="+port);
+            //System.out.println("port="+port);
             // TODO initialize WS operation arguments here
-            System.out.println("fromDepCodeP="+fromDepCodeP);
-            System.out.println("fromWsurlP="+fromWsurlP);
-            System.out.println("toWsurlP="+toWsurlP);
-            System.out.println("----------------");
+            //System.out.println("fromDepCodeP="+fromDepCodeP);
+            //System.out.println("fromWsurlP="+fromWsurlP);
+            //System.out.println("toWsurlP="+toWsurlP);
+            //System.out.println("----------------");
             java.lang.String fromDepCode = fromDepCodeP;
             java.lang.String fromWsurl = fromWsurlP;
             java.lang.String toWsurl = toWsurlP;
             java.lang.String tagLetter1 = "TimeCheckRequest";
             java.lang.String tagLetter2 = "";
             com.px.wf.ecms.LetterOther letterother = new com.px.wf.ecms.LetterOther();    
-            System.out.println("fromDepCode="+fromDepCode);
-            System.out.println("fromWsurl="+fromWsurl);
-            System.out.println("toWsurl="+toWsurl);
-            System.out.println("tagLetter1="+tagLetter1);
-            System.out.println("tagLetter2="+tagLetter2);
-            System.out.println("letterother="+letterother);            
+            //System.out.println("fromDepCode="+fromDepCode);
+            //System.out.println("fromWsurl="+fromWsurl);
+            //System.out.println("toWsurl="+toWsurl);
+            //System.out.println("tagLetter1="+tagLetter1);
+            //System.out.println("tagLetter2="+tagLetter2);
+            //System.out.println("letterother="+letterother);            
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
 
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceAll("/", "\\");
 //            System.out.println("Result Replace / Slash = " + result);
 
@@ -971,15 +971,15 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             if (status.equals("Error")) {
                 status = port.getValinTagNameService2(result, "ErrorCode");
             }
-            System.out.println("status="+status);
+            //System.out.println("status="+status);
             String errorcode = port.getError(result);
-            System.out.println("errorcode="+errorcode);
+            //System.out.println("errorcode="+errorcode);
             
             listThegifModel_ECMSResult = setDataECMSResult(status, errorcode,"",-1);
-            System.out.println("listThegifModel_ECMSResultlistThegifModel_ECMSResult="+listThegifModel_ECMSResult);
+            //System.out.println("listThegifModel_ECMSResultlistThegifModel_ECMSResult="+listThegifModel_ECMSResult);
         } catch (Exception ex) {
             // TODO handle custom exceptions here
-            System.out.println("Exception = " + ex.getMessage());
+            //System.out.println("Exception = " + ex.getMessage());
         } finally {
             return listThegifModel_ECMSResult;
         }
@@ -1005,7 +1005,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -1043,7 +1043,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -1082,7 +1082,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -1122,9 +1122,9 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
             // TODO process result here
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
-            System.out.println("Result Replace = " + result);
+            //System.out.println("Result Replace = " + result);
 
 //            status = port.getValinTagNameService2(result, "ECMSDeleteGovernmentDocumentRequest");
 //            if (status.equals("Error")) {
@@ -1197,7 +1197,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
             // TODO process result here 
             java.lang.String result = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
-            System.out.println("Result First = " + result);
+            //System.out.println("Result First = " + result);
 //            result = result.replaceFirst("C:", "Z:");
 //            System.out.println("Result Replace = " + result);
 
@@ -1342,7 +1342,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             // TODO process result here
             java.lang.String pathfile = port.otherLetterService(fromDepCode, fromWsurl, toWsurl, tagLetter1, tagLetter2, letterother);
             
-            System.out.println("Pathfile First = " + pathfile);
+            //System.out.println("Pathfile First = " + pathfile);
 //            pathfile = pathfile.replaceFirst("C:", "Z:");
 //            System.out.println("Pathfile Replace= " + pathfile);
             
@@ -1693,24 +1693,24 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             java.lang.String fromWsurl = fromWsurlP;
             com.px.wf.ecms.Letter letter = new com.px.wf.ecms.Letter();
             // TODO process result here
-            System.out.println("wfContent.getWfContentBookNo()="+wfContent.getWfContentBookNo());
-            System.out.println("wfContent.getWfContentBookDate().toString()="+Common.localDateTimeToString(wfContent.getWfContentBookDate()));
-            System.out.println("wfContent.getWfContentTitle()="+wfContent.getWfContentTitle());
-            System.out.println("wfContent.getWfContentSecret()="+wfContent.getWfContentSecret());
-            System.out.println("wfContent.getWfContentSpeed()="+wfContent.getWfContentSpeed());
-            System.out.println("sender_givenname="+sender_givenname);
-            System.out.println("sender_familyname="+sender_familyname);
-            System.out.println("sender_jobtitle="+sender_jobtitle);
-            System.out.println("sender_ministryid="+sender_ministryid);
-            System.out.println("sender_departmentid="+sender_departmentid);
-            System.out.println("receiver_givenname="+receiver_givenname);
-            System.out.println("receiver_familyname="+receiver_familyname);
-            System.out.println("receiver_jobtitle="+receiver_jobtitle);
-            System.out.println("receiver_ministryid"+receiver_ministryid);
-            System.out.println("receiver_departmentid="+receiver_departmentid);
-            System.out.println("wfContent.getWfContentAttachment()="+wfContent.getWfContentAttachment());
-            System.out.println("wfContent.getWfContentDescription()="+wfContent.getWfContentDescription());
-            System.out.println("wfContent.getWfContentReference()="+wfContent.getWfContentReference());
+//            System.out.println("wfContent.getWfContentBookNo()="+wfContent.getWfContentBookNo());
+//            System.out.println("wfContent.getWfContentBookDate().toString()="+Common.localDateTimeToString(wfContent.getWfContentBookDate()));
+//            System.out.println("wfContent.getWfContentTitle()="+wfContent.getWfContentTitle());
+//            System.out.println("wfContent.getWfContentSecret()="+wfContent.getWfContentSecret());
+//            System.out.println("wfContent.getWfContentSpeed()="+wfContent.getWfContentSpeed());
+//            System.out.println("sender_givenname="+sender_givenname);
+//            System.out.println("sender_familyname="+sender_familyname);
+//            System.out.println("sender_jobtitle="+sender_jobtitle);
+//            System.out.println("sender_ministryid="+sender_ministryid);
+//            System.out.println("sender_departmentid="+sender_departmentid);
+//            System.out.println("receiver_givenname="+receiver_givenname);
+//            System.out.println("receiver_familyname="+receiver_familyname);
+//            System.out.println("receiver_jobtitle="+receiver_jobtitle);
+//            System.out.println("receiver_ministryid"+receiver_ministryid);
+//            System.out.println("receiver_departmentid="+receiver_departmentid);
+//            System.out.println("wfContent.getWfContentAttachment()="+wfContent.getWfContentAttachment());
+//            System.out.println("wfContent.getWfContentDescription()="+wfContent.getWfContentDescription());
+//            System.out.println("wfContent.getWfContentReference()="+wfContent.getWfContentReference());
             letter.setLetterNumber(checkEscChar("1", wfContent.getWfContentBookNo()));
             letter.setCorrespondenceDate(ECMSFormatDate(Common.localDateTimeToString(wfContent.getWfContentBookDate()), false)); 
             letter.setSubject(checkEscChar("1", wfContent.getWfContentTitle()));
@@ -1752,9 +1752,9 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                         }
                         referenceid = checkEscChar("1", referenceid);
                         referencesubject = checkEscChar("1", referencesubject);
-                        System.out.println("referenceid="+referenceid);
-                        System.out.println("referencesubject="+referencesubject);
-                        System.out.println("referencedate="+referencedate);
+//                        System.out.println("referenceid="+referenceid);
+//                        System.out.println("referencesubject="+referencesubject);
+//                        System.out.println("referencedate="+referencedate);
                         obj_reference = new Reference();
                         obj_reference.setLetterNumber(referenceid);
                         obj_reference.setCorrespondenceDate(referencedate);
