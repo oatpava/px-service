@@ -4,6 +4,7 @@ import com.px.mwp.dao.InboxDao;
 import com.px.mwp.entity.Inbox;
 import com.px.mwp.model.InboxSearchModel;
 import com.px.share.daoimpl.GenericDaoImpl;
+import com.px.share.util.AdvanceSearch;
 import static com.px.share.util.Common.dateThaiToLocalDateTime;
 import java.util.List;
 import org.hibernate.criterion.Conjunction;
@@ -202,10 +203,10 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         conjunction.add(Restrictions.in(search, folderId));
 
         if (inboxFrom != null && inboxFrom != "") {
-            conjunction.add(Restrictions.like("this.inboxFrom", inboxFrom, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxFrom", inboxFrom, null, "&", "|", "!", "^", null));
         }
         if (inboxTitle != null && inboxTitle != "") {
-            conjunction.add(Restrictions.like("this.inboxTitle", inboxTitle, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxTitle", inboxTitle, null, "&", "|", "!", "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.inboxSendDate", dateThaiToLocalDateTime(inboxsearchModel.getInboxStartDate())));
@@ -215,16 +216,18 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
             conjunction.add(Restrictions.le("this.inboxSendDate", dateThaiToLocalDateTime(inboxsearchModel.getInboxEndDate()).plusHours(23).plusMinutes(59)));
         }
         if (inboxNote != null && inboxNote != "") {
-            conjunction.add(Restrictions.like("this.inboxNote", inboxNote, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxNote", inboxNote, null, "&", "|", "!", "^", null));
+
         }
         if (inboxDescription != null && inboxDescription != "") {
-            conjunction.add(Restrictions.like("this.inboxDescription", inboxDescription, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxDescription", inboxDescription, null, "&", "|", "!", "^", null));
+
         }
         if (inboxStr04 != null && inboxStr04 != "") {
-            conjunction.add(Restrictions.like("this.inboxStr04", inboxStr04, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr04", inboxStr04, null, "&", "|", "!", "^", null));
         }
         if (inboxStr03 != null && inboxStr03 != "") {
-            conjunction.add(Restrictions.like("this.inboxStr03", inboxStr03, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr03", inboxStr03, null, "&", "|", "!", "^", null));
         }
         return conjunction;
     }
