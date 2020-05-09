@@ -209,7 +209,7 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
             conjunction.add(Restrictions.eq("this.moduleName", moduleName));
         }
         if (description != null && description != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.description", description, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.description", description, null, "&", ",", "!", "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.createdDate", dateThaiToLocalDateTime(recycleBinSearchModel.getStartDate())));

@@ -203,10 +203,10 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         conjunction.add(Restrictions.in(search, folderId));
 
         if (inboxFrom != null && inboxFrom != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxFrom", inboxFrom, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxFrom", inboxFrom, null, "&", ",", "!", "^", null));
         }
         if (inboxTitle != null && inboxTitle != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxTitle", inboxTitle, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxTitle", inboxTitle, null, "&", ",", "!", "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.inboxSendDate", dateThaiToLocalDateTime(inboxsearchModel.getInboxStartDate())));
@@ -216,18 +216,18 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
             conjunction.add(Restrictions.le("this.inboxSendDate", dateThaiToLocalDateTime(inboxsearchModel.getInboxEndDate()).plusHours(23).plusMinutes(59)));
         }
         if (inboxNote != null && inboxNote != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxNote", inboxNote, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxNote", inboxNote, null, "&", ",", "!", "^", null));
 
         }
         if (inboxDescription != null && inboxDescription != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxDescription", inboxDescription, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxDescription", inboxDescription, null, "&", ",", "!", "^", null));
 
         }
         if (inboxStr04 != null && inboxStr04 != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr04", inboxStr04, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr04", inboxStr04, null, "&", ",", "!", "^", null));
         }
         if (inboxStr03 != null && inboxStr03 != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr03", inboxStr03, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr03", inboxStr03, null, "&", ",", "!", "^", null));
         }
         return conjunction;
     }
