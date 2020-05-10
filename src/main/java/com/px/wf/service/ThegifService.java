@@ -278,7 +278,6 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
 
         ThegifModel_groupShowList2 thegifModel_groupShowList2 = null;
         if (thegif != null) {
-            List<FileAttachModel> listFileAttach = new ArrayList();
             thegifModel_groupShowList2 = new ThegifModel_groupShowList2();
             thegifModel_groupShowList2.setId(thegif.getId());
             thegifModel_groupShowList2.setCreatedBy(thegif.getCreatedBy());
@@ -307,9 +306,11 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
             thegifModel_groupShowList2.setThegifReference(thegif.getThegifReference());
             thegifModel_groupShowList2.setThegifFilePath(thegif.getThegifFilePath());
             thegifModel_groupShowList2.setTd(listThegif); 
+            List<FileAttachModel> listFileAttach = new ArrayList();//*
             thegifModel_groupShowList2.setWfFileAttach(listFileAttach);
             thegifModel_groupShowList2.setThegifFrom(thegif.getThegifFrom());
-            thegifModel_groupShowList2.setThegifTo(thegif.getThegifTo());              
+            thegifModel_groupShowList2.setThegifTo(thegif.getThegifTo());
+            thegifModel_groupShowList2.setNumFileAttach(new FileAttachService().countAllByLinkTypeLinkId("thegif", thegif.getId()));
         }
         return thegifModel_groupShowList2;
     }
@@ -1533,6 +1534,7 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                     fileAttach.setFileAttachType(thegifType);
                     fileAttach.setLinkType("thegif");
                     fileAttach.setLinkId(thegifId);
+                    fileAttach.setSecrets(1);
                     fileAttach = fileAttachService.create(fileAttach);
 
                     if (fileAttach != null) {
