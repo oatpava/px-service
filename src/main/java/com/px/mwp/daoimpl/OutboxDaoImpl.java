@@ -5,6 +5,7 @@ import com.px.mwp.entity.Outbox;
 import com.px.mwp.entity.Workflow;
 import com.px.mwp.model.OutboxSearchModel;
 import com.px.share.daoimpl.GenericDaoImpl;
+import com.px.share.util.AdvanceSearch;
 import com.px.share.util.Common;
 import static com.px.share.util.Common.dateThaiToLocalDateTime;
 import java.util.Calendar;
@@ -493,13 +494,13 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
         conjunction.add(Restrictions.in("this.userProfileFolderId", UserProfileFolderId));
 
         if (outboxTo != null && outboxTo != "") {
-            conjunction.add(Restrictions.like("this.outboxTo", outboxTo, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTo", outboxTo, null, "&", ",", "!", "^", null));
         }
         if (outboxFrom != null && outboxFrom != "") {
-            conjunction.add(Restrictions.like("this.outboxFrom", outboxFrom, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxFrom", outboxFrom, null, "&", ",", "!", "^", null));
         }
         if (outboxTitle != null && outboxTitle != "") {
-            conjunction.add(Restrictions.like("this.outboxTitle", outboxTitle, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTitle", outboxTitle, null, "&", ",", "!", "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.outboxSendDate", dateThaiToLocalDateTime(outboxsearchModel.getOutboxStartDate())));
@@ -509,16 +510,16 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
             conjunction.add(Restrictions.le("this.outboxSendDate", dateThaiToLocalDateTime(outboxsearchModel.getOutboxEndDate()).plusHours(23).plusMinutes(59)));
         }
         if (outboxNote != null && outboxNote != "") {
-            conjunction.add(Restrictions.like("this.outboxNote", outboxNote, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxNote", outboxNote, null, "&", ",", "!", "^", null));
         }
         if (outboxDescription != null && outboxDescription != "") {
-            conjunction.add(Restrictions.like("this.outboxDescription", outboxDescription, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxDescription", outboxDescription, null, "&", ",", "!", "^", null));
         }
         if (outboxStr04 != null && outboxStr04 != "") {
-            conjunction.add(Restrictions.like("this.outboxStr04", outboxStr04, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr04", outboxStr04, null, "&", ",", "!", "^", null));
         }
         if (outboxStr03 != null && outboxStr03 != "") {
-            conjunction.add(Restrictions.like("this.outboxStr03", outboxStr03, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr03", outboxStr03, null, "&", ",", "!", "^", null));
         }
         return conjunction;
     }

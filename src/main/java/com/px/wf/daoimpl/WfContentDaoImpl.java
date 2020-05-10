@@ -445,7 +445,7 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
 //            conjunction.add(Restrictions.in("this.wfContentContentNumber", contentNumber));
 //        }
         if (wfContentContentNo != null && wfContentContentNo != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentContentNo", wfContentContentNo, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentContentNo", wfContentContentNo, null, "&", ",", "!", "^", null));
         }
         if (startContentNo > 0) {
             conjunction.add(Restrictions.ge("this.wfContentContentNumber", startContentNo));
@@ -460,7 +460,7 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
             conjunction.add(Restrictions.le("this.wfContentContentDate", dateThaiToLocalDateTime(wfContentSearchModel.getWfContentContentEndDate()).plusHours(23).plusMinutes(59)));
         }
         if (wfContentBookNo != null && wfContentBookNo != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentBookNo", wfContentBookNo, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentBookNo", wfContentBookNo, null, "&", ",", "!", "^", null));
         }
         if (bookStartDate != null && bookStartDate != "") {
             conjunction.add(Restrictions.ge("this.wfContentBookDate", dateThaiToLocalDateTime(wfContentSearchModel.getWfContentBookStartDate())));
@@ -469,25 +469,25 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
             conjunction.add(Restrictions.le("this.wfContentBookDate", dateThaiToLocalDateTime(wfContentSearchModel.getWfContentBookEndDate()).plusHours(23).plusMinutes(59)));
         }
         if (wfContentFrom != null && wfContentFrom != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentFrom", wfContentFrom, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentFrom", wfContentFrom, null, "&", ",", "!", "^", null));
 
         }
         if (wfContentTo != null && wfContentTo != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentTo", wfContentTo, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentTo", wfContentTo, null, "&", ",", "!", "^", null));
 
         }
         if (wfContentTitle != null && wfContentTitle != "") {
 //            conjunction.add(Restrictions.like("this.wfContentTitle", wfContentTitle, MatchMode.ANYWHERE));           
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentTitle", wfContentTitle, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentTitle", wfContentTitle, null, "&", ",", "!", "^", null));
         }
         if (userName != null && userName != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentOwnername", userName, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentOwnername", userName, null, "&", ",", "!", "^", null));
         }
         if (wfContentDescription != null && wfContentDescription != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentDescription", wfContentDescription, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentDescription", wfContentDescription, null, "&", ",", "!", "^", null));
         }
         if (wfContentStr03 != null && wfContentStr03 != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentStr03", wfContentStr03, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentStr03", wfContentStr03, null, "&", ",", "!", "^", null));
         }
 //        if (contentTimeRange > 0) {
 //            switch (contentTimeRange) {
@@ -495,7 +495,7 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
 //            }
 //        }
         if (fullText != null && fullText != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.fullText", fullText, null, "&", "|", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.fullText", fullText, null, "&", ",", "!", "^", null));
         }
         if (sendingStatus > 0) {
             conjunction.add(Restrictions.eq("this.wfContentInt03", sendingStatus - 1));//0=unSend, 1=sent

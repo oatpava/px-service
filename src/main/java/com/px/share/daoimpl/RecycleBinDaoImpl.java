@@ -4,6 +4,7 @@ import com.px.share.dao.RecycleBinDao;
 import com.px.share.entity.RecycleBin;
 import com.px.share.daoimpl.GenericDaoImpl;
 import com.px.share.model.RecycleBinSearchModel;
+import com.px.share.util.AdvanceSearch;
 import com.px.share.util.Common;
 import static com.px.share.util.Common.dateThaiToLocalDateTime;
 import java.util.Calendar;
@@ -208,7 +209,7 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
             conjunction.add(Restrictions.eq("this.moduleName", moduleName));
         }
         if (description != null && description != "") {
-            conjunction.add(Restrictions.like("this.description", description, MatchMode.ANYWHERE));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.description", description, null, "&", ",", "!", "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.createdDate", dateThaiToLocalDateTime(recycleBinSearchModel.getStartDate())));
@@ -219,7 +220,7 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
         return conjunction;
     }
 
-    public Integer countListByUserId(int userProfileId) {        
+    public Integer countListByUserId(int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("createdBy", userProfileId));

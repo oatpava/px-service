@@ -34,6 +34,11 @@ public class ThegifModel_groupShowList2 extends ThegifModel{
     @Expose
     @Since(1.0)
     private List<FileAttachModel> wfFileAttach; //tumadd
+    
+    @XmlElement(name = "numFileAttach")
+    @Expose
+    @Since(1.0)
+    private int numFileAttach;//oat-add
 
     public List<FileAttachModel> getWfFileAttach() {
         return wfFileAttach;
@@ -41,6 +46,14 @@ public class ThegifModel_groupShowList2 extends ThegifModel{
 
     public void setWfFileAttach(List<FileAttachModel> wfFileAttach) {
         this.wfFileAttach = wfFileAttach;
+    }
+    
+    public int getNumFileAttach() {
+        return numFileAttach;
+    }
+
+    public void setNumFileAttach(int numFileAttach) {
+        this.numFileAttach = numFileAttach;
     }
     
 }
