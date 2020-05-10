@@ -249,9 +249,9 @@ public class ThegifResource {
             ThegifService thegifService = new ThegifService();
             ArrayList<ThegifModel_groupShowList2> listThegifModel_groupShowList2 = new ArrayList();
             List<Thegif> listThegif = thegifService.listByElementType(elementType, offset, limit, sort, dir);
-            System.out.println("listThegifSize="+listThegif.size());
+            //System.out.println("listThegifSize="+listThegif.size());
             int countAll = thegifService.countAllListByElementType(elementType);
-            System.out.println("countAll="+countAll);
+            //System.out.println("countAll="+countAll);
             int count = listThegif.size();
             int next = 0;
             if (count >= limit) {
@@ -261,8 +261,8 @@ public class ThegifResource {
                 next = 0;
             }
             ListReturnModel listReturnModel = new ListReturnModel(countAll, count, next);
-            System.out.println("listThegif="+listThegif);
-            System.out.println("listThegifSize="+listThegif.size());
+            //System.out.println("listThegif="+listThegif);
+            //System.out.println("listThegifSize="+listThegif.size());
             if (!listThegif.isEmpty()) {
                 List<ThegifModel_groupShowList> listThegifModel_groupShowList = new ArrayList();
                 ThegifModel_groupShowList2 thegifModel_groupShowList2 = new ThegifModel_groupShowList2();
