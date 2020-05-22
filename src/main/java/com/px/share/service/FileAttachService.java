@@ -271,25 +271,55 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         }
         return result;
     }
+// assets/filetype/
 
     public String buildThumbhunailUrl(String fileAttachType, String fileAttachUrl) {
         String thumbhunailUrl = fileAttachUrl;
-        if (fileAttachType.equalsIgnoreCase(".DOCX") || fileAttachType.equalsIgnoreCase(".DOC")) {
-            thumbhunailUrl = "assets/icons/icon-word.svg";
-        } else if (fileAttachType.equalsIgnoreCase(".XLSX") || fileAttachType.equalsIgnoreCase(".XLS")) {
-            thumbhunailUrl = "assets/icons/icon-excel.svg";
-        } else if (fileAttachType.equalsIgnoreCase(".PPTX") || fileAttachType.equalsIgnoreCase(".PPT")) {
-            thumbhunailUrl = "assets/icons/icon-powerpoint.svg";
+        if (fileAttachType.equalsIgnoreCase(".DOCX")) {
+            thumbhunailUrl = "assets/filetype/doc.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".DOC")) {
+            thumbhunailUrl = "assets/filetype/docx.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".XLSX")) {
+            thumbhunailUrl = "assets/filetype/xlsx.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".XLS")) {
+            thumbhunailUrl = "assets/filetype/xls.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".PPTX")) {
+            thumbhunailUrl = "assets/filetype/pptx.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".PPT")) {
+            thumbhunailUrl = "assets/filetype/ppt.svg";
         } else if (fileAttachType.equalsIgnoreCase(".PDF")) {
-            thumbhunailUrl = "assets/icons/icon-text.svg";
-        } else if (fileAttachType.equalsIgnoreCase(".JPG") || fileAttachType.equalsIgnoreCase(".JPEG") || fileAttachType.equalsIgnoreCase(".PNG") || fileAttachType.equalsIgnoreCase(".SVG")) {
+            thumbhunailUrl = "assets/filetype/pdf.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".JPEG")) {
+            thumbhunailUrl = "assets/filetype/jpeg.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".JPG") || fileAttachType.equalsIgnoreCase(".BMP")  ) {
+            thumbhunailUrl = "assets/filetype/jpg.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".PNG")) {
+            thumbhunailUrl = "assets/filetype/png.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".SVG")) {
             thumbhunailUrl = "assets/icons/icon-image.svg";
-        } else if (fileAttachType.equalsIgnoreCase(".TIF") || fileAttachType.equalsIgnoreCase(".TIFF")) {
-            thumbhunailUrl = "assets/icons/icon-tif.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".TIF")) {
+            thumbhunailUrl = "assets/filetype/tif.svg";
+        } else if (fileAttachType.equalsIgnoreCase(".TIFF")) {
+            thumbhunailUrl = "assets/filetype/tiff.svg";
         } else {
             thumbhunailUrl = "assets/icons/icon-unknown.svg";
         }
         return thumbhunailUrl;
+
+//        else if (fileAttachType.equalsIgnoreCase(".XLSX") || fileAttachType.equalsIgnoreCase(".XLS")) {
+//            thumbhunailUrl = "assets/icons/icon-excel.svg";
+//        } else if (fileAttachType.equalsIgnoreCase(".PPTX") || fileAttachType.equalsIgnoreCase(".PPT")) {
+//            thumbhunailUrl = "assets/icons/icon-powerpoint.svg";
+//        } else if (fileAttachType.equalsIgnoreCase(".PDF")) {
+//            thumbhunailUrl = "assets/icons/icon-text.svg";
+//        } else if (fileAttachType.equalsIgnoreCase(".JPG") || fileAttachType.equalsIgnoreCase(".JPEG") || fileAttachType.equalsIgnoreCase(".PNG") || fileAttachType.equalsIgnoreCase(".SVG")) {
+//            thumbhunailUrl = "assets/icons/icon-image.svg";
+//        } else if (fileAttachType.equalsIgnoreCase(".TIF") || fileAttachType.equalsIgnoreCase(".TIFF")) {
+//            thumbhunailUrl = "assets/icons/icon-tif.svg";
+//        } else {
+//            thumbhunailUrl = "assets/icons/icon-unknown.svg";
+//        }
+//        return thumbhunailUrl;
     }
 
     @Override
@@ -472,9 +502,9 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
     public int countAllByLinkTypeLinkId(String linkType, int linkId) {
         return fileAttachDaoImpl.countAllByLinkTypeLinkId(linkType, linkId);
     }
-    
-    public boolean checkHaveFile(int id){
-    return true;
+
+    public boolean checkHaveFile(int id) {
+        return true;
     }
 
 }
