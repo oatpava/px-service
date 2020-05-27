@@ -1180,7 +1180,8 @@ log.info("tmpECMSService = "+tmpECMSService);
                 thegifModel_ECMSOfficerSender.setlName(""); // นามสกุลผู้ส่ง userProfile.getUserProfileLastName() use This
 //                thegifModel_ECMSOfficerSender.setName(wfContent.getWfContentFrom()); // ชื่อผู้ส่ง userProfile.getUserProfileFirstName() For test ecms
 //                thegifModel_ECMSOfficerSender.setlName(wfContent.getWfContentFrom()); // นามสกุลผู้ส่ง userProfile.getUserProfileLastName() For test ecms               
-                thegifModel_ECMSOfficerSender.setTitle(wfContent.getWfContentFrom()); // จาก
+//                thegifModel_ECMSOfficerSender.setTitle(wfContent.getWfContentFrom()); // จาก
+                thegifModel_ECMSOfficerSender.setTitle(thegifDepartment.getThegifDepartmentName());
                 thegifModel_ECMSOfficerSender.setDeptId(tmpECMSdepCode);
                 thegifModel_ECMSOfficerSender.setMinistryId(thegifDepartmentParent.getThegifDepartmentCode());
                 thegifModel_ECMSOfficerSender.setWSURL(thegifDepartment.getThegifDepartmentServiceName());
@@ -1207,7 +1208,8 @@ log.info("tmpECMSService = "+tmpECMSService);
             thegifModel_ECMSOfficerReceiver.setlName("");  // thegifDepartmentParent1.getThegifDepartmentName() //use this
 //            thegifModel_ECMSOfficerReceiver.setName(wfContent.getWfContentTo()); // thegifDepartment1.getThegifDepartmentName()
 //            thegifModel_ECMSOfficerReceiver.setlName(wfContent.getWfContentTo());  // thegifDepartmentParent1.getThegifDepartmentName()            
-            thegifModel_ECMSOfficerReceiver.setTitle(wfContent.getWfContentTo()); // เดิมว่าง ใส่เป็นช่อง ถึง หรือเรียน แทน
+//            thegifModel_ECMSOfficerReceiver.setTitle(wfContent.getWfContentTo()); // เดิมว่าง ใส่เป็นช่อง ถึง หรือเรียน แทน
+            thegifModel_ECMSOfficerReceiver.setTitle(thegifDepartment1.getThegifDepartmentName());
             thegifModel_ECMSOfficerReceiver.setDeptId(deptId);
             thegifModel_ECMSOfficerReceiver.setMinistryId(thegifDepartmentParent1.getThegifDepartmentCode());
             thegifModel_ECMSOfficerReceiver.setWSURL(thegifDepartment1.getThegifDepartmentServiceName());
