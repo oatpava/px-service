@@ -1391,9 +1391,9 @@ public class ThegifService implements GenericService<Thegif, ThegifModel> {
                     }
                 }
                 if(letter.getReceiverTitle() != null && !letter.getReceiverTitle().equals("")){
-                    from = letter.getReceiverTitle();
-                }
-                
+                    //to = letter.getReceiverTitle();
+                    to += " "+letter.getReceiverTitle();
+                }                                     
                 
                 for (int ref = 0; ref < letter.getReference().size(); ref++) {
                     reference = letter.getReference().get(ref);
