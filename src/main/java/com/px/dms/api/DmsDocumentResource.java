@@ -2617,6 +2617,8 @@ public class DmsDocumentResource {
 
             UserProfileService userProfileService = new UserProfileService();
             List<UserProfile> listUserProfile = userProfileService.listByUserId(id, "createdDate", "desc");
+            UserProfile userprofile = userProfileService.getById(id);
+            
             ArrayList<UserProfileModel> listUserProfileModel = new ArrayList<>();
             int stutas = 0; // 0 = owner , 1 = not owner
             String name = "";
@@ -2625,7 +2627,7 @@ public class DmsDocumentResource {
                 dataString = "not owner";
                  stutas = 1;
                 if (!listUserProfile.isEmpty()) {              
-                    name = listUserProfile.get(0).getUserProfileFullName();
+                    name = userprofile.getUserProfileFullName();
                 }
 
             }
