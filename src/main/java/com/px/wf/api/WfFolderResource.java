@@ -1489,6 +1489,7 @@ public class WfFolderResource {
                 status = Response.Status.OK;
                 responseData.put("data", ListContentAuthModel);
                 responseData.put("message", "");
+                responseData.put("submodule", subModuleService.tranformToModel(submodule));
             }
             responseData.put("success", true);
         } catch (Exception ex) {
@@ -1558,6 +1559,7 @@ public class WfFolderResource {
                 status = Response.Status.OK;
                 responseData.put("data", ListContentAuthModel);
                 responseData.put("message", "");
+                responseData.put("submodule", subModuleService.tranformToModel(submodule));
             }
             responseData.put("success", true);
         } catch (Exception ex) {
@@ -1607,13 +1609,18 @@ public class WfFolderResource {
             SubmoduleUserAuth submoduleUserAuth = new SubmoduleUserAuth();
             submoduleUserAuth.setLinkId(id);
 
-            if (structureId == 0) {
-                UserProfileService userProfileService = new UserProfileService();
-                submoduleUserAuth.setUserProfile(userProfileService.getByIdNotRemoved(userId));
+            if (id > 0) {
+                if (structureId == 0) {
+                    UserProfileService userProfileService = new UserProfileService();
+                    submoduleUserAuth.setUserProfile(userProfileService.getByIdNotRemoved(userId));
 
-            } else if (userId == 0) {
-                StructureService structureService = new StructureService();
-                submoduleUserAuth.setStructure(structureService.getByIdNotRemoved(structureId));
+                } else if (userId == 0) {
+                    StructureService structureService = new StructureService();
+                    submoduleUserAuth.setStructure(structureService.getByIdNotRemoved(structureId));
+                }
+            } else {//for auth template
+                submoduleUserAuth.setUserProfile(null);
+                submoduleUserAuth.setStructure(null);
             }
 
             SubmoduleAuthService submoduleAuthService = new SubmoduleAuthService();
@@ -1626,6 +1633,9 @@ public class WfFolderResource {
                     //create
                     submoduleUserAuth.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     submoduleUserAuth = submoduleUserAuthService.create(submoduleUserAuth);
+                    submoduleUserAuth.setOrderNo(submoduleUserAuth.getId());
+                    submoduleUserAuth.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                    submoduleUserAuth = submoduleUserAuthService.update(submoduleUserAuth);
                 } else {
                     //update
                     submoduleUserAuth.setId(authModel.getId());
@@ -1633,7 +1643,7 @@ public class WfFolderResource {
                     submoduleUserAuth.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     submoduleUserAuth = submoduleUserAuthService.update(submoduleUserAuth);
                 }
-            };
+            }
             status = Response.Status.OK;
             responseData.put("data", null);
             responseData.put("message", "");
@@ -1952,6 +1962,167 @@ public class WfFolderResource {
 
         return Response.status(status)
                 .entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "createAuthTemplateValue",
+            notes = "createAuthTemplateValue",
+            response = WfFolderContentAuthModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "createAuthTemplateValue success."),
+        @ApiResponse(code = 404, message = "createAuthTemplateValue not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/authTemplateValue/{templateId}")
+    public Response createAuthTemplateValue(
+            @BeanParam VersionModel versionModel,
+            @ApiParam(name = "templateId", value = "รหัสรูปแบบสิทธิ์", required = true)
+            @PathParam("templateId") int templateId,
+            List<WfFolderContentAuthModel> listContentAuthModel
+    ) {
+        LOG.info("createAuthTemplateValue...");
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "createAuthTemplateValue not found in the database.");
+        try {
+            SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
+            SubmoduleUserAuth submoduleUserAuth = new SubmoduleUserAuth();
+            submoduleUserAuth.setLinkId(templateId);
+            submoduleUserAuth.setUserProfile(null);
+            submoduleUserAuth.setStructure(null);
+            for (WfFolderContentAuthModel authModel : listContentAuthModel) {
+                submoduleUserAuth.setSubmoduleAuth(new SubmoduleAuthService().getById(authModel.getSubModuleAuthId()));
+                submoduleUserAuth.setAuthority(authModel.getAuth() ? "1" : "2");
+                submoduleUserAuth.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                submoduleUserAuth = submoduleUserAuthService.create(submoduleUserAuth);
+                submoduleUserAuth.setOrderNo(submoduleUserAuth.getId());
+                submoduleUserAuth.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                submoduleUserAuthService.update(submoduleUserAuth);
+            }
+            status = Response.Status.OK;
+            responseData.put("data", null);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "createAuthTemplateValue",
+            notes = "createAuthTemplateValue",
+            response = WfFolderContentAuthModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "createAuthTemplateValue success."),
+        @ApiResponse(code = 404, message = "createAuthTemplateValue not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/authTemplateValue/{templateId}")
+    public Response updateAuthTemplateValue(
+            @BeanParam VersionModel versionModel,
+            @ApiParam(name = "templateId", value = "รหัสรูปแบบสิทธิ์", required = true)
+            @PathParam("templateId") int templateId,
+            List<WfFolderContentAuthModel> listContentAuthModel
+    ) {
+        LOG.info("createAuthTemplateValue...");
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "createAuthTemplateValue not found in the database.");
+        try {
+            SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
+            for (WfFolderContentAuthModel authModel : listContentAuthModel) {
+                SubmoduleUserAuth submoduleUserAuth = submoduleUserAuthService.getById(authModel.getId());
+                if (submoduleUserAuth != null) {
+                    submoduleUserAuth.setAuthority(authModel.getAuth() ? "1" : "2");
+                    submoduleUserAuth.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                    submoduleUserAuthService.update(submoduleUserAuth);
+                }
+            }
+            status = Response.Status.OK;
+            responseData.put("data", null);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "listAuthTemplateValue",
+            notes = "listAuthTemplateValue",
+            response = WfFolderContentAuthModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "listAuthTemplateValue success."),
+        @ApiResponse(code = 404, message = "listAuthTemplateValue not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/listAuthTemplateValue/{linkId}")
+    public Response listAuthTemplateValue(
+            @BeanParam VersionModel versionModel,
+            @ApiParam(name = "linkId", value = "รหัสรูปแบบสิทธิ์", required = true)
+            @PathParam("linkId") int linkId
+    ) {
+        LOG.info("listAuthTemplateValue...");
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "listAuthTemplateValue not found in the database.");
+        try {
+            List<WfFolderContentAuthModel> ListContentAuthModel = new ArrayList<>();
+            List<SubmoduleUserAuth> listSubModuleUserAuth = new SubmoduleUserAuthService().listTemplateValueByLinkId(linkId);
+            if (!listSubModuleUserAuth.isEmpty()) {
+                for (SubmoduleUserAuth x : listSubModuleUserAuth) {
+                    ListContentAuthModel.add(new WfFolderService().tranformToModel2(x));
+                }
+            }
+            status = Response.Status.OK;
+            responseData.put("data", ListContentAuthModel);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
 }

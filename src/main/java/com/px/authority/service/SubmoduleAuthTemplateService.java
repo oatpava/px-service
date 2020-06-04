@@ -7,6 +7,7 @@ import com.px.authority.daoimpl.SubmoduleAuthTemplateDaoImpl;
 import com.px.authority.entity.SubmoduleAuthTemplate;
 import com.px.authority.model.SubmoduleAuthTemplateModel;
 import com.px.share.service.GenericService;
+import com.px.share.util.Common;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
@@ -33,6 +34,7 @@ public class SubmoduleAuthTemplateService implements GenericService<SubmoduleAut
         submoduleAuthTemplate = submoduleAuthTemplateDaoImpl.create(submoduleAuthTemplate);
         if(submoduleAuthTemplate.getOrderNo()==0){
             submoduleAuthTemplate.setOrderNo(submoduleAuthTemplate.getId());
+            submoduleAuthTemplate.setUpdatedDate(LocalDateTime.now());
             submoduleAuthTemplate = submoduleAuthTemplateDaoImpl.update(submoduleAuthTemplate);
         }
         
@@ -102,6 +104,7 @@ public class SubmoduleAuthTemplateService implements GenericService<SubmoduleAut
             submoduleAuthTemplateModel.setId(submoduleAuthTemplate.getId());
             submoduleAuthTemplateModel.setSubmoduleAuthTemplateName(submoduleAuthTemplate.getSubmoduleAuthTemplateName());
             submoduleAuthTemplateModel.setSubmodule(submoduleService.tranformToModel(submoduleAuthTemplate.getSubmodule()));
+            submoduleAuthTemplateModel.setUpdatedDate(Common.localDateTimeToString2(submoduleAuthTemplate.getUpdatedDate()));
         }
         return submoduleAuthTemplateModel;
     }

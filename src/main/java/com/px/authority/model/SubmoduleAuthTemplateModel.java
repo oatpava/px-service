@@ -41,6 +41,12 @@ public class SubmoduleAuthTemplateModel extends VersionModel{
     @Expose
     @Since(1.0)
     private SubmoduleModel submodule;
+    
+    @XmlElement(name = "updatedDate")
+    @ApiParam(name = "updatedDate", value = "วันที่แก้ไขล่าสุด", required = true)
+    @Expose
+    @Since(1.0)
+    private String updatedDate;//oat-add
 
     public SubmoduleAuthTemplateModel() {
     }
@@ -70,6 +76,15 @@ public class SubmoduleAuthTemplateModel extends VersionModel{
     @ApiModelProperty(name = "submodule", value = "ระบบงานย่อย", required = true)
     public void setSubmodule(SubmoduleModel submodule) {
         this.submodule = submodule;
+    }
+    
+    public String getUpdatedDate() {
+        return updatedDate;
+    }
+
+    @ApiModelProperty(name = "updatedDate", value = "วันที่แก้ไขล่าสุด", required = false)
+    public void setUpdatedDate(String updatedDate) {
+        this.updatedDate = updatedDate;
     }
     
 }
