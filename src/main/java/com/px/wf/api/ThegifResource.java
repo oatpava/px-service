@@ -221,7 +221,7 @@ public class ThegifResource {
             @ApiParam(name = "offset", value = "ตำแหน่งเริ่มต้น", required = true)
             @DefaultValue("0") @QueryParam("offset") int offset,
             @ApiParam(name = "limit", value = "จำนวนข้อมูลที่ต้องการ", required = true)
-            @DefaultValue("50") @QueryParam("limit") int limit,
+            @DefaultValue("500") @QueryParam("limit") int limit,
             @ApiParam(name = "sort", value = "ฟิลด์ที่ต้องการเรียงลำดับ", required = false)
             @DefaultValue("createdDate")
             @QueryParam("sort") String sort,
@@ -443,7 +443,7 @@ public class ThegifResource {
             @ApiParam(name = "offset", value = "ตำแหน่งเริ่มต้น", required = true)
             @DefaultValue("0") @QueryParam("offset") int offset,
             @ApiParam(name = "limit", value = "จำนวนข้อมูลที่ต้องการ", required = true)
-            @DefaultValue("50") @QueryParam("limit") int limit,
+            @DefaultValue("500") @QueryParam("limit") int limit,
             @ApiParam(name = "sort", value = "ฟิลด์ที่ต้องการเรียงลำดับ", required = false)
             @DefaultValue("createdDate") @QueryParam("sort") String sort,
             @ApiParam(name = "dir", value = "เรียงลำดับจาก", required = false)
@@ -563,7 +563,7 @@ public class ThegifResource {
             @ApiParam(name = "offset", value = "ตำแหน่งเริ่มต้น", required = true)
             @DefaultValue("0") @QueryParam("offset") int offset,
             @ApiParam(name = "limit", value = "จำนวนข้อมูลที่ต้องการ", required = true)
-            @DefaultValue("50") @QueryParam("limit") int limit,
+            @DefaultValue("500") @QueryParam("limit") int limit,
             @ApiParam(name = "sort", value = "ฟิลด์ที่ต้องการเรียงลำดับ", required = false)
             @DefaultValue("createdDate") @QueryParam("sort") String sort,
             @ApiParam(name = "dir", value = "เรียงลำดับจาก", required = false)
