@@ -167,7 +167,6 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
             wfContentModel.setWfContentContentNo(wfContent.getWfContentContentNo());
             wfContentModel.setWfContentContentNumber(wfContent.getWfContentContentNumber());
             wfContentModel.setWfContentContentPoint(wfContent.getWfContentContentPoint());
-            //wfContentModel.setWfContentContentDate(Common.localDateTimeToString(wfContent.getWfContentContentDate()));
             wfContentModel.setWfContentContentDate(Common.localDateTimeToString4(wfContent.getWfContentContentDate()));
             wfContentModel.setWfContentBookPre(wfContent.getWfContentBookPre());
             wfContentModel.setWfContentBookYear(wfContent.getWfContentBookYear());
@@ -179,29 +178,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
             wfContentModel.setWfContentTo(wfContent.getWfContentTo());
             wfContentModel.setWfContentTitle(wfContent.getWfContentTitle());
             wfContentModel.setWfContentSpeed(wfContent.getWfContentSpeed());
-//            String wfContentSpeedStr = "";
-//            if (wfContent.getWfContentSpeed() == 1) {
-//                wfContentSpeedStr = "ปกติ";
-//            } else if (wfContent.getWfContentSpeed() == 2) {
-//                wfContentSpeedStr = "ด่วน";
-//            } else if (wfContent.getWfContentSpeed() == 3) {
-//                wfContentSpeedStr = "ด่วนมาก";
-//            } else if (wfContent.getWfContentSpeed() == 4) {
-//                wfContentSpeedStr = "ด่วนที่สุด";
-//            }
-//            wfContentModel.setWfContentSpeedStr(wfContentSpeedStr);
             wfContentModel.setWfContentSecret(wfContent.getWfContentSecret());
-//            String wfContetnSecretStr = "";
-//            if (wfContent.getWfContentSecret() == 1) {
-//                wfContetnSecretStr = "ปกติ";
-//            } else if (wfContent.getWfContentSecret() == 2) {
-//                wfContetnSecretStr = "ลับ";
-//            } else if (wfContent.getWfContentSecret() == 3) {
-//                wfContetnSecretStr = "ลับมาก";
-//            } else if (wfContent.getWfContentSecret() == 4) {
-//                wfContetnSecretStr = "ลับที่สุด";
-//            }
-//            wfContentModel.setWfContentSecretStr(wfContetnSecretStr);
             wfContentModel.setWfContentDescription(wfContent.getWfContentDescription());
             wfContentModel.setWfContentReference(wfContent.getWfContentReference());
             wfContentModel.setWfContentAttachment(wfContent.getWfContentAttachment());
@@ -249,7 +226,6 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
             wfContentModel.setWfContentDate08(Common.localDateTimeToString(wfContent.getWfContentDate08()));
             wfContentModel.setWfContentDate09(Common.localDateTimeToString(wfContent.getWfContentDate09()));
             wfContentModel.setWfContentDate10(Common.localDateTimeToString(wfContent.getWfContentDate10()));
-
         }
 
         return wfContentModel;
@@ -257,17 +233,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
 
     public WfContentModel_groupWfContentAndWorkflowfinish tranformToModelGroupWfContentAndWorkflowfinish(WfContent wfContent, boolean getNumFileattach, boolean getStatus) {
         WorkflowService workflowservice = new WorkflowService();
-        //WfCommandTypeService commandTypeService = new WfCommandTypeService();
-        String commandTypeName1 = "";
-//        if (wfContent.getWfContentInt01() > 0) {
-//            commandTypeName1 = commandTypeService.getById(wfContent.getWfContentInt01()).getCommandTypeName();
-//        } else {
-//            commandTypeName1 = "";
-//        }
-        commandTypeName1 = "";
-
         WfContentModel_groupWfContentAndWorkflowfinish WfContentModel_groupWfContentAndWorkflowfinish = new WfContentModel_groupWfContentAndWorkflowfinish();
-
         WfContentModel_groupWfContentAndWorkflowfinish.setId(wfContent.getId());
         WfContentModel_groupWfContentAndWorkflowfinish.setCreatedBy(wfContent.getCreatedBy());
         WfContentModel_groupWfContentAndWorkflowfinish.setCreatedDate(Common.localDateTimeToString(wfContent.getCreatedDate()));
@@ -343,7 +309,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         WfContentModel_groupWfContentAndWorkflowfinish.setWfContentDate08(Common.localDateTimeToString(wfContent.getWfContentDate08()));
         WfContentModel_groupWfContentAndWorkflowfinish.setWfContentDate09(Common.localDateTimeToString(wfContent.getWfContentDate09()));
         WfContentModel_groupWfContentAndWorkflowfinish.setWfContentDate10(Common.localDateTimeToString(wfContent.getWfContentDate10()));
-        WfContentModel_groupWfContentAndWorkflowfinish.setCommandTypeName(commandTypeName1);
+        WfContentModel_groupWfContentAndWorkflowfinish.setCommandTypeName("");
         //oat-add
         WfContentModel_groupWfContentAndWorkflowfinish.setNumFileAttach(0);
         WfContentModel_groupWfContentAndWorkflowfinish.setStatus(1);
@@ -383,6 +349,10 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
                             WfContentModel_groupWfContentAndWorkflowfinish.setIsCanceled(true);
                             WfContentModel_groupWfContentAndWorkflowfinish.setStatus(3);
                             WfContentModel_groupWfContentAndWorkflowfinish.setCancelBy(workflowCancel.getWorkflowActionId());
+                            String wfDescription = workflowCancel.getWorkflowDescription();
+                            if (wfDescription != null && wfDescription.equals("ย้ายหนังสือ")) {
+                                WfContentModel_groupWfContentAndWorkflowfinish.setCommandTypeName(workflowCancel.getWorkflowNote());
+                            }
                         }
                     }
                 }
