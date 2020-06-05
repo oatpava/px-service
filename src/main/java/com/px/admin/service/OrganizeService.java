@@ -175,5 +175,9 @@ public class OrganizeService implements GenericTreeService<Organize, OrganizeMod
     public List<Organize> listByName(String organizeName) {
         return organizeDaoImpl.listByName(organizeName);
     }
+    
+    public Organize getLatest(int parentId) {
+        return organizeDaoImpl.getLatest(parentId);
+    }
 
 }

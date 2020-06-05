@@ -86,5 +86,16 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
         criteria.add(conjunction).addOrder(Order.desc("this.createdDate"));
         return this.listByCriteria(criteria);
     }
+    
+    //oat-add
+    public Organize getLatest(int parentId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("parentId", parentId));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
+        criteria.add(conjunction).addOrder(Order.desc("this.id"));
+        List<Organize> tmp = this.listByCriteria(criteria, 0, 1);
+        return tmp.get(0);
+    }
 
 }

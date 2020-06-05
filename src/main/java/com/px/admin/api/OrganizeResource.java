@@ -53,8 +53,7 @@ public class OrganizeResource {
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Organize created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Organize created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -105,10 +104,8 @@ public class OrganizeResource {
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Organize by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Organize by id success."),
+        @ApiResponse(code = 404, message = "Organize by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -137,8 +134,18 @@ public class OrganizeResource {
             OrganizeService organizeService = new OrganizeService();
             Organize organize = organizeService.getById(id);
             if (organize != null) {
+
+                OrganizeModel organizeModel = organizeService.tranformToModel(organize);
+                if (id == 1) {
+                    Organize lastestOrganize = organizeService.getLatest(id);
+                    if (lastestOrganize != null) {
+                        organizeModel.setCode(lastestOrganize.getOrganizeCode());
+                        organizeModel.setName("");
+                        organizeModel.setShortName("");
+                    }
+                }
                 status = Response.Status.OK;
-                responseData.put("data", organizeService.tranformToModel(organize));
+                responseData.put("data", organizeModel);
                 responseData.put("message", "");
             }
             responseData.put("success", true);
@@ -156,9 +163,9 @@ public class OrganizeResource {
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Organize by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Organize updeted by id success."),
+        @ApiResponse(code = 404, message = "Organize by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -216,9 +223,9 @@ public class OrganizeResource {
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize deleted by id success.")
-        ,@ApiResponse(code = 404, message = "Organize by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Organize deleted by id success."),
+        @ApiResponse(code = 404, message = "Organize by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -269,9 +276,9 @@ public class OrganizeResource {
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize list By Organize Id success.")
-        ,@ApiResponse(code = 404, message = "Organize list By Organize Id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Organize list By Organize Id success."),
+        @ApiResponse(code = 404, message = "Organize list By Organize Id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -320,7 +327,7 @@ public class OrganizeResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for list All Organize.",
             notes = "รายการโครงสร้างหน่วยงานทั้งหมด",
@@ -328,10 +335,8 @@ public class OrganizeResource {
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize list success.")
-        ,
-        @ApiResponse(code = 404, message = "Organize list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Organize list success."),
+        @ApiResponse(code = 404, message = "Organize list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -377,15 +382,15 @@ public class OrganizeResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for check Duplicate Organize by code.",
             notes = "เช็คค่าซ้ำ",
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize check duplicate by code success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Organize check duplicate by code success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -427,11 +432,11 @@ public class OrganizeResource {
                 }
                 responseData.put("data", authenticationModel);
                 responseData.put("message", "");
-            } else {               
+            } else {
                 if (organizeService.checkDup(code, null)) {
                     authenticationModel = new AuthenticationModel(true);
                 } else {
-                   authenticationModel = new AuthenticationModel(organizeService.checkDup(null, name)); 
+                    authenticationModel = new AuthenticationModel(organizeService.checkDup(null, name));
                 }
                 responseData.put("data", authenticationModel);
                 responseData.put("message", "");
