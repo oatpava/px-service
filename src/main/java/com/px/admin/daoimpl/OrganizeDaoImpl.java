@@ -97,5 +97,14 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
         List<Organize> tmp = this.listByCriteria(criteria, 0, 1);
         return tmp.get(0);
     }
+    
+    public Organize getPrevOrderBy(int id) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("id", id - 1));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
+        criteria.add(conjunction);
+        return this.getOneByCriteria(criteria);
+    }
 
 }
