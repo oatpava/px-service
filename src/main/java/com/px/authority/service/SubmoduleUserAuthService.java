@@ -1757,5 +1757,9 @@ public class SubmoduleUserAuthService implements GenericService<SubmoduleUserAut
 
         return result;
     }
+    
+    public List<SubmoduleUserAuth> listTemplateValueByLinkId(int linkId) {
+        return submoduleUserAuthDaoImpl.listTemplateValueByLinkId(linkId);
+    }
 
 }
