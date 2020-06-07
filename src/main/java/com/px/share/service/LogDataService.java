@@ -86,9 +86,14 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
             }
             logDataModel.setCreatedDate(Common.localDateTimeToString(logData.getCreatedDate()));
             logDataModel.setDescription(logType);
-            logDataModel.setIpAddress(logData.getIpAddress());            
-            logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
-            logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
+            logDataModel.setIpAddress(logData.getIpAddress());
+            if (logData.getType()==4 || logData.getType()==10) {//4=login, 10=logout
+                logDataModel.setModuleName(moduleService.getByModuleCode("wf").getModuleName());
+                logDataModel.setModuleIcon(moduleService.getByModuleCode("wf").getModuleIcon()); 
+            } else {
+                logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
+                logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
+            }           
             userCreated = logData.getCreatedBy();
             if(userCreated <= 0) {
                 userCreated = 1;
