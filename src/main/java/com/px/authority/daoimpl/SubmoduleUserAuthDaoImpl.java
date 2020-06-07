@@ -434,5 +434,16 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
+    
+    public List<SubmoduleUserAuth> listTemplateValueByLinkId(int linkId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("linkId", linkId));
+        conjunction.add(Restrictions.isNull("structure"));
+        conjunction.add(Restrictions.isNull("userProfile"));        
+        DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
+        criteria.add(conjunction);   
+        return this.listByCriteria(criteria);
+    }
 
 }

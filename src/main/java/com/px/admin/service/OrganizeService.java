@@ -175,5 +175,22 @@ public class OrganizeService implements GenericTreeService<Organize, OrganizeMod
     public List<Organize> listByName(String organizeName) {
         return organizeDaoImpl.listByName(organizeName);
     }
+    
+    public Organize getLatest(int parentId) {
+        return organizeDaoImpl.getLatest(parentId);
+    }
+    
+    public double findOrderNo(int id) {
+        checkNotNull(id, "organize id must not be null");
+        Organize org2 = this.getByIdNotRemoved(id);
+        Organize org = organizeDaoImpl.getPrevOrderBy(id);
+        double orderNoNum = 0;
+        if (org != null && org.getOrderNo() == (org2.getOrderNo() - 1)) {
+            orderNoNum = (org.getOrderNo() + org2.getOrderNo()) / 2;
+        } else {
+            orderNoNum = org2.getOrderNo() - 1;
+        }
+        return orderNoNum;
+    }
 
 }
