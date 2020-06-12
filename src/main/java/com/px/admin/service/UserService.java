@@ -90,7 +90,8 @@ public class UserService implements GenericService<User, UserModel> {
 //        } else {//ผู้ใช้งานระดับสูง
 //            user.setUserPasswordExpireDate(this.getExpirePassDateSomeType(user.getId()));
 //        }
-        user.setUserPasswordExpireDate(this.getExpirePasswordDate(user.getId()));
+        LocalDateTime expirePasswordDate = this.getExpirePasswordDate();
+        if (expirePasswordDate != null) user.setUserPasswordExpireDate(expirePasswordDate);
         user.setUserPassword(encyptPassword(user.getUserName().toUpperCase(), user.getUserPassword()));
         return userDaoImpl.update(user);
     }
@@ -469,13 +470,16 @@ public class UserService implements GenericService<User, UserModel> {
         return result;
     }
 
-    public LocalDateTime getExpirePasswordDate(int id) {
-        User user = this.getById(id);
+    public LocalDateTime getExpirePasswordDate() {
         LocalDateTime expireDate;
         String passExpireStr = new ParamService().getByParamName("PASSEXPIRATION").getParamValue();
         long passExpire = Long.parseLong(passExpireStr);
 //        expireDate = user.getCreatedDate().plusDays(passExpire);
-        expireDate = LocalDateTime.now().plusDays(passExpire);
+        if (passExpire == 0) {
+            expireDate = null;
+        } else {
+            expireDate = LocalDateTime.now().plusDays(passExpire);
+        }
         return expireDate;
     }
 
