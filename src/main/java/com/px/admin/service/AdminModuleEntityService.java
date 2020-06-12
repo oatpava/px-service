@@ -385,10 +385,10 @@ public class AdminModuleEntityService {
         listParam.put("FORGOT_PASS_PATH","http://192.168.142.149:80/forgot");
         listParam.put("TIMEOUT","1800");
         listParam.put("PASSEXPIRATION","90");
-        listParam.put("ANDTXT","AND");
-        listParam.put("ORTXT","OR");
-        listParam.put("NOTTXT","NOT");
-        listParam.put("NULLTXT","OR");
+        listParam.put("ANDTXT","&");
+        listParam.put("ORTXT",",");
+        listParam.put("NOTTXT","!");
+        listParam.put("NULLTXT","NULL");
         listParam.put("PATHHRIS","http://192.168.142.148:8080/");
         listParam.put("DEFAULT_PASSWORD","1234");
         listParam.put("TIMEOUT","30000");
