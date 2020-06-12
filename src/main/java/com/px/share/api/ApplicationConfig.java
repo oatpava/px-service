@@ -126,7 +126,6 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.wf.api.FolderPropertyResource.class);
         resources.add(com.px.wf.api.ThegifDepartmentResource.class);
         resources.add(com.px.wf.api.ThegifDocFileResource.class);
-        resources.add(com.px.wf.api.ThegifResource.class);
         resources.add(com.px.wf.api.WfAbsentResource.class);
         resources.add(com.px.wf.api.WfCommandNameResource.class);
         resources.add(com.px.wf.api.WfCommandTypeResource.class);
