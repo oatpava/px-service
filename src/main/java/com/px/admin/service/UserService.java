@@ -83,13 +83,14 @@ public class UserService implements GenericService<User, UserModel> {
         checkArgument(user.getUserName().length() > 0, "user name must not be empty");
         checkNotNull(user.getUpdatedBy(), "update by must not be null");
         user.setUpdatedDate(LocalDateTime.now());
-////        UserProfile userProfile = new UserProfileService().getDeByUserId(user.getId());//oat-edit
-//        UserProfile userProfile = new UserProfileService().getDefaultProfile(user.getId());
+//////        UserProfile userProfile = new UserProfileService().getDeByUserId(user.getId());//oat-edit
+////        UserProfile userProfile = new UserProfileService().getDefaultProfile(user.getId());
 //        if (userProfile.getUserProfileType().getId() != 4) {
 //            user.setUserPasswordExpireDate(this.getExpirePasswordDate(user.getId()));
-//        } else {
+//        } else {//ผู้ใช้งานระดับสูง
 //            user.setUserPasswordExpireDate(this.getExpirePassDateSomeType(user.getId()));
 //        }
+        user.setUserPasswordExpireDate(this.getExpirePasswordDate(user.getId()));
         user.setUserPassword(encyptPassword(user.getUserName().toUpperCase(), user.getUserPassword()));
         return userDaoImpl.update(user);
     }
