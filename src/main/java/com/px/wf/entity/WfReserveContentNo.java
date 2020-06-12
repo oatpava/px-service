@@ -1,4 +1,3 @@
-
 package com.px.wf.entity;
 
 import com.px.share.entity.BaseEntity;
@@ -27,40 +26,42 @@ public class WfReserveContentNo extends BaseEntity {
     //@Column(name = "WF_RESERVE_CONTENTNO_FOLDER_ID", columnDefinition = "int default '0'")
     @Column(name = "WF_RESERVE_FOLDER_ID", columnDefinition = "int default '0'")
     private Integer reserveContentNoFolderId;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_CONTENT_NO", length = 50)
     @Column(name = "WF_RESERVE_CONTENT_NO", length = 50)
     private String reserveContentNoContentNo;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_CONTENT_DATE", nullable = false)
     @Column(name = "WF_RESERVE_CONTENT_DATE", nullable = false)
     private LocalDateTime reserveContentNoContentDate;
-    
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_CONTENT_TIME", length = 10)
     @Column(name = "WF_RESERVE_CONTENT_TIME", length = 10)
     private String reserveContentNoContentTime;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_USER_ID", columnDefinition = "int default '0'")
     @Column(name = "WF_RESERVE_USER_ID", columnDefinition = "int default '0'")
     private Integer reserveContentNoUserId;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_CONTENT_YEAR", columnDefinition = "int default '0'")
     @Column(name = "WF_RESERVE_CONTENT_YEAR", columnDefinition = "int default '0'")
     private Integer reserveContentNoContentYear;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_CONTENT_NUMBER", columnDefinition = "int default '0'")
     @Column(name = "WF_RESERVE_CONTENT_NUMBER", columnDefinition = "int default '0'")
     private int reserveContentNoContentNumber;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_NOTE", length = 255)
     @Column(name = "WF_RESERVE_NOTE", length = 255)
     private String reserveContentNoNote;
-    
+
     //@Column(name = "WF_RESERVE_CONTENTNO_STATUS", columnDefinition = "int default '0'")
     @Column(name = "WF_RESERVE_STATUS", columnDefinition = "int default '0'")
     private int reserveContentNoStatus;
-    
+
+    @Column(name = "WF_RESERVE_STRUCTURE_ID", columnDefinition = "int default '0'")
+    private Integer reserveContentNoStructureId;
+
     public WfReserveContentNo() {
     }
 
@@ -138,5 +139,13 @@ public class WfReserveContentNo extends BaseEntity {
 
     public void setReserveContentNoStatus(int reserveContentNoStatus) {
         this.reserveContentNoStatus = reserveContentNoStatus;
+    }
+
+    public Integer getReserveContentNoStructureId() {
+        return reserveContentNoStructureId;
+    }
+
+    public void setReserveContentNoStructureId(Integer reserveContentNoStructureId) {
+        this.reserveContentNoStructureId = reserveContentNoStructureId;
     }
 }

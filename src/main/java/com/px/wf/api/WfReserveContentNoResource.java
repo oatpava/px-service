@@ -124,6 +124,7 @@ public class WfReserveContentNoResource {
                     reserveContentNo.setReserveContentNoNote(reserveModel.getReserveContentNoNote());
 //                    reserveContentNo.setReserveContentNoStatus(0);
                     reserveContentNo.setReserveContentNoStatus(reserveModel.getReserveContentNoStatus());
+                    reserveContentNo.setReserveContentNoStructureId(reserveModel.getReserveContentNoStructureId());
                     reserveContentNo.setCreatedBy(actionId);
                     reserveContentNo = reserveContentNoService.create(reserveContentNo);
                     reserveContentNo.setOrderNo(reserveContentNo.getId());
@@ -498,6 +499,66 @@ public class WfReserveContentNoResource {
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+    
+    @ApiOperation(
+            value = "Method for get list of WfReserveContentNo.",
+            notes = "รายการเลขจอง",
+            responseContainer = "List",
+            response = WfReserveContentNoModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "WfReserveContentNo list success.")
+        ,
+        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database.")
+        ,
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/structure/{folderId}/{structureId}")
+    public Response listByStructure(
+            @BeanParam ListOptionModel listOptionModel,
+            @ApiParam(name = "folderId", value = "รหัสแฟ้มทะเบียน", required = true)
+            @PathParam("folderId") int folderId,
+            @ApiParam(name = "structureId", value = "รหัสแฟ้มทะเบียน", required = true)
+            @PathParam("structureId") int structureId
+    ) {
+        log.info("listReserveContentNo...");
+        Gson gs = new GsonBuilder()
+                .setVersion(listOptionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "WfReserveContentNo list not found in the database.");
+        try {
+            WfReserveContentNoService reserveContentNoService = new WfReserveContentNoService();
+
+            List<WfReserveContentNo> listReserveContentNo = reserveContentNoService.listByStructure(folderId, structureId, listOptionModel.getSort(), listOptionModel.getDir());
+            ArrayList<WfReserveContentNoModel> listReserveContentNoModel = new ArrayList();
+            if (!listReserveContentNo.isEmpty()) {
+                listReserveContentNo.forEach((reserveContentNo) -> {
+                    listReserveContentNoModel.add(reserveContentNoService.tranformToModel(reserveContentNo));
+                });
+                listReserveContentNoModel.trimToSize();
+            }
+            status = Response.Status.OK;
+            responseData.put("data", listReserveContentNoModel);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (NumberFormatException ex) {
+            log.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+
+        return Response.status(status)
+                .entity(gs.toJson(responseData)).build();
     }
 
 }
