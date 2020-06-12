@@ -83,13 +83,15 @@ public class UserService implements GenericService<User, UserModel> {
         checkArgument(user.getUserName().length() > 0, "user name must not be empty");
         checkNotNull(user.getUpdatedBy(), "update by must not be null");
         user.setUpdatedDate(LocalDateTime.now());
-////        UserProfile userProfile = new UserProfileService().getDeByUserId(user.getId());//oat-edit
-//        UserProfile userProfile = new UserProfileService().getDefaultProfile(user.getId());
+//////        UserProfile userProfile = new UserProfileService().getDeByUserId(user.getId());//oat-edit
+////        UserProfile userProfile = new UserProfileService().getDefaultProfile(user.getId());
 //        if (userProfile.getUserProfileType().getId() != 4) {
 //            user.setUserPasswordExpireDate(this.getExpirePasswordDate(user.getId()));
-//        } else {
+//        } else {//ผู้ใช้งานระดับสูง
 //            user.setUserPasswordExpireDate(this.getExpirePassDateSomeType(user.getId()));
 //        }
+        LocalDateTime expirePasswordDate = this.getExpirePasswordDate();
+        if (expirePasswordDate != null) user.setUserPasswordExpireDate(expirePasswordDate);
         user.setUserPassword(encyptPassword(user.getUserName().toUpperCase(), user.getUserPassword()));
         return userDaoImpl.update(user);
     }
@@ -445,13 +447,16 @@ public class UserService implements GenericService<User, UserModel> {
         return result;
     }
 
-    public LocalDateTime getExpirePasswordDate(int id) {
-        User user = this.getById(id);
+    public LocalDateTime getExpirePasswordDate() {
         LocalDateTime expireDate;
         String passExpireStr = new ParamService().getByParamName("PASSEXPIRATION").getParamValue();
         long passExpire = Long.parseLong(passExpireStr);
 //        expireDate = user.getCreatedDate().plusDays(passExpire);
-        expireDate = LocalDateTime.now().plusDays(passExpire);
+        if (passExpire == 0) {
+            expireDate = null;
+        } else {
+            expireDate = LocalDateTime.now().plusDays(passExpire);
+        }
         return expireDate;
     }
 
