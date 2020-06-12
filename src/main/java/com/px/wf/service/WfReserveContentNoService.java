@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.px.share.util.Common;
 import java.time.LocalDateTime;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.px.admin.entity.UserProfile;
 
 /**
  *
@@ -109,7 +110,9 @@ public class WfReserveContentNoService implements GenericService<WfReserveConten
             reserveContentNoModel.setReserveContentNoContentNumber(reserveContentNo.getReserveContentNoContentNumber());
             reserveContentNoModel.setReserveContentNoNote(reserveContentNo.getReserveContentNoNote());
             reserveContentNoModel.setReserveContentNoStatus(reserveContentNo.getReserveContentNoStatus());
-            reserveContentNoModel.setReserveContentNoUserName(userProfileService.getById(reserveContentNo.getReserveContentNoUserId()).getUserProfileFullName());////
+            UserProfile userProfile = userProfileService.getById(reserveContentNo.getReserveContentNoUserId());
+            reserveContentNoModel.setReserveContentNoUserName(userProfile.getUserProfileFullName());
+            reserveContentNoModel.setReserveContentNoStructureId(userProfile.getStructure().getId());
         }
         return reserveContentNoModel;
     }
@@ -190,6 +193,13 @@ public class WfReserveContentNoService implements GenericService<WfReserveConten
         checkNotNull(folderId, "folderId folderId must not be null");
         checkNotNull(year, "year contentNo must not be null");
         return reserveContentNoDaoImpl.listByFolderId(folderId, year, contentStartdate, contentEndDate);
+    }
+    
+    public List<WfReserveContentNo> listByStructure(int folderId, int strucutreId, String sort, String dir) {
+        checkNotNull(folderId, "folderId folderId must not be null");
+        checkNotNull(sort, "sort contentNo must not be null");
+        checkNotNull(dir, "dir contentNo must not be null");
+        return reserveContentNoDaoImpl.listByStructure(folderId, strucutreId, sort, dir);
     }
 
 }
