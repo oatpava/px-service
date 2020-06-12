@@ -107,6 +107,12 @@ public class WfReserveContentNoModel extends VersionModel {
     @Since(1.0)
     @Expose
     private String reserveContentNoUserName;
+    
+    @XmlElement(name = "reserveContentNoStructureId")
+    @ApiParam(name = "reserveContentNoStructureId", value = "รหัสหน่วยงานผู้จองเลข", required = true)
+    @Since(1.0)
+    @Expose
+    private int reserveContentNoStructureId;
 
     public WfReserveContentNoModel() {
     }
@@ -258,6 +264,14 @@ public class WfReserveContentNoModel extends VersionModel {
 
     public void setReserveContentNoUserName(String reserveContentNoUserName) {
         this.reserveContentNoUserName = reserveContentNoUserName;
+    }
+    
+    public int getReserveContentNoStructureId() {
+        return reserveContentNoStructureId;
+    }
+
+    public void setReserveContentNoStructureId(int reserveContentNoStructureId) {
+        this.reserveContentNoStructureId = reserveContentNoStructureId;
     }
 
 }

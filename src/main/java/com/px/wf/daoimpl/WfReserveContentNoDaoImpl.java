@@ -117,6 +117,7 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
         conjunction.add(Restrictions.eq("createdBy", userId));
+        conjunction.add(Restrictions.eq("reserveContentNoUserId", userId));
         conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
@@ -185,6 +186,18 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
         }
         DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
         criteria.add(conjunction);
+        return this.listByCriteria(criteria);
+    }
+    
+    public List<WfReserveContentNo> listByStructure(int folderId, int structureId, String sort, String dir) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
+        conjunction.add(Restrictions.eq("reserveContentNoStructureId", structureId));
+        conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
+        criteria.add(conjunction);
+        criteria = createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
 }
