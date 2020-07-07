@@ -127,6 +127,7 @@ public class StructureService implements GenericTreeService<Structure, Structure
         checkNotNull(structure, "structure entity must not be null");
         checkNotNull(structure.getUpdatedBy(), "update by must not be null");
         structure.setParentKey(generateParentKey(structure));
+        structure.setNodeLevel(TreeUtil.generateNodeLevel(structure));
         structure.setUpdatedDate(LocalDateTime.now());
         return structureDaoImpl.update(structure);
     }
