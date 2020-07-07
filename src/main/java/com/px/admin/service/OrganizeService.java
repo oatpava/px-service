@@ -114,6 +114,8 @@ public class OrganizeService implements GenericTreeService<Organize, OrganizeMod
         checkNotNull(organize, "Organize entity must not be null");
         checkNotNull(organize.getOrganizeName(), "Organize name must not be null");
         checkNotNull(organize.getUpdatedBy(), "update by must not be null");
+        organize.setParentKey(generateParentKey(organize));
+        organize.setNodeLevel(TreeUtil.generateNodeLevel(organize));
         organize.setUpdatedDate(LocalDateTime.now());
         return organizeDaoImpl.update(organize);
     }
