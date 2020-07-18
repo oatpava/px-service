@@ -284,13 +284,13 @@ public class RecycleBinResource {
 
             if (recycleBin != null) {
                 recycleBinUpdate = recycleBinService.restoreEntity(recycleBin);
-                if ("com.px.dms.entity.DmsDocument".equals(recycleBin.getEntityName())) {
-                    DmsDocumentService dmsDocumentService = new DmsDocumentService();
-                    DmsDocument dmsDocument = dmsDocumentService.getById(recycleBin.getLinkId());
-                    String searchId = dmsDocument.getDmsSearchId();
-                    DmsSearchService dmsSearchService = new DmsSearchService();
-                    dmsSearchService.updateDatareStore(searchId);
-                }
+//                if ("com.px.dms.entity.DmsDocument".equals(recycleBin.getEntityName())) {
+//                    DmsDocumentService dmsDocumentService = new DmsDocumentService();
+//                    DmsDocument dmsDocument = dmsDocumentService.getById(recycleBin.getLinkId());
+//                    String searchId = dmsDocument.getDmsSearchId();
+//                    DmsSearchService dmsSearchService = new DmsSearchService();
+//                    dmsSearchService.updateDatareStore(searchId);
+//                }
 
                 recycleBinUpdate = recycleBinService.remove(id, Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 status = Response.Status.OK;
