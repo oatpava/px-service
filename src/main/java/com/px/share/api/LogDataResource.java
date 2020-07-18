@@ -66,10 +66,8 @@ public class LogDataResource {
             response = LogDataModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "LogData by id success.")
-        ,
-        @ApiResponse(code = 404, message = "LogData by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "LogData by id success."),
+        @ApiResponse(code = 404, message = "LogData by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -118,10 +116,8 @@ public class LogDataResource {
             response = LogDataModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "LogData search success.")
-        ,
-        @ApiResponse(code = 404, message = "LogData search not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "LogData search success."),
+        @ApiResponse(code = 404, message = "LogData search not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -156,7 +152,7 @@ public class LogDataResource {
             LOG.debug(listLogData.size());
             LOG.debug(listLogData.isEmpty());
 
-            int createdBy = 0,type = 0;
+            int createdBy = 0, type = 0;
 //            List<Integer> type = new ArrayList<Integer>();
             String createdDateBegin = "", createdDateEnd = "", moduleName = "", description = "";
 
@@ -309,7 +305,6 @@ public class LogDataResource {
             status = Response.Status.OK;
             responseData.put("success", true);
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
@@ -324,10 +319,8 @@ public class LogDataResource {
             response = LogTypeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "LogType for Dropdown success.")
-        ,
-        @ApiResponse(code = 404, message = "LogType for Dropdown not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "LogType for Dropdown success."),
+        @ApiResponse(code = 404, message = "LogType for Dropdown not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -480,10 +473,8 @@ public class LogDataResource {
             response = LogDataModel_report.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Count All Log success.")
-        ,
-        @ApiResponse(code = 404, message = "Log not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Count All Log success."),
+        @ApiResponse(code = 404, message = "Log not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -536,10 +527,8 @@ public class LogDataResource {
             notes = "ขอรายการ log ทั้งหมดแยกตาม ชื่อโมดูล"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Count All Log success.")
-        ,
-        @ApiResponse(code = 404, message = "Log not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Count All Log success."),
+        @ApiResponse(code = 404, message = "Log not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -612,10 +601,8 @@ public class LogDataResource {
             notes = "ขอรายการ log ด้วยรหัสหน่วยงาน"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Count Log success.")
-        ,
-        @ApiResponse(code = 404, message = "Log not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Count Log success."),
+        @ApiResponse(code = 404, message = "Log not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -709,10 +696,8 @@ public class LogDataResource {
             notes = "ขอรายการการเข้าใช้งานในระบบของทุกหน่วยงาน"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Count Login success.")
-        ,
-        @ApiResponse(code = 404, message = "Login not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Count Login success."),
+        @ApiResponse(code = 404, message = "Login not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -777,10 +762,8 @@ public class LogDataResource {
             notes = "ขอรายการ log ทั้งหมดแยกตาม รหัสผู้ใช้งานระบบ"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Count All Log success.")
-        ,
-        @ApiResponse(code = 404, message = "Log not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Count All Log success."),
+        @ApiResponse(code = 404, message = "Log not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -845,10 +828,8 @@ public class LogDataResource {
             notes = "ค้นหาประวัติการใช้งาน"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Search Log success.")
-        ,
-        @ApiResponse(code = 404, message = "Log not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Search Log success."),
+        @ApiResponse(code = 404, message = "Log not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -999,10 +980,8 @@ public class LogDataResource {
             response = LogTypeModel_type.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "LogType for Dropdown success.")
-        ,
-        @ApiResponse(code = 404, message = "LogType for Dropdown not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "LogType for Dropdown success."),
+        @ApiResponse(code = 404, message = "LogType for Dropdown not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1070,8 +1049,7 @@ public class LogDataResource {
             response = TempTableModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "TempTable created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "TempTable created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -1096,22 +1074,16 @@ public class LogDataResource {
         try {
             TempTableService tempTableService = new TempTableService();
             List<TempTable> listTempTable = tempTableService.listByComputerNameAndJobType(Integer.parseInt(httpHeaders.getHeaderString("userID")), httpHeaders.getHeaderString("clientIp"), jobType, "", "");
-//            List<TempTable> listTempTable = tempTableService.listByComputerNameAndJobType(1, "127.0.0.1", jobType, "", "");
-
             if (!listTempTable.isEmpty()) {
-//            if (listTempTable.size() != 0) {
-                for (TempTable tempTable : listTempTable) {
+                listTempTable.forEach((tempTable) -> {
                     tempTableService.delete(tempTable);
-                }
+                });
             }
 
             listLogDataModel.forEach(model -> {
                 TempTable tempTable = new TempTable();
-
                 tempTable.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 tempTable.setComputerName(httpHeaders.getHeaderString("clientIp"));
-//                tempTable.setCreatedBy(1);
-//                tempTable.setComputerName("127.0.0.1");
                 tempTable.setJobType(jobType);
                 tempTable.setInt01(model.getId());
                 tempTable.setStr01(model.getModuleName());
@@ -1120,21 +1092,13 @@ public class LogDataResource {
                 tempTable.setStr04(model.getIpAddress());
                 tempTable.setStr05(model.getDescription());
                 tempTable.setText01(model.getModuleIcon());
-
-                if (tempTable != null) {
-                    tempTable = tempTableService.create(tempTable);
-                    tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    tempTable.setOrderNo(tempTable.getId());
-                    tempTable = tempTableService.update(tempTable);
-                }
+                tempTableService.create(tempTable);
             });
-
             responseData.put("data", null);
             status = Response.Status.CREATED;
             responseData.put("success", true);
             responseData.put("message", "TempTable created successfully.");
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             responseData.put("errorMessage", ex.getMessage());
         }

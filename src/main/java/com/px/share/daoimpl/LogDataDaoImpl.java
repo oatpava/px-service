@@ -17,8 +17,10 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author OPAS
  */
-public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements LogDataDao{
+public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements LogDataDao {
+
     private final String fieldSearch;
+
     public LogDataDaoImpl() {
         super(LogData.class);
         fieldSearch = ",createdBy,createdDateBegin,createdDateEnd,type,moduleName,description,";
@@ -30,8 +32,8 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
-        criteria = createOrder(criteria,sort,dir);
-        return this.listByCriteria(criteria,offset,limit);
+        criteria = createOrder(criteria, sort, dir);
+        return this.listByCriteria(criteria, offset, limit);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
-        criteria = createOrder(criteria,sort,dir);
+        criteria = createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
 
@@ -52,7 +54,7 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
-    
+
     @Override
     public LogData getByIdNotRemoved(Integer id) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -62,75 +64,76 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
-    
-    public List<LogData> search(MultivaluedMap<String, String> queryParams, int offset, int limit,String sort,String dir){
+
+    public List<LogData> search(MultivaluedMap<String, String> queryParams, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = createConjunctionFormSearch(queryParams);
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
-        criteria = createOrder(criteria,sort,dir);
-        return this.listByCriteria(criteria, offset, limit);
+        criteria = createOrder(criteria, sort, dir);
+        List<LogData> result = (limit == 0) ? this.listByCriteria(criteria) : this.listByCriteria(criteria, offset, limit);
+        return result;
     }
-    
-    public Integer countSearch(MultivaluedMap<String, String> queryParams){
+
+    public Integer countSearch(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = createConjunctionFormSearch(queryParams);
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
-    
-    private Conjunction createConjunctionFormSearch(MultivaluedMap<String, String> queryParams){
+
+    private Conjunction createConjunctionFormSearch(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = Restrictions.conjunction();
         Calendar cal = Calendar.getInstance();
         for (String key : queryParams.keySet()) {
-            if(fieldSearch.contains(","+key+",")){
+            if (fieldSearch.contains("," + key + ",")) {
                 for (String value : queryParams.get(key)) {
                     String[] valueArray = value.split(",");
                     int i = 0;
-                    for(i = 0;i<valueArray.length;i++){
+                    for (i = 0; i < valueArray.length; i++) {
                         switch (key) {
                             case "createdBy":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
                                     conjunction.add(Restrictions.eq("this.createdBy", Integer.parseInt(valueArray[i])));
                                 }
                                 break;
                             case "createdDateBegin":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
                                     conjunction.add(Restrictions.ge("this.createdDate", Common.dateThaiToLocalDateTime(valueArray[i])));
                                 }
                                 break;
                             case "createdDateEnd":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
-                                    conjunction.add(Restrictions.le("this.createdDate", Common.dateThaiToLocalDateTime((String)valueArray[i]).plusDays(1)));
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
+                                    conjunction.add(Restrictions.le("this.createdDate", Common.dateThaiToLocalDateTime((String) valueArray[i]).plusDays(1)));
                                 }
                                 break;
                             case "type":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
                                     String[] typeArr = valueArray[i].split("฿");
                                     List<Integer> typeInt = new ArrayList<Integer>();
-                                    for(i = 0;i<typeArr.length;i++){
+                                    for (i = 0; i < typeArr.length; i++) {
                                         typeInt.add(Integer.parseInt(typeArr[i]));
                                     }
                                     conjunction.add(Restrictions.in("this.type", typeInt));//Integer.parseInt(valueArray[i])
                                 }
                                 break;
                             case "moduleName":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
                                     conjunction.add(Restrictions.eq("this.moduleName", valueArray[i]));
                                 }
                                 break;
                             case "description":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
-                                    conjunction.add(Restrictions.like("this.description", valueArray[i],MatchMode.ANYWHERE));
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
+                                    conjunction.add(Restrictions.like("this.description", valueArray[i], MatchMode.ANYWHERE));
                                 }
                                 break;
                             case "subModule":
-                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
-                                    conjunction.add(Restrictions.like("this.description", valueArray[i],MatchMode.ANYWHERE));
+                                if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
+                                    conjunction.add(Restrictions.like("this.description", valueArray[i], MatchMode.ANYWHERE));
                                 }
                                 break;
                             default:
                                 conjunction.add(Restrictions.ge("this.createdDate", Common.dateThaiToLocalDateTime(valueArray[i])));
-                                conjunction.add(Restrictions.le("this.createdDate", Common.dateThaiToLocalDateTime((String)valueArray[i]).plusDays(1)));
+                                conjunction.add(Restrictions.le("this.createdDate", Common.dateThaiToLocalDateTime((String) valueArray[i]).plusDays(1)));
                         }
                     }
                 }
@@ -138,28 +141,28 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         }
         return conjunction;
     }
-    
-    private DetachedCriteria createOrder(DetachedCriteria criteria,String sort,String dir){
-        if(!sort.isEmpty()){
-            if((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")){
+
+    private DetachedCriteria createOrder(DetachedCriteria criteria, String sort, String dir) {
+        if (!sort.isEmpty()) {
+            if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
                 switch (sort) {
                     case "createdDate":
                         criteria.addOrder(Order.asc("this.createdDate"));
                         break;
                 }
-            }else if((!dir.isEmpty()) && dir.equalsIgnoreCase("desc")){
+            } else if ((!dir.isEmpty()) && dir.equalsIgnoreCase("desc")) {
                 switch (sort) {
                     case "createdDate":
                         criteria.addOrder(Order.desc("this.createdDate"));
                         break;
                 }
-            }            
-        }else{
-            criteria.addOrder(Order.desc("this.createdDate")); 
+            }
+        } else {
+            criteria.addOrder(Order.desc("this.createdDate"));
         }
         return criteria;
     }
-    
+
     public Integer countLogByModuleNameNoDate(String moduleName) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("moduleName", moduleName));
@@ -175,7 +178,7 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
-    
+
     @Override
     public Integer countLogByModuleName(String moduleName, String startDate, String endDate) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -287,7 +290,7 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
-    
+
     @Override
     public Integer countLogByUserId(int userId) {
         Conjunction conjunction = Restrictions.conjunction();
