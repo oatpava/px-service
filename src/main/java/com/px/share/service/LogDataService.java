@@ -101,8 +101,13 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
 //                logDataModel.setUserProfileName(name);
 //            }
             logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
-            logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
-            logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
+            if (logData.getType()==4 || logData.getType()==10) {//4=login, 10=logout
+                logDataModel.setModuleName(moduleService.getByModuleCode("wf").getModuleName());
+                logDataModel.setModuleIcon(moduleService.getByModuleCode("wf").getModuleIcon()); 
+            } else {
+                logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
+                logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
+            }
 //            if(logData.getType() == 4){
 //                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
 //            }else{
