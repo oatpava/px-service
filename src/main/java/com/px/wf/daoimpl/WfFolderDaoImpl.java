@@ -85,4 +85,24 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
         return this.listByCriteria(criteria);
     }
 
+    public List<WfFolder> listByParentId(int offset, int limit, int parentId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("parentId", parentId));
+        conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
+        criteria.add(conjunction).addOrder(Order.asc("wfContentType")).addOrder(Order.asc("wfContentType2")).addOrder(Order.asc("wfFolderName"));
+        return this.listByCriteria(criteria, offset, limit);
+    }
+
+    public Integer countlistByParentId(int parentId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("parentId", parentId));
+        conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
+        criteria.add(conjunction);
+        return this.countAll(criteria);
+    }
+
 }
