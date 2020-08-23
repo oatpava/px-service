@@ -4,6 +4,7 @@ import com.px.share.dao.RecycleBinDao;
 import com.px.share.entity.RecycleBin;
 import com.px.share.daoimpl.GenericDaoImpl;
 import com.px.share.model.RecycleBinSearchModel;
+import com.px.share.service.ParamService;
 import com.px.share.util.AdvanceSearch;
 import com.px.share.util.Common;
 import static com.px.share.util.Common.dateThaiToLocalDateTime;
@@ -197,6 +198,11 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
     }
 
     private Conjunction createConjunction(RecycleBinSearchModel recycleBinSearchModel) {
+        ParamService paramService = new ParamService();
+        String symbolAnd = paramService.getByParamName("ANDTXT").getParamValue();
+        String symbolOr = paramService.getByParamName("ORTXT").getParamValue();
+        String symbolNot = paramService.getByParamName("NOTTXT").getParamValue();
+        
         Conjunction conjunction = Restrictions.conjunction();
         String moduleName = recycleBinSearchModel.getModuleName();
         String description = recycleBinSearchModel.getDescription();
@@ -209,7 +215,7 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
             conjunction.add(Restrictions.eq("this.moduleName", moduleName));
         }
         if (description != null && description != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.description", description, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.description", description, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.createdDate", dateThaiToLocalDateTime(recycleBinSearchModel.getStartDate())));

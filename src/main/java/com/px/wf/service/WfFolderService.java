@@ -661,4 +661,14 @@ public class WfFolderService implements GenericTreeService<WfFolder, WfFolderMod
         checkNotNull(structureId, "structureId must not be null");
         return WfFolderDaoImpl.listByStructureId(structureId);
     }
+
+    public List<WfFolder> listByParentId(int offset, int limit, int parentId) {
+        checkNotNull(parentId, "parentId must not be null");
+        return WfFolderDaoImpl.listByParentId(offset, limit, parentId);
+    }
+
+    public int countlistByParentId(int parentId) {
+        checkNotNull(parentId, "parentId must not be null");
+        return WfFolderDaoImpl.countlistByParentId(parentId);
+    }
 }

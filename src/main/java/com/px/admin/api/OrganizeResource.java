@@ -450,16 +450,16 @@ public class OrganizeResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
-        @ApiOperation(
+
+    @ApiOperation(
             value = "Method for update Organize.",
             notes = "จัดเรียงผู้ใช้งานด้วย Organize Id",
             response = OrganizeModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Organize updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Organize by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Organize updeted by id success."),
+        @ApiResponse(code = 404, message = "Organize by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -496,6 +496,61 @@ public class OrganizeResource {
                 responseData.put("data", organizeService.tranformToModel(organize));
                 responseData.put("message", "");
             }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "Method for list Organize By Organize name.",
+            notes = "รายการโครงสร้างหน่วยงานภายนอก",
+            responseContainer = "List",
+            response = OrganizeModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Organize list By Organize name success."),
+        @ApiResponse(code = 404, message = "Organize list By Organize name not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/listAllByName")
+    public Response listByName(
+            @BeanParam ListOptionModel listOptionModel,
+            @ApiParam(name = "name", value = "ชื่อหน่วยงานภายนอก", required = true)
+            @QueryParam("name") String name
+    ) {
+        LOG.debug("listByName...");
+        Gson gs = new GsonBuilder()
+                .setVersion(listOptionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        ArrayList<OrganizeModel> listOrganizeModel = new ArrayList<>();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.OK;
+        responseData.put("data", listOrganizeModel);
+        responseData.put("success", false);
+        responseData.put("message", "Organize list By Organize name not found in the database.");
+        responseData.put("errorMessage", "");
+        try {
+            OrganizeService organizeService = new OrganizeService();
+            listOrganizeModel = new ArrayList<>();
+            List<Organize> listOrganize = organizeService.listAllByName(listOptionModel.getSort(), listOptionModel.getDir(), name);
+            if (!listOrganize.isEmpty()) {
+                for (Organize organize : listOrganize) {
+                    listOrganizeModel.add(organizeService.tranformToModel(organize));
+                }
+                listOrganizeModel.trimToSize();
+            }
+            responseData.put("data", listOrganizeModel);
+            responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());

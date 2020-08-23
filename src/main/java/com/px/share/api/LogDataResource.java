@@ -149,11 +149,8 @@ public class LogDataResource {
             LogDataService logDataService = new LogDataService();
             List<LogDataModel_report> listLogDataModel_report = new ArrayList<>();
             List<LogData> listLogData = logDataService.search(queryParams, listOptionModel.getOffset(), listOptionModel.getLimit(), listOptionModel.getSort(), listOptionModel.getDir());
-            LOG.debug(listLogData.size());
-            LOG.debug(listLogData.isEmpty());
-
+            ListReturnModel listReturnModel = new ListReturnModel(0, 0, 0);
             int createdBy = 0, type = 0;
-//            List<Integer> type = new ArrayList<Integer>();
             String createdDateBegin = "", createdDateEnd = "", moduleName = "", description = "";
 
             List<String> listModuleName = new ArrayList();
@@ -195,17 +192,6 @@ public class LogDataResource {
                                     createdDateEnd = valueArray[i];
                                     break;
                                 case "type":
-//                                    if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])) {
-//                                        String[] typeArr = valueArray[i].split("฿");
-//                                        List<Integer> typeInt = new ArrayList<Integer>();
-//                                        for (i = 0; i < typeArr.length; i++) {
-//                                            typeInt.add(Integer.parseInt(typeArr[i]));
-//                                        }
-//                                        type = typeInt;
-//                                    }
-//                                    if (valueArray[i] != null && !"".equalsIgnoreCase(valueArray[i])){
-//                                        type = Integer.parseInt(valueArray[i]);
-//                                    }
                                     break;
                                 case "moduleName":
                                     moduleName = valueArray[i];
@@ -225,8 +211,8 @@ public class LogDataResource {
             }
 
             if (!listLogData.isEmpty()) {
+                int count = listLogData.size() + listOptionModel.getOffset();
                 int countAll = logDataService.countSearch(queryParams);
-                int count = listLogData.size();
                 int next = 0;
                 if (count >= listOptionModel.getLimit()) {
                     next = listOptionModel.getOffset() + listOptionModel.getLimit();
@@ -234,7 +220,7 @@ public class LogDataResource {
                 if (next >= countAll) {
                     next = 0;
                 }
-                ListReturnModel listReturnModel = new ListReturnModel(countAll, count, next);
+                listReturnModel = new ListReturnModel(countAll, count, next);
 //                for (String key : queryParams.keySet()) {
 //                    if(fieldSearch.contains(","+key+",")){
 //                        for (String value : queryParams.get(key)) {
@@ -242,7 +228,6 @@ public class LogDataResource {
 //                            int i = 0;
 //                            for(i = 0;i<valueArray.length;i++){
 
-//                if(createdBy == 0 && "".equalsIgnoreCase(createdDateBegin) && "".equalsIgnoreCase(createdDateEnd) && "".equalsIgnoreCase(moduleName) && "".equalsIgnoreCase(description)){
                 if (!"".equalsIgnoreCase(createdDateBegin) && !"".equalsIgnoreCase(createdDateEnd)) {
                     if (!"".equalsIgnoreCase(moduleName)) {
                         for (int i = 0; i < listModuleName.size(); i++) {
@@ -286,9 +271,6 @@ public class LogDataResource {
                         }
                     }
                 }
-//                        }
-//                    }
-//                }
 
                 ArrayList<LogDataModel> listLogDataModel = new ArrayList<>();
                 LogDataModel logDataModel = null;

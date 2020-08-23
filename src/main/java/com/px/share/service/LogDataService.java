@@ -19,10 +19,11 @@ import java.time.LocalDateTime;
  *
  * @author OPAS
  */
-public class LogDataService implements GenericService<LogData, LogDataModel>{
+public class LogDataService implements GenericService<LogData, LogDataModel> {
+
     private static final Logger LOG = Logger.getLogger(LogDataService.class.getName());
     private final LogDataDaoImpl logDataDaoImpl;
-    
+
     public LogDataService() {
         this.logDataDaoImpl = new LogDataDaoImpl();
     }
@@ -30,7 +31,7 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
     @Override
     public LogData create(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         logData = logDataDaoImpl.create(logData);
         return logData;
     }
@@ -44,7 +45,7 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
     @Override
     public LogData update(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getUpdatedBy(),"update by must not be null");
+        checkNotNull(logData.getUpdatedBy(), "update by must not be null");
         logData.setUpdatedDate(LocalDateTime.now());
         return logDataDaoImpl.update(logData);
     }
@@ -72,34 +73,36 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
         String logType = "";
         String userName = "";
         int userCreated = 1;
-        if(logData!=null){
+        if (logData != null) {
             logDataModel = new LogDataModel();
-            logDataModel.setId(logData.getId());            
-            if(logData.getType()==1){
+            logDataModel.setId(logData.getId());
+            if (logData.getType() == 1) {
                 logType = logData.getDescription();
-            }else if(logData.getType()==2){
+            } else if (logData.getType() == 2) {
                 logType = logData.getDescription();
-            }else if(logData.getType()==3){
+            } else if (logData.getType() == 3) {
                 logType = logData.getDescription();
-            }else{
+            } else {
                 logType = logData.getDescription();
             }
-            logDataModel.setCreatedDate(Common.localDateTimeToString(logData.getCreatedDate()));
+            logDataModel.setCreatedDate(Common.localDateTimeToString2(logData.getCreatedDate()));
             logDataModel.setDescription(logType);
-            logDataModel.setIpAddress(logData.getIpAddress());            
-            logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
-            logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
+            logDataModel.setIpAddress(logData.getIpAddress());
             userCreated = logData.getCreatedBy();
-            if(userCreated <= 0) {
+            if (userCreated <= 0) {
                 userCreated = 1;
             }
-            if (!logData.getModuleName().equals(LogData.MODULE_ADMIN)) {
-                logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
-            } else {
-                List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
-                String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
-                logDataModel.setUserProfileName(name);
-            }
+//            if (!logData.getModuleName().equals(LogData.MODULE_ADMIN)) {
+//                logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+//            } else {
+//                System.out.println("ADMIN: " + userCreated + " - " + logType);
+//                List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
+//                String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
+//                logDataModel.setUserProfileName(name);
+//            }
+            logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+            logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
+            logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
 //            if(logData.getType() == 4){
 //                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
 //            }else{
@@ -124,39 +127,39 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
     public int countSearch(MultivaluedMap<String, String> queryParams) {
         return logDataDaoImpl.countSearch(queryParams);
     }
-    
+
     @Override
     public LogData getByIdNotRemoved(int id) {
         checkNotNull(id, "LogData id entity must not be null");
         return logDataDaoImpl.getByIdNotRemoved(id);
     }
-    
-    public LogData createEntity(LogData logData){
+
+    public LogData createEntity(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 1 for create
         logData.setType(1);
         return this.create(logData);
     }
-    
-    public LogData updateEntity(LogData logData){
+
+    public LogData updateEntity(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 2 for update
         logData.setType(2);
         return this.create(logData);
     }
-    
+
     /*
     * For remove set type 3 
-    */
-    public LogData removeEntity(LogData logData){
+     */
+    public LogData removeEntity(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
-        logData.setType(3);        
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
+        logData.setType(3);
         LogData result = this.create(logData);
         checkNotNull(logData, "result logData entity for remove must not be null");
-        
+
         RecycleBin recycleBin = new RecycleBin();
         recycleBin.setCreatedBy(logData.getCreatedBy());
         recycleBin.setDescription(logData.getDescription());
@@ -168,68 +171,68 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
         recycleBin = recycleBinService.create(recycleBin);
         return result;
     }
-    
-    public LogData login(LogData logData){
+
+    public LogData login(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 4 for login
         logData.setType(4);
         return this.create(logData);
-    }    
-    
-    public LogData restore(LogData logData){
+    }
+
+    public LogData restore(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 5 for restore
         logData.setType(5);
         return this.create(logData);
     }
-        
-    public LogData print(LogData logData){
+
+    public LogData print(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 6 for print
         logData.setType(6);
         return this.create(logData);
     }
-    
-    public LogData copy(LogData logData){
+
+    public LogData copy(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 7 for copy
         logData.setType(7);
         return this.create(logData);
     }
-    
-    public LogData export(LogData logData){
+
+    public LogData export(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 8 for export
         logData.setType(8);
         return this.create(logData);
     }
-    
-    public LogData open(LogData logData){
+
+    public LogData open(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 9 for open
         logData.setType(9);
         return this.create(logData);
     }
-    
-    public LogData logout(LogData logData){
+
+    public LogData logout(LogData logData) {
         checkNotNull(logData, "logData entity must not be null");
-        checkNotNull(logData.getCreatedBy(),"create by must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
         //Type 10 for logout
         logData.setType(10);
         return this.create(logData);
-    }    
-    
+    }
+
     public Integer countLogByModuleNameNoDate(String moduleName) {
         checkNotNull(moduleName, "moduleName must not be null");
         return logDataDaoImpl.countLogByModuleNameNoDate(moduleName);
     }
-    
+
     public Integer countLogByModuleName(String moduleName, String startDate, String endDate) {
         checkNotNull(moduleName, "moduleName must not be null");
         checkNotNull(startDate, "startDate must not be null");
@@ -257,11 +260,11 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
     public List<LogData> listLogByModuleName(String moduleName, List<Integer> listUserProfileId, List<Integer> type, String startDate, String endDate, int offset, int limit, String sort, String dir) {
         return logDataDaoImpl.listLogByModuleName(moduleName, listUserProfileId, type, startDate, endDate, offset, limit, sort, dir);
     }
-    
+
     public Integer countListLogByModuleName(String moduleName, List<Integer> listUserProfileId, List<Integer> type, String startDate, String endDate) {
         return logDataDaoImpl.countListLogByModuleName(moduleName, listUserProfileId, type, startDate, endDate);
     }
-    
+
     public Integer countLogByUserId(int userId) {
         checkNotNull(userId, "userId must not be null");
         return logDataDaoImpl.countLogByUserId(userId);
@@ -274,5 +277,5 @@ public class LogDataService implements GenericService<LogData, LogDataModel>{
 
         return logDataModel_report;
     }
-    
+
 }

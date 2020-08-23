@@ -1744,7 +1744,7 @@ public class WfFolderResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/listByParentIdAuth/{parentId}")
     public Response listByParentIdAuth(
-            @BeanParam VersionModel versionModel,
+            @BeanParam ListOptionModel listOptionModel,
             @ApiParam(name = "parentId", value = "รหัสแม่ของทะเบียน", required = true)
             @PathParam("parentId") int parentId
     ) {
@@ -1762,8 +1762,9 @@ public class WfFolderResource {
         responseData.put("message", "WfFolder by parentId not found in the database.");
         try {
             WfFolderService wfFolderService = new WfFolderService();
-            List<WfFolder> listWfFolder = wfFolderService.listByParentId(parentId);
+            List<WfFolder> listWfFolder = wfFolderService.listByParentId(listOptionModel.getOffset(), listOptionModel.getLimit(), parentId);
             List<WfFolderModel> listWfFolderModel = new ArrayList<>();
+            ListReturnModel listReturnModel = new ListReturnModel(0, 0, 0);
 
             int userId = Integer.parseInt(httpHeaders.getHeaderString("userID"));
             if (userId == 1) {
@@ -1776,7 +1777,20 @@ public class WfFolderResource {
                 for (WfFolder wfFolder : listWfFolder) {
                     listWfFolderModel.add(wfFolderService.tranformToModel(wfFolder, listSubModuleUserAuth));
                 }
+                if (!listWfFolder.isEmpty()) {
+                    int count = listWfFolder.size() + listOptionModel.getOffset();
+                    int countAll = wfFolderService.countlistByParentId(parentId);
+                    int next = 0;
+                    if (count >= listOptionModel.getLimit()) {
+                        next = listOptionModel.getOffset() + listOptionModel.getLimit();
+                        if (next >= countAll) {
+                            next = 0;
+                        }
+                    }
+                    listReturnModel = new ListReturnModel(countAll, count, next);
+                }
             } else {
+
                 for (WfFolder wfFolder : listWfFolder) {
                     BaseTreeEntity treeEntity = wfFolderService.getById(wfFolder.getId());
                     SubmoduleService subModuleService = new SubmoduleService();
@@ -1784,13 +1798,16 @@ public class WfFolderResource {
                     SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
                     UserProfileService userProfileService = new UserProfileService();
                     List<SubmoduleUserAuth> listSubModuleUserAuth = submoduleUserAuthService.getAuthorityFromTreeByUserProfile(submodule, userProfileService.getById(userId), treeEntity);
-                    if ("1".equals(listSubModuleUserAuth.get(0).getAuthority())) {
+                    if ("1".equals(listSubModuleUserAuth.get(0).getAuthority())) {//still not implement litReturn (not admin, always limit@200)
                         listWfFolderModel.add(wfFolderService.tranformToModel(wfFolder, listSubModuleUserAuth));
                     }
                 }
+                listReturnModel = new ListReturnModel(listWfFolderModel.size(), listWfFolderModel.size(), 0);
             }
+
             status = Response.Status.OK;
             responseData.put("data", listWfFolderModel);
+            responseData.put("listReturn", listReturnModel);
             responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
