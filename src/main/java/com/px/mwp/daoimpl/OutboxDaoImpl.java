@@ -5,6 +5,7 @@ import com.px.mwp.entity.Outbox;
 import com.px.mwp.entity.Workflow;
 import com.px.mwp.model.OutboxSearchModel;
 import com.px.share.daoimpl.GenericDaoImpl;
+import com.px.share.service.ParamService;
 import com.px.share.util.AdvanceSearch;
 import com.px.share.util.Common;
 import static com.px.share.util.Common.dateThaiToLocalDateTime;
@@ -479,6 +480,11 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
     }
 
     private Conjunction createConjunction(int UserProfileFolderId, OutboxSearchModel outboxsearchModel) {
+        ParamService paramService = new ParamService();
+        String symbolAnd = paramService.getByParamName("ANDTXT").getParamValue();
+        String symbolOr = paramService.getByParamName("ORTXT").getParamValue();
+        String symbolNot = paramService.getByParamName("NOTTXT").getParamValue();
+
         Conjunction conjunction = Restrictions.conjunction();
         String outboxTo = outboxsearchModel.getOutboxTo();
         String outboxFrom = outboxsearchModel.getOutboxFrom();
@@ -494,13 +500,13 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
         conjunction.add(Restrictions.in("this.userProfileFolderId", UserProfileFolderId));
 
         if (outboxTo != null && outboxTo != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTo", outboxTo, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTo", outboxTo, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (outboxFrom != null && outboxFrom != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxFrom", outboxFrom, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxFrom", outboxFrom, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (outboxTitle != null && outboxTitle != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTitle", outboxTitle, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTitle", outboxTitle, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (startDate != null && startDate != "") {
             conjunction.add(Restrictions.ge("this.outboxSendDate", dateThaiToLocalDateTime(outboxsearchModel.getOutboxStartDate())));
@@ -510,16 +516,16 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
             conjunction.add(Restrictions.le("this.outboxSendDate", dateThaiToLocalDateTime(outboxsearchModel.getOutboxEndDate()).plusHours(23).plusMinutes(59)));
         }
         if (outboxNote != null && outboxNote != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxNote", outboxNote, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxNote", outboxNote, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (outboxDescription != null && outboxDescription != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxDescription", outboxDescription, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxDescription", outboxDescription, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (outboxStr04 != null && outboxStr04 != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr04", outboxStr04, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr04", outboxStr04, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         if (outboxStr03 != null && outboxStr03 != "") {
-            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr03", outboxStr03, null, "&", ",", "!", "^", null));
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr03", outboxStr03, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         return conjunction;
     }

@@ -6,6 +6,7 @@ import com.px.share.daoimpl.GenericTreeDaoImpl;
 import java.util.List;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -45,7 +46,7 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
-    
+
     private Conjunction createConjunction(String code, String name) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
@@ -86,7 +87,7 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
         criteria.add(conjunction).addOrder(Order.desc("this.createdDate"));
         return this.listByCriteria(criteria);
     }
-    
+
     //oat-add
     public Organize getLatest(int parentId) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -97,7 +98,7 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
         List<Organize> tmp = this.listByCriteria(criteria, 0, 1);
         return tmp.get(0);
     }
-    
+
     public Organize getPrevOrderBy(int id) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
@@ -105,6 +106,16 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
         DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
+    }
+
+    public List<Organize> listAllByName(String sort, String dir, String name) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.like("organizeName", name, MatchMode.ANYWHERE));
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
+        criteria.add(conjunction);
+        criteria = createOrder(criteria, sort, dir);
+        return this.listByCriteria(criteria);
     }
 
 }
