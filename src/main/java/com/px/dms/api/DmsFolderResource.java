@@ -620,7 +620,7 @@ public class DmsFolderResource {
             dmsFolderService.folderMove(id2, id, userID);
 
             //add log move
-            dmsFolderService.saveLogForMove(dmsFolderService.getById(id2), oldParentFolderId, httpHeaders.getHeaderString("clientIp"));
+            dmsFolderService.saveLogForMove(dmsFolderService.getById(id2), oldParentFolderId, httpHeaders.getHeaderString("clientIp"), Integer.parseInt(httpHeaders.getHeaderString("userID")));
 
             status = Response.Status.CREATED;
             responseData.put("data", true);
@@ -2269,7 +2269,7 @@ public class DmsFolderResource {
             //add log copy
             DmsFolder folder2 = dmsFolderService.getById(id);
 
-            dmsFolderService.saveLogForCopy(folder2, id2, httpHeaders.getHeaderString("clientIp"));
+            dmsFolderService.saveLogForCopy(folder2, id2, httpHeaders.getHeaderString("clientIp"), Integer.parseInt(httpHeaders.getHeaderString("userID")));
 
             status = Response.Status.CREATED;
             responseData.put("data", true);
