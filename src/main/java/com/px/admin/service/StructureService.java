@@ -272,7 +272,7 @@ public class StructureService implements GenericTreeService<Structure, Structure
         //For Create Log when update Structure
         String logDescription = this.generateLogForUpdateEntity(structureOld, structureNew);
         LogData logData = new LogData();
-        logData.setCreatedBy(structureNew.getCreatedBy());
+        logData.setCreatedBy(structureNew.getUpdatedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(structureNew.getClass().getName());
         logData.setLinkId(structureNew.getId());
@@ -287,7 +287,7 @@ public class StructureService implements GenericTreeService<Structure, Structure
         //For Create Log when remove Structure
         String logDescription = this.generateLogForRemoveEntity(structure);
         LogData logData = new LogData();
-        logData.setCreatedBy(structure.getCreatedBy());
+        logData.setCreatedBy(structure.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(structure.getClass().getName());
         logData.setLinkId(structure.getId());
