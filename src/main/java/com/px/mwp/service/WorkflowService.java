@@ -279,7 +279,8 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             }
             break;
             case ('C'): {
-                detail = name + " [ยกเลิกหนังสือ] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
+                String action = (workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
+                detail = name + " [" + action + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
             case ('D'): {
