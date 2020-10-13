@@ -71,7 +71,6 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
         UserProfileService userProfileService = new UserProfileService();
         ModuleService moduleService = new ModuleService();
         String logType = "";
-        String userName = "";
         int userCreated = 1;
         if (logData != null) {
             logDataModel = new LogDataModel();
@@ -92,23 +91,15 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
             if (userCreated <= 0) {
                 userCreated = 1;
             }
-//            if (!logData.getModuleName().equals(LogData.MODULE_ADMIN)) {
-//                logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
-//            } else {
-//                System.out.println("ADMIN: " + userCreated + " - " + logType);
-//                List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
-//                String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
-//                logDataModel.setUserProfileName(name);
-//            }
-            logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+            if (logData.getType() == 4 || logData.getType() == 10) {//4=login, 10=logout //userCreated = userId
+                List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
+                String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
+                logDataModel.setUserProfileName(name);
+            } else {//userCreated = userProfileId
+                logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+            }
             logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
             logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
-//            if(logData.getType() == 4){
-//                userName = userProfileService.getByUserId(userCreated).getUserProfileFullName();
-//            }else{
-//                userName = userProfileService.getById(userCreated).getUserProfileFullName();
-//            }
-//            logDataModel.setUserProfileName(userName);
         }
         return logDataModel;
     }

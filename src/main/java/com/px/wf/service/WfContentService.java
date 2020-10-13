@@ -771,7 +771,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         //For Create Log when update WfContent
         String logDescription = this.generateLogForUpdateEntity(wfContentOld, wfContentNew, bookDateNew);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfContentNew.getCreatedBy());
+        logData.setCreatedBy(wfContentNew.getUpdatedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(wfContentNew.getClass().getName());
         logData.setLinkId(wfContentNew.getId());
@@ -786,7 +786,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         //For Create Log when remove WfContent
         String logDescription = this.generateLogForRemoveEntity(wfContent);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfContent.getCreatedBy());
+        logData.setCreatedBy(wfContent.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(wfContent.getClass().getName());
         logData.setLinkId(wfContent.getId());
@@ -801,7 +801,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
     public WfContent saveLogForRemove_MyWork(WfContent myWork, String clientIp) {
         String logDescription = this.generateLogForRemoveMyWork(myWork);
         LogData logData = new LogData();
-        logData.setCreatedBy(myWork.getCreatedBy());
+        logData.setCreatedBy(myWork.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(myWork.getClass().getName());//*****
         logData.setLinkId(myWork.getId());
@@ -812,11 +812,11 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         return myWork;
     }
 
-    public WfContent saveLogForOpen(WfContent wfContent, String clientIp, String type) {
+    public WfContent saveLogForOpen(WfContent wfContent, String clientIp, String type, int userId) {
         //For Create Log when open WfContent
         String logDescription = this.generateLogForOpenEntity(wfContent, type);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfContent.getCreatedBy());
+        logData.setCreatedBy(userId);
         logData.setDescription(logDescription);
         logData.setEntityName(wfContent.getClass().getName());
         logData.setLinkId(wfContent.getId());

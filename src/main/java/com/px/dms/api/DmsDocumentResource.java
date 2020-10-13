@@ -2286,7 +2286,7 @@ public class DmsDocumentResource {
         try {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
 //            DmsDocument dmsDocument = dmsDocumentService.remove(id, Integer.parseInt(httpHeaders.getHeaderString("userID")));
-//            dmsDocumentService.saveLogForMove(dmsDocument, httpHeaders.getHeaderString("clientIp"));
+//            dmsDocumentService.saveLogForMove(dmsDocument, httpHeaders.getHeaderString("clientIp"), Integer.parseInt(httpHeaders.getHeaderString("userID"));
             DmsSearchService dmsSearchService = new DmsSearchService();
             String[] parts = id.split(",");
             if (parts.length == 0) {
@@ -2302,7 +2302,7 @@ public class DmsDocumentResource {
                 String fullPath = dmsFolderService.getFullPathName(FolderId);
                 dmsDocument.setFullPathName(fullPath);
                 dmsDocument = dmsDocumentService.update(dmsDocument);
-//                dmsDocumentService.saveLogForMove(dmsDocument, folderIdOld,httpHeaders.getHeaderString("clientIp"));
+//                dmsDocumentService.saveLogForMove(dmsDocument, folderIdOld,httpHeaders.getHeaderString("clientIp"), Integer.parseInt(httpHeaders.getHeaderString("userID"));
                 String searchId = dmsDocument.getDmsSearchId();
 
 //                if (searchId != null) {

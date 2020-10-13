@@ -412,7 +412,7 @@ public class WfFolderService implements GenericTreeService<WfFolder, WfFolderMod
         //For Create Log when update WfFolder
         String logDescription = this.generateLogForUpdateEntity(wfFolderOld, wfFolderNew);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfFolderNew.getCreatedBy());
+        logData.setCreatedBy(wfFolderNew.getUpdatedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(wfFolderNew.getClass().getName());
         logData.setLinkId(wfFolderNew.getId());
@@ -427,7 +427,7 @@ public class WfFolderService implements GenericTreeService<WfFolder, WfFolderMod
         //For Create Log when remove WfFolder
         String logDescription = this.generateLogForRemoveEntity(wfFolder);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfFolder.getCreatedBy());
+        logData.setCreatedBy(wfFolder.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(wfFolder.getClass().getName());
         logData.setLinkId(wfFolder.getId());

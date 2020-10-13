@@ -160,7 +160,7 @@ public class WfAbsentService implements GenericService<WfAbsent, WfAbsentModel> 
         //For Create Log when update WfAbsent
         String logDescription = this.generateLogForUpdateEntity(wfAbsentOld, wfAbsentNew);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfAbsentNew.getCreatedBy());
+        logData.setCreatedBy(wfAbsentNew.getUpdatedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(wfAbsentNew.getClass().getName());
         logData.setLinkId(wfAbsentNew.getId());
@@ -175,7 +175,7 @@ public class WfAbsentService implements GenericService<WfAbsent, WfAbsentModel> 
         //For Create Log when remove WfAbsent
         String logDescription = this.generateLogForRemoveEntity(wfAbsent);
         LogData logData = new LogData();
-        logData.setCreatedBy(wfAbsent.getCreatedBy());
+        logData.setCreatedBy(wfAbsent.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(wfAbsent.getClass().getName());
         logData.setLinkId(wfAbsent.getId());

@@ -440,7 +440,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         String logDescription = this.generateLogForUpdateEntity(dmsDocumentOld, dmsDocumentNew);
 
         LogData logData = new LogData();
-        logData.setCreatedBy(dmsDocumentNew.getCreatedBy());
+        logData.setCreatedBy(dmsDocumentNew.getUpdatedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(dmsDocumentNew.getClass().getName());
         logData.setLinkId(dmsDocumentNew.getId());
@@ -455,7 +455,7 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         //For Create Log when remove MeetingRoom
         String logDescription = this.generateLogForRemoveEntity(dmsDocument);
         LogData logData = new LogData();
-        logData.setCreatedBy(dmsDocument.getCreatedBy());
+        logData.setCreatedBy(dmsDocument.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(dmsDocument.getClass().getName());
         logData.setLinkId(dmsDocument.getId());
@@ -466,11 +466,11 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         return dmsDocument;
     }
 
-    public DmsDocument saveLogForCopy(DmsDocument dmsDocument, int oldFolderId, String clientIp) {
+    public DmsDocument saveLogForCopy(DmsDocument dmsDocument, int oldFolderId, String clientIp, int userId) {
         //For Create Log when remove MeetingRoom
         String logDescription = this.generateLogForCopyEntity(dmsDocument, oldFolderId);
         LogData logData = new LogData();
-        logData.setCreatedBy(dmsDocument.getCreatedBy());
+        logData.setCreatedBy(userId);
         logData.setDescription(logDescription);
         logData.setEntityName(dmsDocument.getClass().getName());
         logData.setLinkId(dmsDocument.getId());
@@ -481,11 +481,11 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         return dmsDocument;
     }
 
-    public DmsDocument saveLogForMove(DmsDocument dmsDocument, int oldFolderId, String clientIp) {
+    public DmsDocument saveLogForMove(DmsDocument dmsDocument, int oldFolderId, String clientIp, int userId) {
         //For Create Log when remove MeetingRoom
         String logDescription = this.generateLogForMoveEntity(dmsDocument, oldFolderId);
         LogData logData = new LogData();
-        logData.setCreatedBy(dmsDocument.getCreatedBy());
+        logData.setCreatedBy(userId);
         logData.setDescription(logDescription);
         logData.setEntityName(dmsDocument.getClass().getName());
         logData.setLinkId(dmsDocument.getId());

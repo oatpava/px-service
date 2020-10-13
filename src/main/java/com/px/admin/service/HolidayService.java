@@ -157,7 +157,7 @@ public class HolidayService implements GenericService<Holiday, HolidayModel>{
         //For Create Log when update Holiday
         String logDescription = this.generateLogForUpdateEntity(holidayOld,holidayNew);
         LogData logData = new LogData();
-        logData.setCreatedBy(holidayNew.getCreatedBy());
+        logData.setCreatedBy(holidayNew.getUpdatedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(holidayNew.getClass().getName());
         logData.setLinkId(holidayNew.getId());
@@ -172,7 +172,7 @@ public class HolidayService implements GenericService<Holiday, HolidayModel>{
         //For Create Log when remove Holiday
         String logDescription = this.generateLogForRemoveEntity(holiday);
         LogData logData = new LogData();
-        logData.setCreatedBy(holiday.getCreatedBy());
+        logData.setCreatedBy(holiday.getRemovedBy());
         logData.setDescription(logDescription);
         logData.setEntityName(holiday.getClass().getName());
         logData.setLinkId(holiday.getId());
