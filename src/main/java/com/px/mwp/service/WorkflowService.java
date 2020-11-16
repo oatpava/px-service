@@ -604,7 +604,7 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 action = "ทำเรื่องเสร็จ";
                 break;
             case 'C':
-                action = "ยกเลิกหนังสือ";
+                action = (workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
                 break;
             case 'D':
                 action = "ยกเลิกการส่ง";
