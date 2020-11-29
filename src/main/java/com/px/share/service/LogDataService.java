@@ -102,8 +102,6 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
                 logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
                 logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
             }
-            logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
-            logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
         }
         return logDataModel;
     }
