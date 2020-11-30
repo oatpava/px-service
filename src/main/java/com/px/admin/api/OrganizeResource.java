@@ -139,7 +139,7 @@ public class OrganizeResource {
                 if (id == 1) {
                     Organize lastestOrganize = organizeService.getLatest(id);
                     if (lastestOrganize != null) {
-                        organizeModel.setCode(lastestOrganize.getOrganizeCode());
+                        organizeModel.setCode(Integer.toString(Integer.parseInt(lastestOrganize.getOrganizeCode()) + 1));
                         organizeModel.setName("");
                         organizeModel.setShortName("");
                     }
