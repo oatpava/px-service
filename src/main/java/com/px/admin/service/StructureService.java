@@ -475,5 +475,9 @@ public class StructureService implements GenericTreeService<Structure, Structure
     public List<Structure> listByName(String structureName) {
         return structureDaoImpl.listByName(structureName);
     }
+    
+    public List<Structure> listByParentId(int parentId, int offset, int limit, String sort, String dir) {
+        return structureDaoImpl.listByParentId(parentId, offset, limit, sort, dir);
+    }
 
 }
