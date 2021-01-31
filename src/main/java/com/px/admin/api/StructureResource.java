@@ -75,8 +75,7 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Structure created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Structure created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -127,10 +126,8 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure by id success."),
+        @ApiResponse(code = 404, message = "Structure by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -178,9 +175,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Structure by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure updeted by id success."),
+        @ApiResponse(code = 404, message = "Structure by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -251,9 +248,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure deleted by id success.")
-        ,@ApiResponse(code = 404, message = "Structure by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure deleted by id success."),
+        @ApiResponse(code = 404, message = "Structure by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -339,9 +336,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure list By Structure Id success.")
-        ,@ApiResponse(code = 404, message = "Structure list By Structure Id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure list By Structure Id success."),
+        @ApiResponse(code = 404, message = "Structure list By Structure Id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -398,10 +395,8 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure search success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure search not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure search success."),
+        @ApiResponse(code = 404, message = "Structure search not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -481,10 +476,8 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure search by Name or Code success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure search by Name or Code not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure search by Name or Code success."),
+        @ApiResponse(code = 404, message = "Structure search by Name or Code not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -552,10 +545,8 @@ public class StructureResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure list By Structure Id success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure list By Structure Id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure list By Structure Id success."),
+        @ApiResponse(code = 404, message = "Structure list By Structure Id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -616,10 +607,8 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure list success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure list success."),
+        @ApiResponse(code = 404, message = "Structure list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -672,9 +661,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Structure by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure updeted by id success."),
+        @ApiResponse(code = 404, message = "Structure by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -736,9 +725,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure list By Profile Id success.")
-        ,@ApiResponse(code = 404, message = "Structure list By Profile Id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure list By Profile Id success."),
+        @ApiResponse(code = 404, message = "Structure list By Profile Id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Path(value = "/defaultProfiles")
@@ -793,9 +782,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure list By Profile Id success.")
-        ,@ApiResponse(code = 404, message = "Structure list By Profile Id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure list By Profile Id success."),
+        @ApiResponse(code = 404, message = "Structure list By Profile Id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Path(value = "/defaultProfiles2")
@@ -848,8 +837,8 @@ public class StructureResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure check duplicate by code success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure check duplicate by code success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -930,8 +919,7 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Structure Excel created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "Structure Excel created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
 
@@ -977,10 +965,8 @@ public class StructureResource {
             response = VStructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure by id success."),
+        @ApiResponse(code = 404, message = "Structure by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1029,10 +1015,8 @@ public class StructureResource {
             response = StructureConvertModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure Convert list success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure Convert list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure Convert list success."),
+        @ApiResponse(code = 404, message = "Structure Convert list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1279,9 +1263,9 @@ public class StructureResource {
             response = StructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure updeted by id success.")
-        ,@ApiResponse(code = 404, message = "Structure by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Structure updeted by id success."),
+        @ApiResponse(code = 404, message = "Structure by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1481,8 +1465,7 @@ public class StructureResource {
             response = VStructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "VStructure Excel created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "VStructure Excel created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
 
@@ -1549,9 +1532,9 @@ public class StructureResource {
             response = VStructureModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Name hr list success.")
-        ,@ApiResponse(code = 404, message = "Name hr list not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Name hr list success."),
+        @ApiResponse(code = 404, message = "Name hr list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1591,11 +1574,64 @@ public class StructureResource {
             status = Response.Status.OK;
             responseData.put("success", true);
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
+
+    @ApiOperation(
+            value = "Method for list Structure by parent id",
+            notes = "ขอข้อมูลรายการโครงสร้างหน่วยงาน ด้วย รหัสแม่ของโครงสร้างหน่วยงาน",
+            responseContainer = "List",
+            response = StructureModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "list Structure by parent id success."),
+        @ApiResponse(code = 404, message = "Structure lisy by parent id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/parentId/{parentId}")
+    public Response listByParentId(
+            @BeanParam ListOptionModel listOptionModel,
+            @ApiParam(name = "parentId", value = "รหัสแม่ของโครงสร้างหน่วยงาน", required = true)
+            @PathParam("parentId") int parentId
+    ) {
+        LOG.debug("listByParentId...");
+        Gson gs = new GsonBuilder()
+                .setVersion(listOptionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("message", "Structure lisy by parent id not found in the database.");
+        try {
+            StructureService structureService = new StructureService();
+            ArrayList<StructureModel> listStructureModel = new ArrayList<>();
+            List<Structure> listStructure = structureService.listByParentId(parentId, listOptionModel.getOffset(), listOptionModel.getLimit(), listOptionModel.getSort(), listOptionModel.getDir());
+            if (!listStructure.isEmpty()) {
+                listStructure.forEach((structure) -> {
+                    listStructureModel.add(structureService.tranformToModel(structure));
+                });
+                listStructureModel.trimToSize();
+            }
+            status = Response.Status.OK;
+            responseData.put("data", listStructureModel);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 }

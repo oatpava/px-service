@@ -208,4 +208,14 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
         return this.listByCriteria(criteria);
     }
 
+    public List<Structure> listByParentId(int parentId, int offset, int limit, String sort, String dir) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("parentId", parentId));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
+        criteria.add(conjunction);
+        criteria = createOrder(criteria, sort, dir);
+        return this.listByCriteria(criteria, offset, limit);
+    }
+
 }
