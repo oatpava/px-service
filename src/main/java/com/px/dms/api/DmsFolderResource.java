@@ -1629,7 +1629,14 @@ public class DmsFolderResource {
                 submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DF_SEC4");
                 submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
                 submoduleUserAuthService.create(submoduleUserAuth);
-
+                
+                submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DMS_COPY");
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
+                submoduleUserAuthService.create(submoduleUserAuth);
+                
+                submoduleAuth = submoduleAuthService.getBySubmoduleAuthCode("DMS_MOVE");
+                submoduleUserAuth.setSubmoduleAuth(submoduleAuth);
+                submoduleUserAuthService.create(submoduleUserAuth);
             }
 
             status = Response.Status.OK;
@@ -2207,7 +2214,18 @@ public class DmsFolderResource {
                 status = Response.Status.OK;
                 List<Menu> menu = menuService.listByMenuTypeSubmoduleUserAuth(menuType, listSubModuleUserAuth, "orderNo", "asc");
 //                System.out.println("List<Menu> ="+menu.size());
+            boolean authCopy = false;
+            boolean authMove = false;
+            for (int i=0;i<listSubModuleUserAuth.size();i++) {
+                if (listSubModuleUserAuth.get(i).getSubmoduleAuth().getSubmoduleAuthCode().equals("DMS_COPY")) {
+                   authCopy = listSubModuleUserAuth.get(i).getAuthority().equals("1");
+                } else if (listSubModuleUserAuth.get(i).getSubmoduleAuth().getSubmoduleAuthCode().equals("DMS_MOVE")) {
+                    authMove = listSubModuleUserAuth.get(i).getAuthority().equals("1");
+                }
+            }
                 responseData.put("data", menuService.tranformToModelTree(menu, 0));
+                responseData.put("authCopy", authCopy);
+                responseData.put("authMove", authMove);
                 responseData.put("message", "");
             }
 
