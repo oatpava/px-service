@@ -153,6 +153,13 @@ public class WfContentSearchModel extends VersionModel {
     @Expose
     private int sendingStatus;
 
+    @XmlElement(name = "wfContentText01")
+    @ApiParam(name = "wfContentText01", value = "การปฏิบัติ", required = false)
+    @Size(max = 4000)
+    @Since(1.0)
+    @Expose
+    private String wfContentText01;
+
     public int getWfContentFolderId() {
         return wfContentFolderId;
     }
@@ -320,6 +327,14 @@ public class WfContentSearchModel extends VersionModel {
 
     public void seะtSendingStatuse(int sendingStatus) {
         this.sendingStatus = sendingStatus;
+    }
+
+    public String getWfContentText01() {
+        return wfContentText01;
+    }
+
+    public void setWfContentText01(String wfContentText01) {
+        this.wfContentText01 = wfContentText01;
     }
 
 }
