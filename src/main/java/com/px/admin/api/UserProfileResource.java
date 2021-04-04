@@ -2169,6 +2169,7 @@ public class UserProfileResource {
                     tempTable.setInt01(model.getId());
 //                        tempTable.setInt01(model.getSubmoduleAuth().getAuth().getId());
                     tempTable.setStr01(model.getStructure().getName());
+                    tempTable.setText01(model.getStructure().getShortName());
                     tempTable.setStr02(model.getFullName());
                     tempTable.setStr03(model.getUser().getName());
                     tempTable.setStr04(model.getUserStatus().getName());
