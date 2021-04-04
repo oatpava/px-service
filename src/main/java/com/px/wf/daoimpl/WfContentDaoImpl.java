@@ -436,6 +436,7 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         //int contentTimeRange = wfContentSearchModel.getContentTimeRange();
         String fullText = wfContentSearchModel.getFileAttachText();
         int sendingStatus = wfContentSearchModel.getSendingStatus();
+        String wfContentText01 = wfContentSearchModel.getWfContentText01();
 
         conjunction.add(Restrictions.eq("this.removedBy", 0));
         if (folderId > 0) {
@@ -505,6 +506,9 @@ public class WfContentDaoImpl extends GenericDaoImpl<WfContent, Integer> impleme
         }
         if (sendingStatus > 0) {
             conjunction.add(Restrictions.eq("this.wfContentInt03", sendingStatus - 1));//0=unSend, 1=sent
+        }
+        if (wfContentText01 != null && wfContentText01 != "") {
+            conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.wfContentText01", wfContentText01, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
         return conjunction;
     }
