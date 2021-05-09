@@ -80,14 +80,18 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
 
     public List<UserProfile> listByStructure(Structure structure, String sort, String dir) {
         List<UserProfile> result = new ArrayList();
-        Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("s.id", structure.getId()));
-        DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
-        criteria.createCriteria("structure", "s", JoinType.INNER_JOIN);
-        criteria.add(conjunction);
-        criteria = createOrder(criteria, sort, dir);
-        return this.listByCriteria(criteria);
+        if (structure != null) {
+            Conjunction conjunction = Restrictions.conjunction();
+            conjunction.add(Restrictions.eq("removedBy", 0));
+            conjunction.add(Restrictions.eq("s.id", structure.getId()));
+            DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
+            criteria.createCriteria("structure", "s", JoinType.INNER_JOIN);
+            criteria.add(conjunction);
+            criteria = createOrder(criteria, sort, dir);
+            result = this.listByCriteria(criteria);
+        }
+
+        return result;
     }
 
     public List<UserProfile> listAllByUserProfileStatusId(int userStatusId, String sort, String dir) {
@@ -148,6 +152,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
 //        criteria.add(conjunction);
 //        return this.getOneByCriteria(criteria);
 //    }
+
     public UserProfile getByUsername(String username) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("this.removedBy", 0));
