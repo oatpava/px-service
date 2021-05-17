@@ -199,6 +199,9 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             String shortStructure = "-";
             if (userProfile != null) {
                 shortStructure = userProfile.getStructure().getStructureShortName();
+                if (shortStructure == null) {
+                    shortStructure = "-";
+                }
             }
             name = name + " (" + shortStructure + ")";
         }
@@ -279,7 +282,7 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             }
             break;
             case ('C'): {
-                String action = (workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
+                String action = (workflow.getWorkflowDescription() !=null && workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
                 detail = name + " [" + action + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
