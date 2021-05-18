@@ -20,7 +20,8 @@ import org.hibernate.criterion.Restrictions;
  * @author TOP
  */
 public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> implements DocumentFileDao {
-     public DocumentFileDaoImpl() {
+
+    public DocumentFileDaoImpl() {
         super(DocumentFile.class);
     }
 
@@ -73,9 +74,9 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
     @Override
     public DocumentFile findDocumentFile(int moduleId, int linkId, int linkId2) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("moduleId", moduleId));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("linkId2", linkId2));
+        conjunction.add(Restrictions.eq("moduleId", moduleId));
         conjunction.add(Restrictions.eq("removedBy", 0));
 
         DetachedCriteria criteria = DetachedCriteria.forClass(DocumentFile.class);
@@ -105,11 +106,10 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         // sort = 1 : มาก ไปน้อย des
         //create AND 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("moduleId", moduleId));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("linkId2", linkId2));
-        
+        conjunction.add(Restrictions.eq("moduleId", moduleId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
 
         //create Query        
         DetachedCriteria criteria = DetachedCriteria.forClass(DocumentFile.class);
@@ -122,11 +122,6 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         return this.listByCriteria(criteria);
 
     }
-    
-    
- 
-    
-    
 
     @Override
     public boolean changeRefId(int moduleId, int linkId, int linkId2, int refId, int ModifiedBy) {
@@ -139,7 +134,6 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
             documentFileDbOld.setUpdatedBy(ModifiedBy);
             documentFileDbOld.setUpdatedDate(LocalDateTime.now());
 
-            
             this.update(documentFileDbOld);
 
         }
@@ -161,7 +155,7 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         int size = result.size();
         int i;
         for (i = 0; i < size; i++) {
-       
+
             DocumentFile documentFileDb2 = result.get(i);
             documentFileDb2.setRemovedBy(documentFile.getRemovedBy());
             documentFileDb2.setRemovedDate(LocalDateTime.now());
@@ -187,7 +181,6 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         documentFile.setUpdatedBy(documentFileDbNew.getUpdatedBy());
         int newDocFileId = createDocumentFile(documentFile);
 
-
         changeReferenceId(newDocFileId, documentFileDbOld);
 
         return newDocFileId;
@@ -209,7 +202,7 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("referenceId", referenceId));
         conjunction.add(Restrictions.eq("removedBy", 0));
-     
+
         DetachedCriteria criteria = DetachedCriteria.forClass(DocumentFile.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
@@ -229,7 +222,7 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         int i;
         int order = 100;
         for (i = 0; i < size; i++) {
-            
+
             DocumentFile documentFileDb2 = result.get(i);
             documentFileDb2.setUpdatedBy(documentFileOld.getUpdatedBy());
             documentFileDb2.setReferenceId(documentFileIdNew);
@@ -289,13 +282,11 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
     }
 
     public boolean checkDocumentFileinDocument(int documentid) {
-        
 
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("linkId", documentid));
         conjunction.add(Restrictions.eq("removedBy", 0));
 
-    
         DetachedCriteria criteria = DetachedCriteria.forClass(DocumentFile.class);
         criteria.add(conjunction);
         DocumentFile dmsDocumentFile = this.getOneByCriteria(criteria);
@@ -315,19 +306,20 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
+
     @Override
     public List<DocumentFile> ListDocumentFileWithSec(int moduleId, int linkId, int linkId2, String order, int sort, String sec) {
         //sort = 0 : น้อยไปมาก asc
         // sort = 1 : มาก ไปน้อย des
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("moduleId", moduleId));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("linkId2", linkId2));
+        conjunction.add(Restrictions.eq("moduleId", moduleId));
         conjunction.add(Restrictions.eq("removedBy", 0));
-        
+
         String[] arrB = sec.split(",");
-       
+
         DetachedCriteria criteria = DetachedCriteria.forClass(DocumentFile.class);
         if (sort == 0) {
             criteria.add(conjunction).addOrder(Order.asc(order));
@@ -337,14 +329,14 @@ public class DocumentFileDaoImpl extends GenericDaoImpl<DocumentFile, Integer> i
         }
         return this.listByCriteria(criteria);
     }
-        
-       public List<DocumentFile>  listMotherDocFile (int moduleId, int linkId, int linkId2, String order, int sort) {
+
+    public List<DocumentFile> listMotherDocFile(int moduleId, int linkId, int linkId2, String order, int sort) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("moduleId", moduleId));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("linkId2", linkId2));
         conjunction.add(Restrictions.eq("referenceId", 0));
+        conjunction.add(Restrictions.eq("moduleId", moduleId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         order = "fileOrder";
 
         //create Query        

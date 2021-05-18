@@ -1311,8 +1311,8 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         return day + " " + month + " " + year;
     }
 
-    public WfContent getByContentNumber(int contentNumber, int folderId) {
-        return WfContentDaoImpl.getByContentNumber(contentNumber, folderId);
+    public WfContent getByContentNumber(int contentNumber, int folderId, int year) {
+        return WfContentDaoImpl.getByContentNumber(contentNumber, folderId, year);
     }
 
     public List<WfContent> listMyWork(int userId) {

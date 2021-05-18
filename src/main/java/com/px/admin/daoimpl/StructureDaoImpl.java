@@ -49,7 +49,6 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
 
     public Integer countDup(String code, String name) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (!"".equals(code) && !"".equals(name)) {
             conjunction.add(Restrictions.disjunction()
                     .add(Restrictions.eq("structureCode", code))
@@ -60,6 +59,7 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
         } else if ("".equals(name)) {
             conjunction.add(Restrictions.eq("structureCode", code));
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -99,9 +99,9 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
         }
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("nodeLevel", 2));
         conjunction.add(Restrictions.like("parentKey", tmpStructureKey, MatchMode.START));
+        conjunction.add(Restrictions.eq("nodeLevel", 2));
+        conjunction.add(Restrictions.eq("removedBy", 0));
 
         DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
         criteria.add(conjunction);
@@ -130,7 +130,6 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
 
     private Conjunction createConjunctionFormSearch(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
         for (String key : queryParams.keySet()) {
             if (fieldSearch.contains("," + key + ",")) {
                 for (String value : queryParams.get(key)) {
@@ -146,6 +145,7 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
                 }
             }
         }
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
@@ -172,8 +172,8 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
 
     public List<Structure> listStructureByType(int type, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("structureType", type));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -182,8 +182,8 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
 
     public Structure getPrevOrderBy(int id) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("id", id - 1));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
@@ -201,8 +201,8 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
     //oat-add
     public List<Structure> listByName(String structureName) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("structureName", structureName));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
         criteria.add(conjunction).addOrder(Order.desc("this.createdDate"));
         return this.listByCriteria(criteria);
@@ -210,8 +210,8 @@ public class StructureDaoImpl extends GenericTreeDaoImpl<Structure, Integer> imp
 
     public List<Structure> listByParentId(int parentId, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", parentId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Structure.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);

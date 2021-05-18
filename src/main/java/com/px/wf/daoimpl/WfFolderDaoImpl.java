@@ -26,9 +26,9 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
     @Override
     public List<WfFolder> listByParentId(int parentId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", parentId));
         conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         criteria.add(conjunction).addOrder(Order.asc("wfContentType")).addOrder(Order.asc("wfContentType2")).addOrder(Order.asc("wfFolderName"));
         return this.listByCriteria(criteria);
@@ -37,9 +37,9 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
     @Override
     public List<WfFolder> listShortcutByUserProfileId(int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("wfFolderType", "SC"));
         conjunction.add(Restrictions.eq("wfFolderOwnerId", userProfileId));
+        conjunction.add(Restrictions.eq("wfFolderType", "SC"));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         //criteria.add(conjunction).addOrder(Order.asc("wfFolderLinkFolderId")).addOrder(Order.asc("wfContentType")).addOrder(Order.asc("wfContentType2")).addOrder(Order.asc("wfFolderName"));
         criteria.add(conjunction).addOrder(Order.asc("orderNo")).addOrder(Order.asc("createdDate"));
@@ -59,12 +59,12 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
     @Override
     public List<WfFolder> listByContentTypeId(String folderType, int contentTypeId, int contentType2Id) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("wfFolderType", folderType));
-        conjunction.add(Restrictions.eq("ct.id", contentTypeId));
         if (contentType2Id > 0) {
             conjunction.add(Restrictions.eq("ct2.id", contentType2Id));
         }
+        conjunction.add(Restrictions.eq("ct.id", contentTypeId));
+        conjunction.add(Restrictions.eq("wfFolderType", folderType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         criteria.createCriteria("wfContentType", "ct", JoinType.INNER_JOIN);
         criteria.createCriteria("wfContentType2", "ct2", JoinType.INNER_JOIN);
@@ -75,10 +75,10 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
 
     public List<WfFolder> listByStructureId(int structureId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("wfFolderType", "T"));
         conjunction.add(Restrictions.eq("wfFolderLinkId", structureId));
         conjunction.add(Restrictions.eq("ct.id", 3));
+        conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         criteria.createCriteria("wfContentType", "ct", JoinType.INNER_JOIN);
         criteria.add(conjunction).addOrder(Order.asc("orderNo"));
@@ -87,9 +87,9 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
 
     public List<WfFolder> listByParentId(int offset, int limit, int parentId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", parentId));
         conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         criteria.add(conjunction).addOrder(Order.asc("wfContentType")).addOrder(Order.asc("wfContentType2")).addOrder(Order.asc("wfFolderName"));
         return this.listByCriteria(criteria, offset, limit);
@@ -97,9 +97,9 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
 
     public Integer countlistByParentId(int parentId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", parentId));
         conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         criteria.add(conjunction);
         return this.countAll(criteria);

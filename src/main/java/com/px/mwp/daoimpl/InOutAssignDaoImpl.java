@@ -8,7 +8,6 @@ import java.util.List;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -29,8 +28,8 @@ public class InOutAssignDaoImpl extends GenericDaoImpl<InOutAssign, Integer> imp
     @Override
     public List<InOutAssign> listByAssignId(int assignId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("inOutAssignAssignId", assignId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(InOutAssign.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -40,22 +39,22 @@ public class InOutAssignDaoImpl extends GenericDaoImpl<InOutAssign, Integer> imp
     @Override
     public List<InOutAssign> listByOwnerId(int ownerId, int ownerType, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("inOutAssignOwnerId", ownerId));
         conjunction.add(Restrictions.eq("inOutAssignOwnerType", ownerType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(InOutAssign.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
-    
+
     @Override
-    public List<InOutAssign> listByOwnerIdAndAssignId(int ownerId, int ownerType,int assignId, String sort, String dir) {
+    public List<InOutAssign> listByOwnerIdAndAssignId(int ownerId, int ownerType, int assignId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("inOutAssignOwnerId", ownerId));
-        conjunction.add(Restrictions.eq("inOutAssignOwnerType", ownerType));
         conjunction.add(Restrictions.eq("inOutAssignAssignId", assignId));
+        conjunction.add(Restrictions.eq("inOutAssignOwnerType", ownerType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(InOutAssign.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -65,9 +64,9 @@ public class InOutAssignDaoImpl extends GenericDaoImpl<InOutAssign, Integer> imp
     @Override
     public List<InOutAssign> listAfterEndDate(LocalDateTime nowDate) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("inOutAssignIsperiod", 1));
         conjunction.add(Restrictions.lt("inOutAssignEndDate", nowDate));
+        conjunction.add(Restrictions.eq("inOutAssignIsperiod", 1));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(InOutAssign.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);

@@ -21,8 +21,8 @@ public class WfContentType2DaoImpl extends GenericDaoImpl<WfContentType2, Intege
 
     public List<WfContentType2> listByWfContentType(List<Integer> listContentType, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.in("id", listContentType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
 
         //create Query
         DetachedCriteria criteria = DetachedCriteria.forClass(WfContentType2.class);
