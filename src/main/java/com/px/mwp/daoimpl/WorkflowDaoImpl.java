@@ -42,10 +42,10 @@ public class WorkflowDaoImpl extends GenericDaoImpl<Workflow, Integer> implement
     @Override
     public Workflow getByLinkIdAndLinkId2(int linkId, int linkId2, String type) {//for "F" and "C" only
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("linkId2", linkId2));
         conjunction.add(Restrictions.eq("workflowActionType", type));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Workflow.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
@@ -54,10 +54,10 @@ public class WorkflowDaoImpl extends GenericDaoImpl<Workflow, Integer> implement
     @Override
     public Workflow getByLinkIdAndLinkId3(int linkId, int linkId3, String type) {//for "F" and "C" only
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("linkId3", linkId3));
         conjunction.add(Restrictions.eq("workflowActionType", type));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Workflow.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);

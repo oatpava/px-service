@@ -58,18 +58,15 @@ public class borrowDaoImpl extends GenericDaoImpl<borrow, Integer> implements bo
 
     public boolean checkStatusDocBorrow(DmsDocument document) {
         Conjunction conjunction = Restrictions.conjunction();
-         conjunction.add(Restrictions.eq("dmsDocument", document));
-         conjunction.add(Restrictions.eq("removedBy", 0));
+        conjunction.add(Restrictions.eq("dmsDocument", document));
 //        conjunction.add(Restrictions.or(Restrictions.eq("returnName", ""), Restrictions.isNull("returnName"));
-
         conjunction.add(Restrictions.or(Restrictions.eq("returnName", ""), Restrictions.isNull("returnName")));
-                
+        conjunction.add(Restrictions.eq("removedBy", 0));
         //create Query
         DetachedCriteria criteria = DetachedCriteria.forClass(borrow.class);
         criteria.add(conjunction);
 
         List<borrow> dmsDocumentlist = this.listByCriteria(criteria);
-        System.out.println("dmsDocumentlist = "+dmsDocumentlist.size());
         int borrowId = 0;
         if (dmsDocumentlist.size() != 0) {
             borrow borrow = dmsDocumentlist.get(0);
@@ -79,7 +76,7 @@ public class borrowDaoImpl extends GenericDaoImpl<borrow, Integer> implements bo
         }
         return borrowId > 0;
     }
-    
+
     public List<borrow> getByIdNotRemoved(DmsDocument document) {
         Conjunction conjunction = Restrictions.conjunction();
 
@@ -89,7 +86,7 @@ public class borrowDaoImpl extends GenericDaoImpl<borrow, Integer> implements bo
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
     }
-    
+
     public List<borrow> listAll(String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
@@ -100,8 +97,8 @@ public class borrowDaoImpl extends GenericDaoImpl<borrow, Integer> implements bo
 
         return this.listByCriteria(criteria);
     }
-    
-     private DetachedCriteria createOrder(DetachedCriteria criteria, String sort, String dir) {
+
+    private DetachedCriteria createOrder(DetachedCriteria criteria, String sort, String dir) {
         if (!sort.isEmpty()) {
             if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
                 switch (sort) {

@@ -128,19 +128,16 @@ public class DocumentTypeDaoImpl extends GenericDaoImpl<DocumentType, Integer> i
         }
         return criteria;
     }
-    
-    
-     public int duplicateDoctype( String nameDocType) {
+
+    public int duplicateDoctype(String nameDocType) {
 
         try {
 
             Conjunction conjunction = Restrictions.conjunction();
 
 //            Disjunction disjunction = Restrictions.disjunction();
-
-            
-            conjunction.add(Restrictions.eq("removedBy", 0));
             conjunction.add(Restrictions.eq("documentTypeName", nameDocType));
+            conjunction.add(Restrictions.eq("removedBy", 0));
 
 //            conjunction.add(disjunction);
             DetachedCriteria criteria = DetachedCriteria.forClass(DocumentType.class);

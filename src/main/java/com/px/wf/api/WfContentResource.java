@@ -1335,11 +1335,11 @@ public class WfContentResource {
 
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR) + 543;
-            if (folder.getWfFolderByBudgetYear() == 1) {
-                if ((calendar.get(Calendar.MONTH) + 1) >= 10) {
-                    year++;
-                }
-            }
+//            if (folder.getWfFolderByBudgetYear() == 1) {
+//                if ((calendar.get(Calendar.MONTH) + 1) >= 10) {
+//                    year++;
+//                }
+//            }
 
             int pointNumber = contentService.getMaxContentPoint(folderId, year, contentNumber);
             String point = "0" + Integer.toString(pointNumber);
@@ -1388,7 +1388,7 @@ public class WfContentResource {
                     break;
 
             }
-            WfContent contentMain = contentService.getByContentNumber(contentNumber, folderId);
+            WfContent contentMain = contentService.getByContentNumber(contentNumber, folderId, year);
             WfContentModel tmp = new WfContentModel();
             if (contentMain != null) {
                 tmp.setWfContentContentNumber(contentNumber);

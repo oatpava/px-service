@@ -57,9 +57,6 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
     @Override
     public List<WfReserveContentNo> listWfReserveContentNoByContentDate(int folderId, String reserveContentNoContentDateBegin, String reserveContentNoContentDateEnd, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
         LocalDateTime dateReserveContentNoContentDateBegin = dateThaiToLocalDateTime(reserveContentNoContentDateBegin);
         dateReserveContentNoContentDateBegin.withHour(0);
         dateReserveContentNoContentDateBegin.withMinute(0);
@@ -73,6 +70,10 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
         dateReserveContentNoContentDateEnd.withSecond(59);
         dateReserveContentNoContentDateEnd.withNano(99);
         conjunction.add(Restrictions.le("reserveContentNoContentDate", dateReserveContentNoContentDateEnd));
+
+        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
+        conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -83,8 +84,8 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
     public List<WfReserveContentNo> listByDate(int folderId, String dateBegin, String dateEnd, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         if (dateBegin != null && dateBegin != "") {
             dateBegin = dateBegin.replace('x', '/');
             conjunction.add(Restrictions.ge("reserveContentNoContentDate", dateThaiToLocalDateTime(dateBegin)));
@@ -115,9 +116,9 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
     //oat-add
     public List<WfReserveContentNo> listByUser(int folderId, int userId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
         conjunction.add(Restrictions.eq("createdBy", userId));
         conjunction.add(Restrictions.eq("reserveContentNoUserId", userId));
+        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
         conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
@@ -188,11 +189,11 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
     }
-    
+
     public List<WfReserveContentNo> listByStructure(int folderId, int structureId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
         conjunction.add(Restrictions.eq("reserveContentNoStructureId", structureId));
+        conjunction.add(Restrictions.eq("reserveContentNoFolderId", folderId));
         conjunction.add(Restrictions.eq("reserveContentNoStatus", 0));
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfReserveContentNo.class);
@@ -200,4 +201,5 @@ public class WfReserveContentNoDaoImpl extends GenericDaoImpl<WfReserveContentNo
         criteria = createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
+    
 }

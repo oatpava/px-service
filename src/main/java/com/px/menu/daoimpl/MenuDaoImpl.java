@@ -15,20 +15,20 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Peach
  */
-public class MenuDaoImpl extends GenericTreeDaoImpl<Menu, Integer> implements MenuDao{
+public class MenuDaoImpl extends GenericTreeDaoImpl<Menu, Integer> implements MenuDao {
 
     public MenuDaoImpl() {
         super(Menu.class);
     }
-    
+
     @Override
     public List<Menu> list(int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Menu.class);
         criteria.add(conjunction);
-        criteria = Common.createOrder(criteria,sort,dir);
-        return this.listByCriteria(criteria,offset,limit);
+        criteria = Common.createOrder(criteria, sort, dir);
+        return this.listByCriteria(criteria, offset, limit);
     }
 
     @Override
@@ -37,39 +37,39 @@ public class MenuDaoImpl extends GenericTreeDaoImpl<Menu, Integer> implements Me
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Menu.class);
         criteria.add(conjunction);
-        criteria = Common.createOrder(criteria,sort,dir);
+        criteria = Common.createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
-    
+
     @Override
-    public List<Menu> listByMenuType(MenuType menuType,String sort, String dir){
+    public List<Menu> listByMenuType(MenuType menuType, String sort, String dir) {
         List<Menu> result = new ArrayList();
-        if(menuType!=null){
+        if (menuType != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("removedBy", 0));
             conjunction.add(Restrictions.eq("menuType", menuType));
+            conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(Menu.class);
-            criteria.add(conjunction);   
-            criteria = Common.createOrder(criteria,sort,dir);
+            criteria.add(conjunction);
+            criteria = Common.createOrder(criteria, sort, dir);
             result = this.listByCriteria(criteria);
         }
-        
+
         return result;
     }
-    
+
     @Override
-    public List<Menu> listByMenuType(List<MenuType> menuType,String sort, String dir){
+    public List<Menu> listByMenuType(List<MenuType> menuType, String sort, String dir) {
         List<Menu> result = new ArrayList();
-        if(menuType!=null){
+        if (menuType != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("removedBy", 0));
             conjunction.add(Restrictions.in("menuType", menuType));
+            conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(Menu.class);
-            criteria.add(conjunction);   
-            criteria = Common.createOrder(criteria,sort,dir);
+            criteria.add(conjunction);
+            criteria = Common.createOrder(criteria, sort, dir);
             result = this.listByCriteria(criteria);
         }
-        
+
         return result;
     }
 
@@ -77,7 +77,7 @@ public class MenuDaoImpl extends GenericTreeDaoImpl<Menu, Integer> implements Me
     public Integer countAll() {
         return this.listAll("", "").size();
     }
-    
+
     @Override
     public Menu getByIdNotRemoved(Integer id) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -87,7 +87,7 @@ public class MenuDaoImpl extends GenericTreeDaoImpl<Menu, Integer> implements Me
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
-    
+
     @Override
     public Menu getByMenuCode(String menuCode) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -96,5 +96,5 @@ public class MenuDaoImpl extends GenericTreeDaoImpl<Menu, Integer> implements Me
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
-    
+
 }

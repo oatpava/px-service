@@ -9,7 +9,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import com.px.wf.dao.ThegifDepartmentDao;
 import javax.ws.rs.core.MultivaluedMap;
-import org.apache.log4j.Logger;
 import org.hibernate.criterion.MatchMode;
 
 /**
@@ -62,9 +61,9 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
     @Override
     public int countSearchThegifDepartment(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = createConjunctionFormSearchThegifDepartment(queryParams);
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.isNotNull("thegifDepartmentServiceName"));
         conjunction.add(Restrictions.isNotEmpty("thegifDepartmentServiceName"));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(ThegifDepartment.class);
         criteria.add(conjunction);
 
@@ -74,7 +73,6 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
     @Override
     public Conjunction createConjunctionFormSearchThegifDepartment(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
         conjunction.add(Restrictions.isNotNull("this.thegifDepartmentServiceName"));
         conjunction.add(Restrictions.ne("this.thegifDepartmentServiceName", ""));
 
@@ -100,6 +98,7 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
                 }
             }
         }
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
@@ -111,4 +110,5 @@ public class ThegifDepartmentDaoImpl extends GenericTreeDaoImpl<ThegifDepartment
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
     }
+    
 }

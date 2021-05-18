@@ -2,7 +2,6 @@ package com.px.share.daoimpl;
 
 import com.px.share.dao.RecycleBinDao;
 import com.px.share.entity.RecycleBin;
-import com.px.share.daoimpl.GenericDaoImpl;
 import com.px.share.model.RecycleBinSearchModel;
 import com.px.share.service.ParamService;
 import com.px.share.util.AdvanceSearch;
@@ -94,8 +93,8 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
 
     public List<RecycleBin> listByUserId(int offset, int limit, String sort, String dir, int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("createdBy", userProfileId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(RecycleBin.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -111,7 +110,6 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
 
     private Conjunction createConjunctionFormSearch(MultivaluedMap<String, String> queryParams, Integer userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (userProfileId > 0) {
             conjunction.add(Restrictions.eq("createdBy", userProfileId));
         }
@@ -160,6 +158,7 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
                 }
             }
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         return conjunction;
     }
 
@@ -209,8 +208,6 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
         String startDate = recycleBinSearchModel.getStartDate();
         String endDate = recycleBinSearchModel.getEndDate();
 
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-
         if (moduleName != null && moduleName != "") {
             conjunction.add(Restrictions.eq("this.moduleName", moduleName));
         }
@@ -223,13 +220,14 @@ public class RecycleBinDaoImpl extends GenericDaoImpl<RecycleBin, Integer> imple
         if (endDate != null && endDate != "") {
             conjunction.add(Restrictions.le("this.createdDate", dateThaiToLocalDateTime(recycleBinSearchModel.getEndDate()).plusHours(23).plusMinutes(59)));
         }
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
     public Integer countListByUserId(int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("createdBy", userProfileId));
+         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(RecycleBin.class);
         criteria.add(conjunction);
         return this.countAll(criteria);

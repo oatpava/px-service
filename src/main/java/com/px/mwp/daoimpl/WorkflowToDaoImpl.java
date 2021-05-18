@@ -1,7 +1,6 @@
 package com.px.mwp.daoimpl;
 
 import com.px.share.daoimpl.GenericDaoImpl;
-import com.px.share.util.Common;
 import com.px.mwp.dao.WorkflowToDao;
 import com.px.mwp.entity.WorkflowTo;
 import java.util.List;
@@ -95,8 +94,8 @@ public class WorkflowToDaoImpl extends GenericDaoImpl<WorkflowTo, Integer> imple
     @Override
     public List<WorkflowTo> listByUserProfileId(int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
         conjunction.add(Restrictions.eq("this.userProfileId", userProfileId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WorkflowTo.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
@@ -105,8 +104,8 @@ public class WorkflowToDaoImpl extends GenericDaoImpl<WorkflowTo, Integer> imple
     @Override
     public List<WorkflowTo> listByStructureId(int structureId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
         conjunction.add(Restrictions.eq("this.structureId", structureId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WorkflowTo.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);

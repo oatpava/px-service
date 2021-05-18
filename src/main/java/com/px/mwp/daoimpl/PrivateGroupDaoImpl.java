@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.px.mwp.daoimpl;
 
 import com.px.mwp.dao.PrivateGroupDao;
@@ -15,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
 
 /**
  *
- * @author Dell
+ * @author Oat
  */
 public class PrivateGroupDaoImpl extends GenericDaoImpl<PrivateGroup, Integer> implements PrivateGroupDao {
 
@@ -36,9 +31,9 @@ public class PrivateGroupDaoImpl extends GenericDaoImpl<PrivateGroup, Integer> i
     @Override
     public List<PrivateGroup> listByOwnerIdAndType(int ownerId, int groupType) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("ownerId", ownerId));
         conjunction.add(Restrictions.eq("groupType", groupType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(PrivateGroup.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
