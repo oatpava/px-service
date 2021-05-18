@@ -107,12 +107,11 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
 
     public List<UserProfile> listByStructureParentKey(String parentKey, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-//        parentKey = "฿"+parentKey+"฿";
         conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.like("struc.parentKey", parentKey, MatchMode.START));
         DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
         criteria.createCriteria("structure", "struc", JoinType.INNER_JOIN);
-        criteria.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
+//        criteria.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
@@ -152,7 +151,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
 //        criteria.add(conjunction);
 //        return this.getOneByCriteria(criteria);
 //    }
-
     public UserProfile getByUsername(String username) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("this.removedBy", 0));

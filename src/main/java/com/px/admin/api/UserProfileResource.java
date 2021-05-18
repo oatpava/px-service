@@ -89,8 +89,7 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "UserProfile created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "UserProfile created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -258,10 +257,8 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile by id success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -312,9 +309,9 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile updeted by id success.")
-        ,@ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile updeted by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -437,9 +434,9 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile deleted by id success.")
-        ,@ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile deleted by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -491,9 +488,9 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile deleted by id success.")
-        ,@ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile deleted by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
@@ -541,10 +538,8 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile list success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile list success."),
+        @ApiResponse(code = 404, message = "UserProfile list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -607,10 +602,8 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile search success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile search not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile search success."),
+        @ApiResponse(code = 404, message = "UserProfile search not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -689,10 +682,8 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile list success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile list success."),
+        @ApiResponse(code = 404, message = "UserProfile list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -758,9 +749,9 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile changed by id success.")
-        ,@ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile changed by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -880,10 +871,8 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile list success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile list success."),
+        @ApiResponse(code = 404, message = "UserProfile list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -932,17 +921,15 @@ public class UserProfileResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for get default UserProfile.",
             notes = "ขอข้อมูลค่า default ผู้ใช้งานระบบ",
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile default success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile default not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile default success."),
+        @ApiResponse(code = 404, message = "UserProfile default not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -989,10 +976,8 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile default success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile default not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile default success."),
+        @ApiResponse(code = 404, message = "UserProfile default not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1041,9 +1026,9 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile updeted by id success.")
-        ,@ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile updeted by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1105,8 +1090,8 @@ public class UserProfileResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile check duplicate by code success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile check duplicate by code success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1173,8 +1158,7 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "UserProfile Excel created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "UserProfile Excel created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
 
@@ -1221,8 +1205,7 @@ public class UserProfileResource {
             response = VUserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "VUserProfile Excel created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "VUserProfile Excel created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
 
@@ -1343,10 +1326,8 @@ public class UserProfileResource {
             response = VUserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile by id success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1395,10 +1376,8 @@ public class UserProfileResource {
             response = UserProfileConvertModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile Convert list success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile Convert list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile Convert list success."),
+        @ApiResponse(code = 404, message = "UserProfile Convert list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -1746,9 +1725,9 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile updeted by id success.")
-        ,@ApiResponse(code = 404, message = "UserProfile by id not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "UserProfile updeted by id success."),
+        @ApiResponse(code = 404, message = "UserProfile by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1990,9 +1969,9 @@ public class UserProfileResource {
             response = AuthenticationModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Name hr list success.", response = AuthenticationModel.class)
-        ,@ApiResponse(code = 404, message = "Name hr list not found in the database.")
-        ,@ApiResponse(code = 500, message = "Internal Server Error!")
+        @ApiResponse(code = 200, message = "Name hr list success.", response = AuthenticationModel.class),
+        @ApiResponse(code = 404, message = "Name hr list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
@@ -2046,10 +2025,8 @@ public class UserProfileResource {
             response = VUserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure Convert list success.")
-        ,
-        @ApiResponse(code = 404, message = "Structure Convert list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Structure Convert list success."),
+        @ApiResponse(code = 404, message = "Structure Convert list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -2108,17 +2085,15 @@ public class UserProfileResource {
             response = UserProfileModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "UserProfile list success.")
-        ,
-        @ApiResponse(code = 404, message = "UserProfile list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "UserProfile list success."),
+        @ApiResponse(code = 404, message = "UserProfile list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/userStatus/{parentKey}/report/{jobType}")
     public Response listByStucture(
-            @ApiParam(name = "parentKey", value = "รหัสผู้ใช้", required = true)
+            @ApiParam(name = "parentKey", value = "ParentKey", required = true)
             @PathParam("parentKey") String parentKey,
             @ApiParam(name = "jobType", value = "รหัสประเภทงาน", required = true)
             @PathParam("jobType") String jobType
@@ -2141,8 +2116,6 @@ public class UserProfileResource {
         try {
             TempTableService tempTableService = new TempTableService();
             List<TempTable> listTempTable = tempTableService.listByJobType(Integer.parseInt(httpHeaders.getHeaderString("userID")), jobType, "", "");
-//            List<TempTable> listTempTable = tempTableService.listByComputerNameAndJobType(1, "127.0.0.1", jobType, "", "");
-
             if (!listTempTable.isEmpty()) {
                 for (TempTable tempTable : listTempTable) {
                     tempTableService.delete(tempTable);
@@ -2150,46 +2123,26 @@ public class UserProfileResource {
             }
 
             UserProfileService userProfileService = new UserProfileService();
-            UserStatusService userStatusService = new UserStatusService();
             List<UserProfile> listUserProfile = userProfileService.listByStructureParentKey(parentKey, "structure", "asc");
-//            List<DmsFolder> listDmsFolder = dmsFolderService.listFolderByparenID(id, 0, 500);
             if (!listUserProfile.isEmpty()) {
-                ArrayList<UserProfileModel> listUserProfileModel = new ArrayList<>();
                 for (UserProfile userProfile : listUserProfile) {
-                    listUserProfileModel.add(userProfileService.tranformToModel(userProfile));
-                }
-
-                listUserProfileModel.forEach(model -> {
                     TempTable tempTable = new TempTable();
-                    String subName = "";
-
                     tempTable.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     tempTable.setComputerName(httpHeaders.getHeaderString("clientIp"));
                     tempTable.setJobType(jobType);
-                    tempTable.setInt01(model.getId());
-//                        tempTable.setInt01(model.getSubmoduleAuth().getAuth().getId());
-                    tempTable.setStr01(model.getStructure().getName());
-                    tempTable.setStr02(model.getFullName());
-                    tempTable.setStr03(model.getUser().getName());
-                    tempTable.setStr04(model.getUserStatus().getName());
-
-                    if (tempTable != null) {
-                        tempTable = tempTableService.create(tempTable);
-                        tempTable.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                        tempTable.setOrderNo(tempTable.getId());
-                        tempTable = tempTableService.update(tempTable);
-                    }
-                });
-
-                listUserProfileModel.trimToSize();
-                responseData.put("data", listUserProfileModel);
-                responseData.put("message", "");
-
+                    tempTable.setInt01(userProfile.getId());
+                    tempTable.setStr01(userProfile.getStructure().getStructureName());
+                    tempTable.setStr02(userProfile.getUserProfileFullName());
+                    tempTable.setStr03(userProfile.getUser().getUserName());
+                    tempTable.setStr04(userProfile.getUserProfileStatus().getUserStatusName());
+                    tempTableService.create(tempTable);
+                }
             }
+            responseData.put("data", true);
+            responseData.put("message", "");
             status = Response.Status.OK;
             responseData.put("success", true);
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
