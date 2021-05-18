@@ -91,14 +91,13 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
             if (userCreated <= 0) {
                 userCreated = 1;
             }
-            if (logData.getType() == 4 || logData.getType() == 10) {//4=login, 10=logout //userCreated = userId
-                List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "createdDate", "asc");
-                String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
-                logDataModel.setUserProfileName(name);
+            List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "id", "asc");
+            String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
+            logDataModel.setUserProfileName(name);
+            if (logData.getType() == 4 || logData.getType() == 10) {//4=login, 10=logout
                 logDataModel.setModuleName(moduleService.getByModuleCode("wf").getModuleName());
                 logDataModel.setModuleIcon(moduleService.getByModuleCode("wf").getModuleIcon());
-            } else {//userCreated = userProfileId
-                logDataModel.setUserProfileName(userProfileService.getById(userCreated).getUserProfileFullName());
+            } else {
                 logDataModel.setModuleName(moduleService.getByModuleCode(logData.getModuleName()).getModuleName());
                 logDataModel.setModuleIcon(moduleService.getByModuleCode(logData.getModuleName()).getModuleIcon());
             }

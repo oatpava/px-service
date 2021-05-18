@@ -270,6 +270,7 @@ public class UserProfileResource {
             @PathParam("id") int id
     ) {
         LOG.debug("getById...");
+        LOG.debug("id = " + id);
         Gson gs = new GsonBuilder()
                 .setVersion(versionModel.getVersion())
                 .excludeFieldsWithoutExposeAnnotation()
@@ -2090,14 +2091,16 @@ public class UserProfileResource {
     })
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/userStatus/{structureId}/report/{jobType}")
+    @Path(value = "/userStatus/{parentKey}/report/{jobType}")
     public Response listByStucture(
-            @ApiParam(name = "structureId", value = "รหัสหน่วยงาน", required = true)
-            @PathParam("structureId") int structureId,
+            @ApiParam(name = "parentKey", value = "ParentKey", required = true)
+            @PathParam("parentKey") String parentKey,
             @ApiParam(name = "jobType", value = "รหัสประเภทงาน", required = true)
             @PathParam("jobType") String jobType
     ) {
-        LOG.info("userStatus...");
+        LOG.info("list...");
+        LOG.info("parentKey..." + parentKey);
+        LOG.info("jobType..." + jobType);
         Gson gs = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .disableHtmlEscaping()
@@ -2120,14 +2123,10 @@ public class UserProfileResource {
             }
 
             UserProfileService userProfileService = new UserProfileService();
-            Structure structure = new Structure();
-            structure.setId(structureId);
-            List<UserProfile> listUserProfile = userProfileService.listByStructure(structure, "orderNo", "asc");
+            List<UserProfile> listUserProfile = userProfileService.listByStructureParentKey(parentKey, "structure", "asc");
             if (!listUserProfile.isEmpty()) {
                 for (UserProfile userProfile : listUserProfile) {
                     TempTable tempTable = new TempTable();
-                    String subName = "";
-
                     tempTable.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     tempTable.setComputerName(httpHeaders.getHeaderString("clientIp"));
                     tempTable.setJobType(jobType);
@@ -2151,5 +2150,4 @@ public class UserProfileResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
 }
