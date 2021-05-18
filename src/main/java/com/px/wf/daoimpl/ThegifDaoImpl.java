@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
-import org.apache.log4j.Logger;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -23,8 +22,8 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Mali
  */
-
 public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements ThegifDao {
+
     private final String fieldSearchReceive;
     private final String fieldSearchStatus;
 
@@ -43,51 +42,52 @@ public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements Th
     public List<Thegif> listByElementType(String elementType, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         Conjunction conjunction2 = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (elementType != null && !elementType.equals("")) {
             conjunction.add(Restrictions.eq("thegifElementType", elementType));
         } else {
             conjunction2.add(Restrictions.eq("this.thegifElementType", "CorrespondenceLetter"));
             conjunction.add(Restrictions.not(conjunction2));
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
+
         DetachedCriteria criteria = DetachedCriteria.forClass(Thegif.class);
         criteria.add(conjunction);
         criteria = Common.createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria, offset, limit);
     }
-    
+
     public List<Thegif> listByBookNo(String bookNo, String elementType, String depCode, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("thegifBookNo", bookNo));
-        
-        if(elementType.indexOf(",") >-1){
-           String[]  listelementType = elementType.split(",");
-             conjunction.add(Restrictions.in("this.thegifElementType", listelementType));
-        }else if(elementType != null && !elementType.equals("")) {
-             conjunction.add(Restrictions.eq("this.thegifElementType", elementType));
+
+        if (elementType.indexOf(",") > -1) {
+            String[] listelementType = elementType.split(",");
+            conjunction.add(Restrictions.in("this.thegifElementType", listelementType));
+        } else if (elementType != null && !elementType.equals("")) {
+            conjunction.add(Restrictions.eq("this.thegifElementType", elementType));
         }
 
-        if(depCode != null && !depCode.equals("")){
+        if (depCode != null && !depCode.equals("")) {
             conjunction.add(Restrictions.eq("this.thegifAcceptDepartmentCode", depCode));
-        }       
-        
+        }
+
         DetachedCriteria criteria = DetachedCriteria.forClass(Thegif.class);
         criteria.add(conjunction);
         criteria = Common.createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria, offset, limit);
-    }    
+    }
 
     @Override
     public List<Thegif> listByElementType(String elementType) {
         Conjunction conjunction = Restrictions.conjunction();
         Conjunction conjunction2 = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (elementType != null && !elementType.equals("")) {
             conjunction.add(Restrictions.eq("thegifElementType", elementType));
         } else {
             conjunction2.add(Restrictions.eq("this.thegifElementType", "CorrespondenceLetter"));
             conjunction.add(Restrictions.not(conjunction2));
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Thegif.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
@@ -132,8 +132,6 @@ public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements Th
         ThegifDepartmentService thegifDepartmentService = new ThegifDepartmentService();
         ThegifService thegifService = new ThegifService();
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction.add(Restrictions.eq("this.thegifElementType", "CorrespondenceLetter"));
 
         for (String key : queryParams.keySet()) {
             if (fieldSearchReceive.contains(key)) {
@@ -209,6 +207,8 @@ public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements Th
                 }
             }
         }
+        conjunction.add(Restrictions.eq("this.thegifElementType", "CorrespondenceLetter"));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
@@ -232,14 +232,11 @@ public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements Th
     }
 
     @Override
-    public Conjunction createConjunctionFormSearchThegifStatus(MultivaluedMap<String, String> queryParams) { 
+    public Conjunction createConjunctionFormSearchThegifStatus(MultivaluedMap<String, String> queryParams) {
         ThegifDepartmentService thegifDepartmentService = new ThegifDepartmentService();
         ThegifService thegifService = new ThegifService();
         Conjunction conjunction = Restrictions.conjunction();
         Conjunction conjunction2 = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction2.add(Restrictions.eq("this.thegifElementType", "CorrespondenceLetter"));
-        conjunction.add(Restrictions.not(conjunction2));
 
         for (String key : queryParams.keySet()) {
             if (fieldSearchStatus.contains(key)) {
@@ -300,6 +297,9 @@ public class ThegifDaoImpl extends GenericDaoImpl<Thegif, Integer> implements Th
                 }
             }
         }
+        conjunction2.add(Restrictions.eq("this.thegifElementType", "CorrespondenceLetter"));
+        conjunction.add(Restrictions.not(conjunction2));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 

@@ -2,7 +2,6 @@ package com.px.mwp.daoimpl;
 
 import com.px.mwp.dao.OutboxDao;
 import com.px.mwp.entity.Outbox;
-import com.px.mwp.entity.Workflow;
 import com.px.mwp.model.OutboxSearchModel;
 import com.px.share.daoimpl.GenericDaoImpl;
 import com.px.share.service.ParamService;
@@ -17,10 +16,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.sql.JoinType;
 
 /**
  *
@@ -40,9 +37,9 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
 
     public List<Outbox> listByUserProfileFolderId(int userProfileFolderId, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
 //        conjunction.add(Restrictions.in("userProfileFolderId", ListUserProfileFolderId));
         conjunction.add(Restrictions.eq("userProfileFolderId", userProfileFolderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -51,8 +48,8 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
 
     public Integer countListByUserProfileFolderId(int userProfileFolderId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("userProfileFolderId", userProfileFolderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -61,8 +58,8 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
     //@Override
     public List<Outbox> listByStructureFolderId(List<Integer> listStructureFolderId, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.in("structureFolderId", listStructureFolderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -71,8 +68,8 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
 
     public List<Outbox> listByUserProfileFolderIdAll(List<Integer> listUserProfileFolderId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.in("userProfileFolderId", listUserProfileFolderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -81,8 +78,8 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
 
     public List<Outbox> listByStructureFolderIdAll(List<Integer> listStructureFolderId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.in("structureFolderId", listStructureFolderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -199,8 +196,6 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
     @Override
     public Conjunction createConjunctionFormSearchUser(MultivaluedMap<String, String> queryParams, List<Integer> listUserProfileFolderId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction.add(Restrictions.in("this.userProfileFolderId", listUserProfileFolderId));
 
         for (String key : queryParams.keySet()) {
             if (fieldSearch.contains(key)) {
@@ -279,14 +274,14 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
                 }
             }
         }
+        conjunction.add(Restrictions.in("this.userProfileFolderId", listUserProfileFolderId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
     @Override
     public Conjunction createConjunctionFormSearchStructure(MultivaluedMap<String, String> queryParams, List<Integer> listStructureId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction.add(Restrictions.in("this.structureFolderId", listStructureId));
 
         for (String key : queryParams.keySet()) {
             if (fieldSearch.contains(key)) {
@@ -365,13 +360,14 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
                 }
             }
         }
+        conjunction.add(Restrictions.in("this.structureFolderId", listStructureId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
     @Override
     public Conjunction createConjunctionFormSearchBin(MultivaluedMap<String, String> queryParams, int userID) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", userID));
 
         for (String key : queryParams.keySet()) {
             if (fieldSearchBin.contains(key)) {
@@ -410,14 +406,15 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
                 }
             }
         }
+        conjunction.add(Restrictions.eq("this.removedBy", userID));
         return conjunction;
     }
 
     @Override
     public Outbox getByWorkflowId(int workflowId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("workflowId", workflowId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
@@ -458,8 +455,8 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
     //oat-add
     public List<Outbox> listByLinkId(int linkId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.in("linkId", linkId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Outbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -496,9 +493,6 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
         String outboxStr04 = outboxsearchModel.getOutboxStr04();
         String outboxStr03 = outboxsearchModel.getOutboxStr03();
 
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction.add(Restrictions.in("this.userProfileFolderId", UserProfileFolderId));
-
         if (outboxTo != null && outboxTo != "") {
             conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxTo", outboxTo, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
@@ -527,6 +521,8 @@ public class OutboxDaoImpl extends GenericDaoImpl<Outbox, Integer> implements Ou
         if (outboxStr03 != null && outboxStr03 != "") {
             conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.outboxStr03", outboxStr03, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
+        conjunction.add(Restrictions.in("this.userProfileFolderId", UserProfileFolderId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 

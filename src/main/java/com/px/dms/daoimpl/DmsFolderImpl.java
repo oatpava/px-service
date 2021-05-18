@@ -13,7 +13,6 @@ import com.px.share.daoimpl.GenericTreeDaoImpl;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.apache.commons.collections4.list.AbstractLinkedList;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
@@ -49,8 +48,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
     public List<DmsFolder> findListFolder(int folderId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("dmsFolderParentId", folderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
         criteria.add(conjunction)
                 .addOrder(Order.asc("dmsFolderType"))
@@ -61,8 +60,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
     public List<DmsFolder> findListByFolderParentId(int folderId, int offset, int limit) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("dmsFolderParentId", folderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
         criteria.add(conjunction)
                 .addOrder(Order.asc("dmsFolderType"))
@@ -74,7 +73,6 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
         //create AND 
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.ilike("dmsFolderParentKey", dmsFolderParentKey, MatchMode.START));
 
         if (dmsFolderName != null) {
@@ -84,7 +82,7 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
         if (dmsFolderName != null) {
             conjunction.add(Restrictions.ilike("dmsFolderDescription", dmsFolderDescription, MatchMode.ANYWHERE));
         }
-
+        conjunction.add(Restrictions.eq("removedBy", 0));
         //create OR
 //        Disjunction disjunction = Restrictions.disjunction();
 //        disjunction.add(Restrictions.eq("dmsFolderType", "C"));
@@ -200,8 +198,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
     public Integer countAll(int folderId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("dmsFolderParentId", folderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -368,9 +366,9 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
             Conjunction conjunction = Restrictions.conjunction();
 
 //            Disjunction disjunction = Restrictions.disjunction();
+            conjunction.add(Restrictions.eq("dmsFolderName", nameFolder));
             conjunction.add(Restrictions.eq("dmsFolderParentId", parentId));
             conjunction.add(Restrictions.eq("removedBy", 0));
-            conjunction.add(Restrictions.eq("dmsFolderName", nameFolder));
 
 //            conjunction.add(disjunction);
             DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
@@ -396,8 +394,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
     public List<DmsFolder> getListFolderByWfDocTypeCode(String wfDocTypeCode) {
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("wfDocumentTypeCode", wfDocTypeCode));
+        conjunction.add(Restrictions.eq("removedBy", 0));
 
         DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
         criteria.add(conjunction);
@@ -408,8 +406,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
     public List<DmsFolder> findListByFolderParentId2(int folderId, int offset, int limit) {
         try {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("removedBy", 0));
             conjunction.add(Restrictions.eq("dmsFolderParentId", folderId));
+            conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(DmsFolder.class);
             criteria.add(conjunction)
                     .addOrder(Order.asc("dmsFolderType"))
@@ -424,8 +422,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
     public List<DmsFolder> findListByFolderParentIdLazyback(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("dmsFolderParentId", folderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
 
         Disjunction disjunction = Restrictions.disjunction();
 
@@ -463,9 +461,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
     public List<DmsFolder> findListByFolderParentIdLazy(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", folderId));
-//        System.out.println("dmsFolderParentId - "+folderId);
+        conjunction.add(Restrictions.eq("removedBy", 0));
         Disjunction disjunction = Restrictions.disjunction();
         Disjunction disjunctionNot = Restrictions.disjunction();
         boolean haveCondition = false;
@@ -476,7 +473,6 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
             for (String folder : listDms) {
                 //mustNot
 
-//                System.out.println("mustNot - "+folder);
 //                disjunction.add(Restrictions.not(Restrictions.like("parentKey", '฿' + folder + '฿', MatchMode.ANYWHERE)));
                 disjunctionNot.add(Restrictions.like("parentKey", '฿' + folder + '฿', MatchMode.ANYWHERE));
             }
@@ -488,7 +484,6 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
             for (String folder : listDms) {
                 //must
-//                System.out.println("must - "+folder);
 //                disjunction.add(Restrictions.like("parentKey", "฿" + folder + "฿", MatchMode.ANYWHERE));
                 disjunction.add(Restrictions.like("parentKey", "฿" + folder + "฿", MatchMode.ANYWHERE));
             }
@@ -511,8 +506,8 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
     public int countAll(int folderId, int offset, int limit, AuthEnableDisableIdListModel temp) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", folderId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
 
         Disjunction disjunction = Restrictions.disjunction();
         Disjunction disjunctionNot = Restrictions.disjunction();
@@ -547,4 +542,5 @@ public class DmsFolderImpl extends GenericTreeDaoImpl<DmsFolder, Integer> implem
 
         return this.countAll(criteria);
     }
+
 }

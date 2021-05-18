@@ -12,8 +12,6 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 
 /**
@@ -31,7 +29,6 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
     @Override
     public List<Inbox> listByStructureFolderId(int structureFolderId, int offset, int limit, String sort, String dir, int status) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("structureFolderId", structureFolderId));
         switch (status) {
             case 1:
@@ -49,6 +46,7 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
             default:
                 break;
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Inbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -58,7 +56,6 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
     @Override
     public List<Inbox> listByUserProfileFolderId(int userProfileFolderId, int offset, int limit, String sort, String dir, int status) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("userProfileFolderId", userProfileFolderId));
         switch (status) {
             case 1:
@@ -76,6 +73,7 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
             default:
                 break;
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Inbox.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -85,8 +83,7 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
     @Override
     public int countListByStructureFolderId(int structureFolderId, int status) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.in("structureFolderId", structureFolderId));
+        conjunction.add(Restrictions.eq("structureFolderId", structureFolderId));
         switch (status) {
             case 1:
                 conjunction.add(Restrictions.eq("inboxReceiveFlag", 1));
@@ -103,6 +100,7 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
             default:
                 break;
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Inbox.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -111,7 +109,6 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
     @Override
     public int countListByUserProfileFolderId(int userProfileFolderId, int status) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.in("userProfileFolderId", userProfileFolderId));
         switch (status) {
             case 1:
@@ -129,6 +126,7 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
             default:
                 break;
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Inbox.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -205,9 +203,6 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         String inboxStr04 = inboxsearchModel.getInboxStr04();
         String inboxStr03 = inboxsearchModel.getInboxStr03();
 
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction.add(Restrictions.in(search, folderId));
-
         if (inboxFrom != null && inboxFrom != "") {
             conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxFrom", inboxFrom, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
@@ -235,6 +230,8 @@ public class InboxDaoImpl extends GenericDaoImpl<Inbox, Integer> implements Inbo
         if (inboxStr03 != null && inboxStr03 != "") {
             conjunction.add(new AdvanceSearch().advanceSearchTextQuery("this.inboxStr03", inboxStr03, null, symbolAnd, symbolOr, symbolNot, "^", null));
         }
+        conjunction.add(Restrictions.eq(search, folderId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 

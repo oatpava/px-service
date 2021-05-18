@@ -1,7 +1,6 @@
 package com.px.mwp.daoimpl;
 
 import com.px.share.daoimpl.GenericDaoImpl;
-import com.px.share.util.Common;
 import com.px.mwp.dao.WorkflowCcDao;
 import com.px.mwp.entity.WorkflowCc;
 import java.util.List;
@@ -53,28 +52,27 @@ public class WorkflowCcDaoImpl extends GenericDaoImpl<WorkflowCc, Integer> imple
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
     }
-    
+
     @Override
     public List<WorkflowCc> listByUserProfileId(int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
         conjunction.add(Restrictions.eq("this.userProfileId", userProfileId));
-        DetachedCriteria criteria = DetachedCriteria.forClass(WorkflowCc.class);
-        criteria.add(conjunction);
-        return this.listByCriteria(criteria);
-    }
-    
-    @Override
-    public List<WorkflowCc> listByStructureId(int structureId) {
-        Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("this.removedBy", 0));
-        conjunction.add(Restrictions.eq("this.structureId", structureId));
         DetachedCriteria criteria = DetachedCriteria.forClass(WorkflowCc.class);
         criteria.add(conjunction);
         return this.listByCriteria(criteria);
     }
 
-    
+    @Override
+    public List<WorkflowCc> listByStructureId(int structureId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("this.structureId", structureId));
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WorkflowCc.class);
+        criteria.add(conjunction);
+        return this.listByCriteria(criteria);
+    }
+
     @Override
     public WorkflowCc getByWorkflowIdAndUserProfileId(int workflowId, int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
@@ -86,7 +84,7 @@ public class WorkflowCcDaoImpl extends GenericDaoImpl<WorkflowCc, Integer> imple
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
-    
+
     @Override
     public WorkflowCc getByWorkflowIdAndStructureId(int workflowId, int structureId) {
         Conjunction conjunction = Restrictions.conjunction();

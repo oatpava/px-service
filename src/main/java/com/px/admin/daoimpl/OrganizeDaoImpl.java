@@ -49,13 +49,13 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
 
     private Conjunction createConjunction(String code, String name) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (code != null && code != "") {
             conjunction.add(Restrictions.eq("organizeCode", code));
         }
         if (name != null && name != "") {
             conjunction.add(Restrictions.eq("organizeName", name));
         }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         return conjunction;
     }
 
@@ -81,8 +81,8 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
     //oat-add
     public List<Organize> listByName(String organizeName) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("organizeName", organizeName));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
         criteria.add(conjunction).addOrder(Order.desc("this.createdDate"));
         return this.listByCriteria(criteria);
@@ -91,8 +91,8 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
     //oat-add
     public Organize getLatest(int parentId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", parentId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
         criteria.add(conjunction).addOrder(Order.desc("this.id"));
         List<Organize> tmp = this.listByCriteria(criteria, 0, 1);
@@ -101,8 +101,8 @@ public class OrganizeDaoImpl extends GenericTreeDaoImpl<Organize, Integer> imple
 
     public Organize getPrevOrderBy(int id) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("id", id - 1));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(Organize.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);

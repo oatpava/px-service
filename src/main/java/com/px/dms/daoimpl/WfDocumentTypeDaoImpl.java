@@ -84,7 +84,6 @@ public class WfDocumentTypeDaoImpl extends GenericTreeDaoImpl<WfDocumentType, In
 
     private Conjunction createConjunctionFormSearch(MultivaluedMap<String, String> queryParams) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("this.removedBy", 0));
         for (String key : queryParams.keySet()) {
             if (fieldSearch.contains("," + key + ",")) {
                 for (String value : queryParams.get(key)) {
@@ -100,6 +99,7 @@ public class WfDocumentTypeDaoImpl extends GenericTreeDaoImpl<WfDocumentType, In
                 }
             }
         }
+        conjunction.add(Restrictions.eq("this.removedBy", 0));
         return conjunction;
     }
 
@@ -150,8 +150,8 @@ public class WfDocumentTypeDaoImpl extends GenericTreeDaoImpl<WfDocumentType, In
     public Integer getMaxCode(int parentId) {
         Integer maxTypeId;
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("parentId", parentId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfDocumentType.class);
         criteria.add(conjunction);
         maxTypeId = this.max(criteria, "id");
@@ -161,8 +161,8 @@ public class WfDocumentTypeDaoImpl extends GenericTreeDaoImpl<WfDocumentType, In
     public WfDocumentType getwftypeByname(String wfTypeName) {
 
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("documentTypeName", wfTypeName));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfDocumentType.class);
         criteria.add(conjunction);
         WfDocumentType wfDocumentType = new WfDocumentType();
@@ -176,12 +176,12 @@ public class WfDocumentTypeDaoImpl extends GenericTreeDaoImpl<WfDocumentType, In
 
 //        return wfDocumentType;
     }
-    
-     public List<WfDocumentType> listWfTypeByTypeCode(String wfTypeCode) {
+
+    public List<WfDocumentType> listWfTypeByTypeCode(String wfTypeCode) {
 
         Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.like("documentTypeCode", wfTypeCode, MatchMode.ANYWHERE));
         conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.like("documentTypeCode", wfTypeCode,MatchMode.ANYWHERE));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfDocumentType.class);
         criteria.add(conjunction);
 //        WfDocumentType wfDocumentType = new WfDocumentType();
@@ -190,12 +190,11 @@ public class WfDocumentTypeDaoImpl extends GenericTreeDaoImpl<WfDocumentType, In
 //            wfDocumentType = this.getOneByCriteria(criteria);
             return this.listByCriteria(criteria, 0, 1000);
         } catch (Exception e) {
-            
+
             return null;
         }
 
 //        return wfDocumentType;
     }
-    
-    
+
 }

@@ -50,9 +50,9 @@ public class FileAttachDaoImpl extends GenericDaoImpl<FileAttach, Integer> imple
 
     public List<FileAttach> listAllByLinkTypeLinkId(String linkType, int linkId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("linkType", linkType));
         conjunction.add(Restrictions.eq("linkId", linkId));
+        conjunction.add(Restrictions.eq("linkType", linkType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(FileAttach.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -62,10 +62,10 @@ public class FileAttachDaoImpl extends GenericDaoImpl<FileAttach, Integer> imple
     //oat-add
     public List<FileAttach> listAllAfterAdd(String linkType, int linkId, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("linkType", linkType));
-        conjunction.add(Restrictions.eq("linkId", linkId));
         conjunction.add(Restrictions.eq("secrets", 0));
+        conjunction.add(Restrictions.eq("linkId", linkId));
+        conjunction.add(Restrictions.eq("linkType", linkType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(FileAttach.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -74,9 +74,9 @@ public class FileAttachDaoImpl extends GenericDaoImpl<FileAttach, Integer> imple
 
     public List<FileAttach> listByLinkTypeLinkId(String linkType, int linkId, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("linkType", linkType));
         conjunction.add(Restrictions.eq("linkId", linkId));
+        conjunction.add(Restrictions.eq("linkType", linkType));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(FileAttach.class);
         criteria.add(conjunction);
         criteria = createOrder(criteria, sort, dir);
@@ -115,17 +115,18 @@ public class FileAttachDaoImpl extends GenericDaoImpl<FileAttach, Integer> imple
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
     }
-    
+
     //oat-add
     public int countAllByLinkTypeLinkId(String linkType, int linkId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
-        conjunction.add(Restrictions.eq("linkType", linkType));
         conjunction.add(Restrictions.eq("linkId", linkId));
-        conjunction.add(Restrictions.eq("referenceId", 0));
+        conjunction.add(Restrictions.eq("linkType", linkType));
         conjunction.add(Restrictions.ne("fileAttachType", ".TTT"));
+        conjunction.add(Restrictions.eq("referenceId", 0));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(FileAttach.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
+    
 }

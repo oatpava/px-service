@@ -182,8 +182,6 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
     @Override
     public Integer countLogByModuleName(String moduleName, String startDate, String endDate) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("moduleName", moduleName));
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.ge("createdDate", Common.dateThaiToLocalDateTime(startDate)));
 
 //        Calendar cal = Calendar.getInstance();
@@ -191,6 +189,8 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
 //        cal.add(Calendar.DATE, 1);
 //        conjunction.add(Restrictions.lt("createdDate", cal.getTime()));
         conjunction.add(Restrictions.lt("createdDate", Common.dateThaiToLocalDateTime(endDate).plusDays(1)));
+        conjunction.add(Restrictions.eq("moduleName", moduleName));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -199,8 +199,9 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
     @Override
     public Integer countLogByModuleName(String moduleName, List<Integer> listUserProfileId, String startDate, String endDate) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("moduleName", moduleName));
-        conjunction.add(Restrictions.eq("removedBy", 0));
+        if (!listUserProfileId.isEmpty()) {
+            conjunction.add(Restrictions.in("createdBy", listUserProfileId));
+        }
 //        conjunction.add(Restrictions.ge("createdDate", Common.dateThaiToEng(startDate)));
         conjunction.add(Restrictions.ge("createdDate", Common.dateThaiToLocalDateTime(startDate)));
 
@@ -209,9 +210,8 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
 //        cal.add(Calendar.DATE, 1);
 //        conjunction.add(Restrictions.lt("createdDate", cal.getTime()));
         conjunction.add(Restrictions.lt("createdDate", Common.dateThaiToLocalDateTime(endDate).plusDays(1)));
-        if (!listUserProfileId.isEmpty()) {
-            conjunction.add(Restrictions.in("createdBy", listUserProfileId));
-        }
+        conjunction.add(Restrictions.eq("moduleName", moduleName));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -220,8 +220,6 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
     @Override
     public Integer countLogByModuleName(String moduleName, List<Integer> listUserProfileId, int type, String startDate, String endDate) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("moduleName", moduleName));
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.ge("createdDate", Common.dateThaiToLocalDateTime(startDate)));
 
 //        Calendar cal = Calendar.getInstance();
@@ -231,6 +229,8 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         conjunction.add(Restrictions.lt("createdDate", Common.dateThaiToLocalDateTime(endDate).plusDays(1)));
         conjunction.add(Restrictions.in("createdBy", listUserProfileId));
         conjunction.add(Restrictions.eq("type", type));
+        conjunction.add(Restrictions.eq("moduleName", moduleName));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -239,10 +239,6 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
     @Override
     public List<LogData> listLogByModuleName(String moduleName, List<Integer> listUserProfileId, List<Integer> type, String startDate, String endDate, int offset, int limit, String sort, String dir) {
         Conjunction conjunction = Restrictions.conjunction();
-        if (!moduleName.equals("")) {
-            conjunction.add(Restrictions.eq("moduleName", moduleName));
-        }
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (!startDate.equals("")) {
             conjunction.add(Restrictions.ge("createdDate", Common.dateThaiToLocalDateTime(startDate)));
 
@@ -258,6 +254,10 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         if (!type.isEmpty()) {
             conjunction.add(Restrictions.in("type", type));
         }
+        if (!moduleName.equals("")) {
+            conjunction.add(Restrictions.eq("moduleName", moduleName));
+        }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria = Common.createOrder(criteria, sort, dir);
         criteria.add(conjunction);
@@ -267,10 +267,6 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
     @Override
     public Integer countListLogByModuleName(String moduleName, List<Integer> listUserProfileId, List<Integer> type, String startDate, String endDate) {
         Conjunction conjunction = Restrictions.conjunction();
-        if (!moduleName.equals("")) {
-            conjunction.add(Restrictions.eq("moduleName", moduleName));
-        }
-        conjunction.add(Restrictions.eq("removedBy", 0));
         if (!startDate.equals("")) {
             conjunction.add(Restrictions.ge("createdDate", Common.dateThaiToLocalDateTime(startDate)));
 
@@ -286,6 +282,10 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         if (!type.isEmpty()) {
             conjunction.add(Restrictions.in("type", type));
         }
+        if (!moduleName.equals("")) {
+            conjunction.add(Restrictions.eq("moduleName", moduleName));
+        }
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(LogData.class);
         criteria.add(conjunction);
         return this.countAll(criteria);
@@ -301,4 +301,5 @@ public class LogDataDaoImpl extends GenericDaoImpl<LogData, Integer> implements 
         criteria.add(conjunction);
         return this.countAll(criteria);
     }
+    
 }

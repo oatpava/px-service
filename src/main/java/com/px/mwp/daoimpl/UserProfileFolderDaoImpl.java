@@ -18,12 +18,12 @@ public class UserProfileFolderDaoImpl extends GenericDaoImpl<UserProfileFolder, 
     public UserProfileFolderDaoImpl() {
         super(UserProfileFolder.class);
     }
-    
+
     public UserProfileFolder getByUserProfileId(int userProfileId, String type) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("userProfileId", userProfileId));
         conjunction.add(Restrictions.eq("userProfileFolderType", type));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(UserProfileFolder.class);
         criteria.add(conjunction);
         return this.getOneByCriteria(criteria);
@@ -32,9 +32,9 @@ public class UserProfileFolderDaoImpl extends GenericDaoImpl<UserProfileFolder, 
     @Override
     public List<UserProfileFolder> listByUserProfileId(int userProfileId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("userProfileId", userProfileId));
         //conjunction.add(Restrictions.eq("usp.id", userProfileId));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(UserProfileFolder.class);
         //criteria.createCriteria("userProfile", "usp", JoinType.INNER_JOIN);
         criteria.add(conjunction);
@@ -45,10 +45,10 @@ public class UserProfileFolderDaoImpl extends GenericDaoImpl<UserProfileFolder, 
     @Override
     public List<UserProfileFolder> listByUserProfileId(int userProfileId, String type) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("removedBy", 0));
         conjunction.add(Restrictions.eq("userProfileId", userProfileId));
         //conjunction.add(Restrictions.eq("usp.id", userProfileId));
         conjunction.add(Restrictions.eq("userProfileFolderType", type));
+        conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(UserProfileFolder.class);
         //criteria.createCriteria("userProfile", "usp", JoinType.INNER_JOIN);
         criteria.add(conjunction);
@@ -97,4 +97,5 @@ public class UserProfileFolderDaoImpl extends GenericDaoImpl<UserProfileFolder, 
         }
         return criteria;
     }
+
 }
