@@ -63,7 +63,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (structure != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("structure", structure));
+            conjunction.add(Restrictions.in("structure", structure));
             conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
@@ -81,7 +81,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         if (structure != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("structure", structure));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -97,8 +97,8 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (structure != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("structure", structure));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("structure", structure));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -131,7 +131,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("userProfile", userProfile));
+            conjunction.add(Restrictions.in("userProfile", userProfile));
             conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
@@ -149,7 +149,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("userProfile", userProfile));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -165,8 +165,8 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("userProfile", userProfile));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("userProfile", userProfile));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -201,7 +201,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         if (structure != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("linkId", linkId));
-            conjunction.add(Restrictions.eq("structure", structure));
+            conjunction.add(Restrictions.in("structure", structure));
             conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
@@ -220,7 +220,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("linkId", linkId));
             conjunction.add(Restrictions.eq("structure", structure));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -237,8 +237,8 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         if (structure != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("linkId", linkId));
-            conjunction.add(Restrictions.eq("structure", structure));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("structure", structure));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -254,9 +254,9 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (structure != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("linkId", linkId));
-            conjunction.add(Restrictions.eq("structure", structure));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("linkId", linkId));
+            conjunction.add(Restrictions.in("structure", structure));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -291,7 +291,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("linkId", linkId));
-            conjunction.add(Restrictions.eq("userProfile", userProfile));
+            conjunction.add(Restrictions.in("userProfile", userProfile));
             conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
@@ -310,7 +310,7 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("linkId", linkId));
             conjunction.add(Restrictions.eq("userProfile", userProfile));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -326,9 +326,9 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("linkId", linkId));
+            conjunction.add(Restrictions.in("linkId", linkId));
             conjunction.add(Restrictions.eq("userProfile", userProfile));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -345,8 +345,8 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
             conjunction.add(Restrictions.eq("linkId", linkId));
-            conjunction.add(Restrictions.eq("userProfile", userProfile));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("userProfile", userProfile));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
@@ -362,9 +362,9 @@ public class SubmoduleUserAuthDaoImpl extends GenericDaoImpl<SubmoduleUserAuth, 
         List<SubmoduleUserAuth> result = new ArrayList();
         if (userProfile != null && submoduleAuth != null) {
             Conjunction conjunction = Restrictions.conjunction();
-            conjunction.add(Restrictions.eq("linkId", linkId));
-            conjunction.add(Restrictions.eq("userProfile", userProfile));
-            conjunction.add(Restrictions.eq("submoduleAuth", submoduleAuth));
+            conjunction.add(Restrictions.in("linkId", linkId));
+            conjunction.add(Restrictions.in("userProfile", userProfile));
+            conjunction.add(Restrictions.in("submoduleAuth", submoduleAuth));
             conjunction.add(Restrictions.eq("removedBy", 0));
             DetachedCriteria criteria = DetachedCriteria.forClass(SubmoduleUserAuth.class);
             criteria.add(conjunction);
