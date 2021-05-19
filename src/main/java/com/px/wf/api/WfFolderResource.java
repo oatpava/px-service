@@ -1493,7 +1493,6 @@ public class WfFolderResource {
             }
             responseData.put("success", true);
         } catch (Exception ex) {
-            //ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
