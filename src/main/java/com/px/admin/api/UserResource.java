@@ -363,8 +363,8 @@ public class UserResource {
             }
             status = Response.Status.OK;
             responseData.put("success", true);
+            responseData.put("clientIp", httpHeaders.getHeaderString("clientIp"));
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.OK;
             responseData.put("errorMessage", ex.getMessage());
