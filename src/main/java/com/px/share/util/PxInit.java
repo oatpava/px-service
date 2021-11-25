@@ -42,10 +42,10 @@ public class PxInit implements ServletContextListener {
     public static final String KEY = "42444678902180239428358646519815165132078951561321646432131696998878616";
     public static final String HEADER = "ATENCODE01";
     public static final String DEFAULT_PASSWORD = "12345678";
-    public static String PathDocument = "/Users/Oat/dbPraxticol/Data/Document/";
-    public static String PathDocumentTemp = "/Users/Oat/dbPraxticol/Data/Document/Temp/";
-    public static String PathWatermark = "/Users/Oat/dbPraxticol/Data/Document/Watermark/";
-    public static String PathMasterFile = "masterFile/";
+    public static String PathDocument = "C:\\px8\\Data\\Document\\";
+    public static String PathDocumentTemp = "C:\\px8\\Data\\Document\\Temp\\";
+    public static String PathWatermark = "C:\\px8\\Data\\Document\\Watermark\\";
+    public static String PathMasterFile = "masterFile\\";
     public static String MasterFileSplitBy = "\\|";
     public static String PathLog = "logs\\";
     public static String LogFileName = ".log";
@@ -64,7 +64,7 @@ public class PxInit implements ServletContextListener {
     }
 
     public PxInit() {
-        this.appName = "pxservice";
+        this.appName = "dmscService";
         this.adminUserName = "admin";
         this.adminPassword = "1234";
         this.adminFullName = "ผู้ดูแลระบบ";
@@ -82,8 +82,8 @@ public class PxInit implements ServletContextListener {
         sc = sce.getServletContext();
 
         try {
-//            PathDocument = Common.noNull(sc.getInitParameter("PathDocument"), "D:\\dbPraxticol\\Data\\Document\\");
-//            PathDocumentTemp = Common.noNull(sc.getInitParameter("PathDocumentTemp"), "D:\\dbPraxticol\\Data\\Document\\Temp\\");
+//            PathDocument = Common.noNull(sc.getInitParameter("PathDocument"), "D:\\px8\\Data\\Document\\");
+//            PathDocumentTemp = Common.noNull(sc.getInitParameter("PathDocumentTemp"), "D:\\px8\\Data\\Document\\Temp\\");
             //create default data
             createPathFile();
 

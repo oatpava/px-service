@@ -52,9 +52,9 @@ public class TestWaterMark {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, InvalidFormatException, Docx4JException, Exception {
-//        String pathSourceFile = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\2609.PDF";
-//        String pathDestFile = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\2609_w.PDF";
-//        String pathWaterMarkFile = "C:\\dbPraxticol\\Data\\Document\\watermark\\watermark-cc.png";
+//        String pathSourceFile = "C:\\px8\\Data\\Document\\Temp\\dms\\EXT0\\2609.PDF";
+//        String pathDestFile = "C:\\px8\\Data\\Document\\Temp\\dms\\EXT0\\2609_w.PDF";
+//        String pathWaterMarkFile = "C:\\px8\\Data\\Document\\watermark\\watermark-cc.png";
 //        String resultWaterMarkPath = "";
 //        File f = new File(pathSourceFile);
 //        if(f.exists()){
@@ -88,10 +88,10 @@ public class TestWaterMark {
 ////               LOG.error("Source File not found.");
 //            }
 
-        String pathSourceFile = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\1201.DOCX";
-//        String pathSourceFile2 = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\1201.DOCX";
-        String pathDestFile = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\1200_w.DOCX";
-        String pathWaterMarkFile = "C:\\dbPraxticol\\Data\\Document\\watermark\\watermark-cc.png";
+        String pathSourceFile = "C:\\px8\\Data\\Document\\Temp\\dms\\EXT0\\1201.DOCX";
+//        String pathSourceFile2 = "C:\\px8\\Data\\Document\\Temp\\dms\\EXT0\\1201.DOCX";
+        String pathDestFile = "C:\\px8\\Data\\Document\\Temp\\dms\\EXT0\\1200_w.DOCX";
+        String pathWaterMarkFile = "C:\\px8\\Data\\Document\\watermark\\watermark-cc.png";
         String resultWaterMarkPath = "";
         
         
@@ -177,7 +177,7 @@ public class TestWaterMark {
     }
     
     private static byte[] getImage() throws IOException {
-        String pathWaterMarkFile = "C:\\dbPraxticol\\Data\\Document\\watermark\\watermark-cc.png";
+        String pathWaterMarkFile = "C:\\px8\\Data\\Document\\watermark\\watermark-cc.png";
         File imageFile = new File(pathWaterMarkFile);
         // Our utility method wants that as a byte array
         java.io.InputStream is = new java.io.FileInputStream(imageFile);

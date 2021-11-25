@@ -66,7 +66,7 @@ public class WfModuleEntityService {
         listParam.put("OUTBOXCANCELSEND", "2");
         listParam.put("SETSTARTCONTENTNO", "0");
         listParam.put("BOOKNOEQUALCONNO", "Y");//oat-still no check
-        listParam.put("THEGIF_PAHT", "C:\\dbPraxticol\\Data\\Document\\");
+        listParam.put("THEGIF_PAHT", "C:\\px8\\Data\\Document\\");
         listParam.put("SENDAPPROVEINBOX", "0");
         listParam.put("RESULTAPPROVEINBOX", "0");
         listParam.put("ECMSDEPCODE", "-");//oat-edit

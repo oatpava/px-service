@@ -1043,7 +1043,7 @@ public class FileAttachResource {
                 fileName = fileAttach.getFileAttachName();
                 fileName = URLEncoder.encode(fileName, "UTF-8");
                 String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
-//                String fileSave = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\25316.PDF";
+//                String fileSave = "C:\\px8\\Data\\Document\\Temp\\dms\\EXT0\\25316.PDF";
                 fileStream = new StreamingOutput() {
                     @Override
                     public void write(java.io.OutputStream output) throws IOException, WebApplicationException {
