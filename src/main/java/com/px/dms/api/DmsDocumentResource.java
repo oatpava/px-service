@@ -2644,5 +2644,57 @@ public class DmsDocumentResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
+    
+    //oat-add
+     @ApiOperation(
+            value = "Method for permanent delete dmsDocument by id.",
+            notes = "ลบข้อมูล",
+            response = DmsDocumentModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "dmsDocument permanent deleted by id success."),
+        @ApiResponse(code = 404, message = "dmsDocument by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @DELETE
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/delete/{id}")
+    public Response delete(
+            @BeanParam VersionModel versionModel,
+            @ApiParam(name = "id", value = "รหัสเอกสาร", required = true)
+            @PathParam("id") int id
+    ) {
+        LOG.info("delete...");
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.NOT_FOUND;
+        responseData.put("success", false);
+        responseData.put("data", null);
+        responseData.put("message", "dmsDocument by id not found in the database.");
+        responseData.put("errorMessage", "");
+        try {
+            DmsDocumentService dmsDocumentService = new DmsDocumentService();
+            DmsDocument dmsDocument = dmsDocumentService.getById(id);
+            boolean result = false;
+            if (dmsDocument != null) {
+                dmsDocumentService.delete(dmsDocument);
+                result = true;
+            }
+            responseData.put("data", result);
+            responseData.put("message", "dmsDocument permanent deleted by id success.");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = "+ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
 
 }
