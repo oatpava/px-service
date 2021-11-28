@@ -5,20 +5,20 @@ import com.google.gson.GsonBuilder;
 import com.px.dms.entity.DmsDocument;
 import com.px.dms.model.DmsSearchModel;
 import com.px.dms.service.DmsDocumentService;
-import com.px.dms.service.DmsSearchService;
+//import com.px.dms.service.DmsSearchService;
 import com.px.share.entity.FileAttach;
 import com.px.share.model.ListOptionModel;
 import com.px.share.model.VersionModel;
 import com.px.share.model.FileAttachModel;
 import com.px.share.model.FileAttachBase64Model;
 import com.px.share.model.FileAttachModel2;
-import com.px.share.model.FileAttachWfSearchModel;
+//import com.px.share.model.FileAttachWfSearchModel;
 import com.px.share.service.FileAttachService;
 import com.px.share.service.ParamService;
-import com.px.wf.entity.WfContent;
-import com.px.wf.model.WfContentESModel;
-import com.px.wf.service.WfContentService;
-import com.px.wf.service.WfSearchService;
+//import com.px.wf.entity.WfContent;
+//import com.px.wf.model.WfContentESModel;
+//import com.px.wf.service.WfContentService;
+//import com.px.wf.service.WfSearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -89,475 +89,477 @@ public class FileAttachResource {
     
     @Context
     HttpHeaders httpHeaders;
-    
-    @ApiOperation(
-            value = "Method for create FileAttach",
-            notes = "สร้างข้อมูลเอกสารแนบ",
-            response = FileAttachModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created successfully."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @POST
-    public Response create(
-            //        @BeanParam FileAttachModel fileAttachModel,
-            @FormDataParam("file") InputStream uploadInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail,
-            //        @FormDataParam("fileAttachName") String fileAttachName,
-            //        @FormDataParam("fileAttachType") String fileAttachType,
-            //        @FormDataParam("fileAttachSize") float fileAttachSize,
-            @FormDataParam("version") int version,
-            @FormDataParam("linkType") String linkType,
-            @FormDataParam("linkId") int linkId,
-            @FormDataParam("referenceId") int referenceId,
-            @FormDataParam("secrets") int secrets
-    ) throws UnsupportedEncodingException {
-        LOG.debug("create...");
-//        Map<String, String> queryParams = fileDetail.getParameters();
-//        for (String key : queryParams.keySet()) {
-//            String value = queryParams.get(key);
-//            LOG.debug(key+" = " +value);
-//        }
-//        LOG.debug("fileAttachName = " +fileAttachModel.getFileAttachName());
-//        LOG.debug("fileAttachType = " +fileAttachModel.getFileAttachType());
-//        LOG.debug("linkId = " +fileAttachModel.getLinkId());
-//        LOG.debug("linkType = " +fileAttachModel.getLinkType());
-        LOG.debug("fileDetail.getFileName() = " + fileDetail.getFileName());
-//        LOG.debug("fileAttachName = " +fileAttachName);
-//        LOG.debug("fileAttachType = " +fileAttachType);
-//        LOG.debug("fileAttachSize = " +fileAttachSize);
-        LOG.debug("version = " + version);
-        LOG.debug("linkType = " + linkType);
-        LOG.debug("linkId = " + linkId);
-        LOG.debug("referenceId = " + referenceId);
-        LOG.debug("secrets = " + secrets);
-        String newFileName = new String(fileDetail.getFileName().getBytes("iso-8859-1"), "UTF-8");
-        LOG.debug("newFileName = " + newFileName);
-        Gson gs = new GsonBuilder()
-                .setVersion(version)
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
-        responseData.put("data", null);
-        responseData.put("success", false);
-        String tempFile = "";
-        try {
-//            if(fileAttachModel.getFileAttachName() == null) fileAttachModel.setFileAttachName(fileAttachName);
-//            if(fileAttachModel.getFileAttachType() == null) fileAttachModel.setFileAttachType(fileAttachType);
-//            if(fileAttachModel.getLinkId() == 0) fileAttachModel.setLinkId(linkId);
-//            if(fileAttachModel.getLinkType() == null) fileAttachModel.setLinkType(linkType);
-            ParamService paramService = new ParamService();
-            FileAttach fileAttach = new FileAttach();
-            fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-            fileAttach.setFileAttachName(newFileName);
-            fileAttach.setFileAttachType(newFileName.substring(newFileName.lastIndexOf(".")).toUpperCase());
-            fileAttach.setLinkType(linkType);
-            fileAttach.setLinkId(linkId);
-            fileAttach.setReferenceId(0);
-            fileAttach.setSecrets(secrets);
-            
-            FileAttachService fileAttachService = new FileAttachService();
-            fileAttach = fileAttachService.create(fileAttach);
-            if (fileAttach != null) {
-                String pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
-                String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
-                LOG.debug("pathDocumentTemp = " + pathDocumentTemp);
-                LOG.debug("pathDocumentHttp = " + pathDocumentHttp);
-                String fileSave = pathDocumentTemp + fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-                LOG.debug("fileSave = " + fileSave);
-                tempFile = fileSave;
-                fileAttachService.saveFile(uploadInputStream, fileSave);
-                
-                fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
-                
-                File file = new File(fileSave);
-                fileAttach.setFileAttachSize(file.length());
-                fileAttach = fileAttachService.update(fileAttach);
-                LOG.debug("fileAttach getId = " + fileAttach.getId());
-                if (referenceId > 0) {
-//                    List<FileAttach> listOldFileAttach = fileAttachService.listAllByLinkTypeLinkId(linkType, linkId,"","");
-//                    LOG.debug("listOldFileAttach = "+listOldFileAttach.size());
-//                    for (FileAttach oldFileAttach : listOldFileAttach) {
-//                        if(oldFileAttach.getId() != fileAttach.getId()){
-//                            oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-//                            oldFileAttach.setReferenceId(fileAttach.getId());
+
+//ES    
+//    @ApiOperation(
+//            value = "Method for create FileAttach",
+//            notes = "สร้างข้อมูลเอกสารแนบ",
+//            response = FileAttachModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 201, message = "FileAttach created successfully."),
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    @POST
+//    public Response create(
+//            //        @BeanParam FileAttachModel fileAttachModel,
+//            @FormDataParam("file") InputStream uploadInputStream,
+//            @FormDataParam("file") FormDataContentDisposition fileDetail,
+//            //        @FormDataParam("fileAttachName") String fileAttachName,
+//            //        @FormDataParam("fileAttachType") String fileAttachType,
+//            //        @FormDataParam("fileAttachSize") float fileAttachSize,
+//            @FormDataParam("version") int version,
+//            @FormDataParam("linkType") String linkType,
+//            @FormDataParam("linkId") int linkId,
+//            @FormDataParam("referenceId") int referenceId,
+//            @FormDataParam("secrets") int secrets
+//    ) throws UnsupportedEncodingException {
+//        LOG.debug("create...");
+////        Map<String, String> queryParams = fileDetail.getParameters();
+////        for (String key : queryParams.keySet()) {
+////            String value = queryParams.get(key);
+////            LOG.debug(key+" = " +value);
+////        }
+////        LOG.debug("fileAttachName = " +fileAttachModel.getFileAttachName());
+////        LOG.debug("fileAttachType = " +fileAttachModel.getFileAttachType());
+////        LOG.debug("linkId = " +fileAttachModel.getLinkId());
+////        LOG.debug("linkType = " +fileAttachModel.getLinkType());
+//        LOG.debug("fileDetail.getFileName() = " + fileDetail.getFileName());
+////        LOG.debug("fileAttachName = " +fileAttachName);
+////        LOG.debug("fileAttachType = " +fileAttachType);
+////        LOG.debug("fileAttachSize = " +fileAttachSize);
+//        LOG.debug("version = " + version);
+//        LOG.debug("linkType = " + linkType);
+//        LOG.debug("linkId = " + linkId);
+//        LOG.debug("referenceId = " + referenceId);
+//        LOG.debug("secrets = " + secrets);
+//        String newFileName = new String(fileDetail.getFileName().getBytes("iso-8859-1"), "UTF-8");
+//        LOG.debug("newFileName = " + newFileName);
+//        Gson gs = new GsonBuilder()
+//                .setVersion(version)
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+//        responseData.put("data", null);
+//        responseData.put("success", false);
+//        String tempFile = "";
+//        try {
+////            if(fileAttachModel.getFileAttachName() == null) fileAttachModel.setFileAttachName(fileAttachName);
+////            if(fileAttachModel.getFileAttachType() == null) fileAttachModel.setFileAttachType(fileAttachType);
+////            if(fileAttachModel.getLinkId() == 0) fileAttachModel.setLinkId(linkId);
+////            if(fileAttachModel.getLinkType() == null) fileAttachModel.setLinkType(linkType);
+//            ParamService paramService = new ParamService();
+//            FileAttach fileAttach = new FileAttach();
+//            fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+//            fileAttach.setFileAttachName(newFileName);
+//            fileAttach.setFileAttachType(newFileName.substring(newFileName.lastIndexOf(".")).toUpperCase());
+//            fileAttach.setLinkType(linkType);
+//            fileAttach.setLinkId(linkId);
+//            fileAttach.setReferenceId(0);
+//            fileAttach.setSecrets(secrets);
+//            
+//            FileAttachService fileAttachService = new FileAttachService();
+//            fileAttach = fileAttachService.create(fileAttach);
+//            if (fileAttach != null) {
+//                String pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+//                String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
+//                LOG.debug("pathDocumentTemp = " + pathDocumentTemp);
+//                LOG.debug("pathDocumentHttp = " + pathDocumentHttp);
+//                String fileSave = pathDocumentTemp + fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//                LOG.debug("fileSave = " + fileSave);
+//                tempFile = fileSave;
+//                fileAttachService.saveFile(uploadInputStream, fileSave);
+//                
+//                fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
+//                
+//                File file = new File(fileSave);
+//                fileAttach.setFileAttachSize(file.length());
+//                fileAttach = fileAttachService.update(fileAttach);
+//                LOG.debug("fileAttach getId = " + fileAttach.getId());
+//                if (referenceId > 0) {
+////                    List<FileAttach> listOldFileAttach = fileAttachService.listAllByLinkTypeLinkId(linkType, linkId,"","");
+////                    LOG.debug("listOldFileAttach = "+listOldFileAttach.size());
+////                    for (FileAttach oldFileAttach : listOldFileAttach) {
+////                        if(oldFileAttach.getId() != fileAttach.getId()){
+////                            oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+////                            oldFileAttach.setReferenceId(fileAttach.getId());
+////                        }
+////                    }
+//                    FileAttach oldFileAttach = fileAttachService.getByIdNotRemoved(referenceId);
+//                    oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+//                    oldFileAttach.setReferenceId(fileAttach.getId());
+//                    oldFileAttach = fileAttachService.update(oldFileAttach);
+//                    
+//                    fileAttach.setOrderNo(oldFileAttach.getOrderNo());
+//                    fileAttach = fileAttachService.update(fileAttach);
+//                }
+//                
+//                FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
+//                String url = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//                String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
+//                String resultUrlNoName = pathDocumentHttp + linkId + "/" + fileAttachService.buildHtmlPathExtNoName(fileAttach.getId());
+//                LOG.debug("resultUrlNoName = " + resultUrlNoName);
+//                newFileAttachModel.setUrl(url);
+//                newFileAttachModel.setThumbnailUrl(thumbnailUrl);
+//                responseData.put("data", newFileAttachModel);
+//                
+//            }
+//            ///แคะ text
+//            DmsSearchModel result;
+//            int id = linkId;
+//            DmsSearchService dmsSearchService = new DmsSearchService();
+////            ParamService paramService = new ParamService();
+//            DmsDocumentService dmsDocumentService = new DmsDocumentService();
+//            DmsDocument document = dmsDocumentService.getById(id);
+//            String searchId = document.getDmsSearchId();
+////            FileAttachService fileAttachService = new FileAttachService();
+////            List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", id, "createdDate", "asc");
+//            List<String> attachName = new ArrayList<String>();
+//            List<String> fulltext = new ArrayList<String>();
+//            if (searchId != null) {
+//                DmsSearchModel resultTemp = dmsSearchService.getData(searchId);
+//                attachName = resultTemp.getFileAttachName();
+//                fulltext = resultTemp.getFullText();
+//            }
+//            String url = "";
+//            String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+//            url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//            attachName.add(fileAttach.getFileAttachName());
+//            if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
+//                File file = new File(tempFile);
+//                BufferedReader br = new BufferedReader(new FileReader(file));
+//                String sCurrentLine;
+//                
+//                while ((sCurrentLine = br.readLine()) != null) {
+//                    fulltext.add(sCurrentLine);
+//                }
+//            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
+//                XWPFDocument doc = new XWPFDocument(new FileInputStream(tempFile));
+//                XWPFWordExtractor ex = new XWPFWordExtractor(doc);
+//                String text = ex.getText();
+//                fulltext.add(text);
+//            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
+//                NPOIFSFileSystem fs = new NPOIFSFileSystem(new FileInputStream(tempFile));
+//                WordExtractor extractor = new WordExtractor(fs.getRoot());
+//                for (String rawText : extractor.getParagraphText()) {
+//                    String text = extractor.stripFields(rawText);
+//                    fulltext.add(text);
+//                }
+//                
+//            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
+//                POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(tempFile));
+//                HSSFWorkbook wb = new HSSFWorkbook(fs);
+//                HSSFSheet sheet = wb.getSheetAt(0);
+//                HSSFRow row;
+//                HSSFCell cell;
+//                int rows; // No of rows
+//                rows = sheet.getPhysicalNumberOfRows();
+//                int cols = 0; // No of columns
+//                int tmp = 0;
+//                for (int i = 0; i < 10 || i < rows; i++) {
+//                    row = sheet.getRow(i);
+//                    if (row != null) {
+//                        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+//                        if (tmp > cols) {
+//                            cols = tmp;
 //                        }
 //                    }
-                    FileAttach oldFileAttach = fileAttachService.getByIdNotRemoved(referenceId);
-                    oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-                    oldFileAttach.setReferenceId(fileAttach.getId());
-                    oldFileAttach = fileAttachService.update(oldFileAttach);
-                    
-                    fileAttach.setOrderNo(oldFileAttach.getOrderNo());
-                    fileAttach = fileAttachService.update(fileAttach);
-                }
-                
-                FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
-                String url = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-                String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
-                String resultUrlNoName = pathDocumentHttp + linkId + "/" + fileAttachService.buildHtmlPathExtNoName(fileAttach.getId());
-                LOG.debug("resultUrlNoName = " + resultUrlNoName);
-                newFileAttachModel.setUrl(url);
-                newFileAttachModel.setThumbnailUrl(thumbnailUrl);
-                responseData.put("data", newFileAttachModel);
-                
-            }
-            ///แคะ text
-            DmsSearchModel result;
-            int id = linkId;
-            DmsSearchService dmsSearchService = new DmsSearchService();
-//            ParamService paramService = new ParamService();
-            DmsDocumentService dmsDocumentService = new DmsDocumentService();
-            DmsDocument document = dmsDocumentService.getById(id);
-            String searchId = document.getDmsSearchId();
-//            FileAttachService fileAttachService = new FileAttachService();
-//            List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", id, "createdDate", "asc");
-            List<String> attachName = new ArrayList<String>();
-            List<String> fulltext = new ArrayList<String>();
-            if (searchId != null) {
-                DmsSearchModel resultTemp = dmsSearchService.getData(searchId);
-                attachName = resultTemp.getFileAttachName();
-                fulltext = resultTemp.getFullText();
-            }
-            String url = "";
-            String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
-            url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-            attachName.add(fileAttach.getFileAttachName());
-            if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
-                File file = new File(tempFile);
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String sCurrentLine;
-                
-                while ((sCurrentLine = br.readLine()) != null) {
-                    fulltext.add(sCurrentLine);
-                }
-            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
-                XWPFDocument doc = new XWPFDocument(new FileInputStream(tempFile));
-                XWPFWordExtractor ex = new XWPFWordExtractor(doc);
-                String text = ex.getText();
-                fulltext.add(text);
-            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
-                NPOIFSFileSystem fs = new NPOIFSFileSystem(new FileInputStream(tempFile));
-                WordExtractor extractor = new WordExtractor(fs.getRoot());
-                for (String rawText : extractor.getParagraphText()) {
-                    String text = extractor.stripFields(rawText);
-                    fulltext.add(text);
-                }
-                
-            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
-                POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(tempFile));
-                HSSFWorkbook wb = new HSSFWorkbook(fs);
-                HSSFSheet sheet = wb.getSheetAt(0);
-                HSSFRow row;
-                HSSFCell cell;
-                int rows; // No of rows
-                rows = sheet.getPhysicalNumberOfRows();
-                int cols = 0; // No of columns
-                int tmp = 0;
-                for (int i = 0; i < 10 || i < rows; i++) {
-                    row = sheet.getRow(i);
-                    if (row != null) {
-                        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-                        if (tmp > cols) {
-                            cols = tmp;
-                        }
-                    }
-                }
-                for (int r = 0; r < rows; r++) {
-                    row = sheet.getRow(r);
-                    if (row != null) {
-                        for (int c = 0; c < cols; c++) {
-                            cell = row.getCell((short) c);
-                            if (cell != null) {
-                                fulltext.add(cell.toString());
-                            }
-                        }
-                    }
-                }
-            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
-                XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(tempFile));
-                XSSFWorkbook test = new XSSFWorkbook();
-                XSSFSheet sheet = wb.getSheetAt(0);
-                XSSFRow row;
-                XSSFCell cell;
-                Iterator rows = sheet.rowIterator();
-                while (rows.hasNext()) {
-                    row = (XSSFRow) rows.next();
-                    Iterator cells = row.cellIterator();
-                    while (cells.hasNext()) {
-                        cell = (XSSFCell) cells.next();
-                        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                            fulltext.add(cell.getStringCellValue());
-                        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-//                                    fulltext.add( cell.getNumericCellValue());
-                        }
-                    }
-                }
-            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
-                PDDocument pdDoc = PDDocument.load(new FileInputStream(tempFile));
-                PDFTextStripper pdfStripper = new PDFTextStripper();
-                String parsedText = pdfStripper.getText(pdDoc);
-                fulltext.add(parsedText);
-                pdDoc.close();
-            }
-            
-            if (searchId == null) {
-                DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
-                temp.setFileAttachName(attachName);
-                temp.setFullText(fulltext);
-                result = dmsSearchService.addData(temp);
-                document.setDmsSearchId(result.getDmsSearchId());
-                document = dmsDocumentService.update(document);
-            } else {
-                DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
-                temp.setFileAttachName(attachName);
-                temp.setFullText(fulltext);
-                result = dmsSearchService.updateData(searchId, temp);
-            }
-            //
-            status = Response.Status.CREATED;
-            responseData.put("data", true);
-            responseData.put("success", true);
-            responseData.put("message", "FileAttach created successfully.");
-        } catch (IOException ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
-    
-    @ApiOperation(
-            value = "Method for create FileAttach from ActiveX",
-            notes = "สร้างข้อมูลเอกสารแนบจาก ActiveX",
-            response = FileAttachModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "FileAttach created from ActiveX successfully."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @POST
-    @Path(value = "/activex")
-    public Response createActiveX(
-            //            @BeanParam VersionModel versionModel,
-            //            @FormDataParam("linkType") String linkType,
-            //            @FormDataParam("linkId") int linkId,
-            //            @FormDataParam("referenceId") int referenceId,
-            //            @FormDataParam("secrets") int secrets,
-            FormDataMultiPart formData,
-            //             @BeanParam VersionModel versionModel,
-            //            @FormDataParam("file") InputStream uploadInputStream,
-            //            @FormDataParam("file") FormDataContentDisposition fileDetail,
-
-            @QueryParam("version") int version,
-            @QueryParam("linkType") String linkType,
-            @QueryParam("linkId") int linkId,
-            @QueryParam("referenceId") int referenceId,
-            @QueryParam("secrets") int secrets,
-            @QueryParam("attachNameInput") String attachNameInput
-    ) {
-        LOG.debug("createActiveX...");
-        Gson gs = new GsonBuilder()
-                .setVersion(version)
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
-        responseData.put("success", false);
-        responseData.put("data", null);
-        try {
-            String str = new String(attachNameInput.getBytes(), StandardCharsets.UTF_8);
-            String fileName = new String(attachNameInput.getBytes("iso-8859-1"), "UTF-8");
-            fileName = attachNameInput;
-            
-            InputStream uploadInputStream = formData.getBodyParts().get(0).getEntityAs(InputStream.class);
-            ParamService paramService = new ParamService();
-            FileAttach fileAttach = new FileAttach();
-            fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-            fileAttach.setFileAttachName(fileName);
-            fileAttach.setFileAttachType(fileName.substring(fileName.lastIndexOf(".")).toUpperCase());
-            fileAttach.setLinkType(linkType);
-            fileAttach.setLinkId(linkId);
-            fileAttach.setReferenceId(referenceId);
-            fileAttach.setSecrets(secrets);
-            
-            FileAttachService fileAttachService = new FileAttachService();
-            fileAttach = fileAttachService.create(fileAttach);
-            if (fileAttach != null) {
-                String pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
-                String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
-                LOG.debug("pathDocumentTemp = " + pathDocumentTemp);
-                LOG.debug("pathDocumentHttp = " + pathDocumentHttp);
-                String fileSave = pathDocumentTemp + fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-                LOG.debug("fileSave = " + fileSave);
-                fileAttachService.saveFile(uploadInputStream, fileSave);
-                fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
-                File file2 = new File(fileSave);
-                fileAttach.setFileAttachSize(file2.length());
-                fileAttach = fileAttachService.update(fileAttach);
-                
-                FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
-                String url2 = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-                String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url2);
-                String urlNoName = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExtNoName(fileAttach.getId());
-                newFileAttachModel.setUrl(url2);
-                newFileAttachModel.setThumbnailUrl(thumbnailUrl);
-                newFileAttachModel.setUrlNoName(urlNoName);
-                responseData.put("data", newFileAttachModel);
-                
-                DmsSearchModel result;
-                int id = linkId;
-                DmsSearchService dmsSearchService = new DmsSearchService();
-//            ParamService paramService = new ParamService();
-                DmsDocumentService dmsDocumentService = new DmsDocumentService();
-                DmsDocument document = dmsDocumentService.getById(id);
-                String searchId = document.getDmsSearchId();
-//            FileAttachService fileAttachService = new FileAttachService();
-//            List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", id, "createdDate", "asc");
-                List<String> attachName = new ArrayList<String>();
-                List<String> fulltext = new ArrayList<String>();
-                if (searchId != null) {
-                    DmsSearchModel resultTemp = dmsSearchService.getData(searchId);
-                    attachName = resultTemp.getFileAttachName();
-                    fulltext = resultTemp.getFullText();
-                }
-//            
-                String url = "";
-                String pathDocumentHttp2 = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
-
-//            for (FileAttach fileAttach2 : listFileAttach) {
-                url = pathDocumentHttp2 + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-                attachName.add(fileAttach.getFileAttachName());
-                if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
-//                    url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
-
-                    File file = new File(url);
-                    BufferedReader br = new BufferedReader(new FileReader(file));
-                    String sCurrentLine;
-                    
-                    while ((sCurrentLine = br.readLine()) != null) {
-                        fulltext.add(sCurrentLine);
-                    }
-                }
-                if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
-                    InputStream in = new FileInputStream(url);
-                    XWPFDocument doc = new XWPFDocument(in);
-                    XWPFWordExtractor ex = new XWPFWordExtractor(doc);
-                    String text = ex.getText();
-                    fulltext.add(text);
-                }
-                if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
-                    File file = new File(url);
-                    NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
-                    WordExtractor extractor = new WordExtractor(fs.getRoot());
-                    
-                    for (String rawText : extractor.getParagraphText()) {
-                        String text = extractor.stripFields(rawText);
-                        fulltext.add(text);
-                    }
-                    
-                }
-                if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
-                    File file = new File(url);
-                    POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
-                    HSSFWorkbook wb = new HSSFWorkbook(fs);
-                    HSSFSheet sheet = wb.getSheetAt(0);
-                    HSSFRow row;
-                    HSSFCell cell;
-                    int rows; // No of rows
-                    rows = sheet.getPhysicalNumberOfRows();
-                    
-                    int cols = 0; // No of columns
-                    int tmp = 0;
-                    
-                    for (int i = 0; i < 10 || i < rows; i++) {
-                        row = sheet.getRow(i);
-                        if (row != null) {
-                            tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-                            if (tmp > cols) {
-                                cols = tmp;
-                            }
-                        }
-                    }
-                    for (int r = 0; r < rows; r++) {
-                        row = sheet.getRow(r);
-                        if (row != null) {
-                            for (int c = 0; c < cols; c++) {
-                                cell = row.getCell((short) c);
-                                if (cell != null) {
-                                    // Your code here
-                                    fulltext.add(cell.toString());
-                                }
-                            }
-                        }
-                    }
-                    
-                }
-                if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
-                    File file = new File(url);
-//                    FileInputStream fis = new FileInputStream(file);
-
-                    InputStream ExcelFileToRead = new FileInputStream(url);
-                    XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
-                    
-                    XSSFWorkbook test = new XSSFWorkbook();
-                    
-                    XSSFSheet sheet = wb.getSheetAt(0);
-                    XSSFRow row;
-                    XSSFCell cell;
-                    
-                    Iterator rows = sheet.rowIterator();
-                    
-                    while (rows.hasNext()) {
-                        row = (XSSFRow) rows.next();
-                        Iterator cells = row.cellIterator();
-                        while (cells.hasNext()) {
-                            cell = (XSSFCell) cells.next();
-                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                                fulltext.add(cell.getStringCellValue());
-                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
+//                }
+//                for (int r = 0; r < rows; r++) {
+//                    row = sheet.getRow(r);
+//                    if (row != null) {
+//                        for (int c = 0; c < cols; c++) {
+//                            cell = row.getCell((short) c);
+//                            if (cell != null) {
+//                                fulltext.add(cell.toString());
+//                            }
+//                        }
+//                    }
+//                }
+//            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
+//                XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(tempFile));
+//                XSSFWorkbook test = new XSSFWorkbook();
+//                XSSFSheet sheet = wb.getSheetAt(0);
+//                XSSFRow row;
+//                XSSFCell cell;
+//                Iterator rows = sheet.rowIterator();
+//                while (rows.hasNext()) {
+//                    row = (XSSFRow) rows.next();
+//                    Iterator cells = row.cellIterator();
+//                    while (cells.hasNext()) {
+//                        cell = (XSSFCell) cells.next();
+//                        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+//                            fulltext.add(cell.getStringCellValue());
+//                        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+////                                    fulltext.add( cell.getNumericCellValue());
+//                        }
+//                    }
+//                }
+//            } else if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
+//                PDDocument pdDoc = PDDocument.load(new FileInputStream(tempFile));
+//                PDFTextStripper pdfStripper = new PDFTextStripper();
+//                String parsedText = pdfStripper.getText(pdDoc);
+//                fulltext.add(parsedText);
+//                pdDoc.close();
 //            }
+//            
+//            if (searchId == null) {
+//                DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
+//                temp.setFileAttachName(attachName);
+//                temp.setFullText(fulltext);
+//                result = dmsSearchService.addData(temp);
+//                document.setDmsSearchId(result.getDmsSearchId());
+//                document = dmsDocumentService.update(document);
+//            } else {
+//                DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
+//                temp.setFileAttachName(attachName);
+//                temp.setFullText(fulltext);
+//                result = dmsSearchService.updateData(searchId, temp);
+//            }
+//            //
+//            status = Response.Status.CREATED;
+//            responseData.put("data", true);
+//            responseData.put("success", true);
+//            responseData.put("message", "FileAttach created successfully.");
+//        } catch (IOException ex) {
+//            LOG.error("Exception = " + ex.getMessage());
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
 
-                if (searchId == null) {
-                    DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
-                    temp.setFileAttachName(attachName);
-                    temp.setFullText(fulltext);
-                    result = dmsSearchService.addData(temp);
-                    document.setDmsSearchId(result.getDmsSearchId());
-                    document = dmsDocumentService.update(document);
-                } else {
-                    DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
-                    temp.setFileAttachName(attachName);
-                    temp.setFullText(fulltext);
-                    result = dmsSearchService.updateData(searchId, temp);
-                }
-                
-            }
-            status = Response.Status.CREATED;
-            responseData.put("success", true);
-            responseData.put("message", "FileAttach created successfully.");
-        } catch (IOException ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
+//ES    
+//    @ApiOperation(
+//            value = "Method for create FileAttach from ActiveX",
+//            notes = "สร้างข้อมูลเอกสารแนบจาก ActiveX",
+//            response = FileAttachModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 201, message = "FileAttach created from ActiveX successfully."),
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    @POST
+//    @Path(value = "/activex")
+//    public Response createActiveX(
+//            //            @BeanParam VersionModel versionModel,
+//            //            @FormDataParam("linkType") String linkType,
+//            //            @FormDataParam("linkId") int linkId,
+//            //            @FormDataParam("referenceId") int referenceId,
+//            //            @FormDataParam("secrets") int secrets,
+//            FormDataMultiPart formData,
+//            //             @BeanParam VersionModel versionModel,
+//            //            @FormDataParam("file") InputStream uploadInputStream,
+//            //            @FormDataParam("file") FormDataContentDisposition fileDetail,
+//
+//            @QueryParam("version") int version,
+//            @QueryParam("linkType") String linkType,
+//            @QueryParam("linkId") int linkId,
+//            @QueryParam("referenceId") int referenceId,
+//            @QueryParam("secrets") int secrets,
+//            @QueryParam("attachNameInput") String attachNameInput
+//    ) {
+//        LOG.debug("createActiveX...");
+//        Gson gs = new GsonBuilder()
+//                .setVersion(version)
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+//        responseData.put("success", false);
+//        responseData.put("data", null);
+//        try {
+//            String str = new String(attachNameInput.getBytes(), StandardCharsets.UTF_8);
+//            String fileName = new String(attachNameInput.getBytes("iso-8859-1"), "UTF-8");
+//            fileName = attachNameInput;
+//            
+//            InputStream uploadInputStream = formData.getBodyParts().get(0).getEntityAs(InputStream.class);
+//            ParamService paramService = new ParamService();
+//            FileAttach fileAttach = new FileAttach();
+//            fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+//            fileAttach.setFileAttachName(fileName);
+//            fileAttach.setFileAttachType(fileName.substring(fileName.lastIndexOf(".")).toUpperCase());
+//            fileAttach.setLinkType(linkType);
+//            fileAttach.setLinkId(linkId);
+//            fileAttach.setReferenceId(referenceId);
+//            fileAttach.setSecrets(secrets);
+//            
+//            FileAttachService fileAttachService = new FileAttachService();
+//            fileAttach = fileAttachService.create(fileAttach);
+//            if (fileAttach != null) {
+//                String pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+//                String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
+//                LOG.debug("pathDocumentTemp = " + pathDocumentTemp);
+//                LOG.debug("pathDocumentHttp = " + pathDocumentHttp);
+//                String fileSave = pathDocumentTemp + fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//                LOG.debug("fileSave = " + fileSave);
+//                fileAttachService.saveFile(uploadInputStream, fileSave);
+//                fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
+//                File file2 = new File(fileSave);
+//                fileAttach.setFileAttachSize(file2.length());
+//                fileAttach = fileAttachService.update(fileAttach);
+//                
+//                FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
+//                String url2 = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//                String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url2);
+//                String urlNoName = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExtNoName(fileAttach.getId());
+//                newFileAttachModel.setUrl(url2);
+//                newFileAttachModel.setThumbnailUrl(thumbnailUrl);
+//                newFileAttachModel.setUrlNoName(urlNoName);
+//                responseData.put("data", newFileAttachModel);
+//                
+//                DmsSearchModel result;
+//                int id = linkId;
+//                DmsSearchService dmsSearchService = new DmsSearchService();
+////            ParamService paramService = new ParamService();
+//                DmsDocumentService dmsDocumentService = new DmsDocumentService();
+//                DmsDocument document = dmsDocumentService.getById(id);
+//                String searchId = document.getDmsSearchId();
+////            FileAttachService fileAttachService = new FileAttachService();
+////            List<FileAttach> listFileAttach = fileAttachService.listAllByLinkTypeLinkId("dms", id, "createdDate", "asc");
+//                List<String> attachName = new ArrayList<String>();
+//                List<String> fulltext = new ArrayList<String>();
+//                if (searchId != null) {
+//                    DmsSearchModel resultTemp = dmsSearchService.getData(searchId);
+//                    attachName = resultTemp.getFileAttachName();
+//                    fulltext = resultTemp.getFullText();
+//                }
+////            
+//                String url = "";
+//                String pathDocumentHttp2 = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+//
+////            for (FileAttach fileAttach2 : listFileAttach) {
+//                url = pathDocumentHttp2 + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//                attachName.add(fileAttach.getFileAttachName());
+//                if (fileAttach.getFileAttachType().equalsIgnoreCase(".TXT")) {
+////                    url = pathDocumentHttp + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+//
+//                    File file = new File(url);
+//                    BufferedReader br = new BufferedReader(new FileReader(file));
+//                    String sCurrentLine;
+//                    
+//                    while ((sCurrentLine = br.readLine()) != null) {
+//                        fulltext.add(sCurrentLine);
+//                    }
+//                }
+//                if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOCX")) {
+//                    InputStream in = new FileInputStream(url);
+//                    XWPFDocument doc = new XWPFDocument(in);
+//                    XWPFWordExtractor ex = new XWPFWordExtractor(doc);
+//                    String text = ex.getText();
+//                    fulltext.add(text);
+//                }
+//                if (fileAttach.getFileAttachType().equalsIgnoreCase(".DOC")) {
+//                    File file = new File(url);
+//                    NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
+//                    WordExtractor extractor = new WordExtractor(fs.getRoot());
+//                    
+//                    for (String rawText : extractor.getParagraphText()) {
+//                        String text = extractor.stripFields(rawText);
+//                        fulltext.add(text);
+//                    }
+//                    
+//                }
+//                if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLS")) {
+//                    File file = new File(url);
+//                    POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+//                    HSSFWorkbook wb = new HSSFWorkbook(fs);
+//                    HSSFSheet sheet = wb.getSheetAt(0);
+//                    HSSFRow row;
+//                    HSSFCell cell;
+//                    int rows; // No of rows
+//                    rows = sheet.getPhysicalNumberOfRows();
+//                    
+//                    int cols = 0; // No of columns
+//                    int tmp = 0;
+//                    
+//                    for (int i = 0; i < 10 || i < rows; i++) {
+//                        row = sheet.getRow(i);
+//                        if (row != null) {
+//                            tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+//                            if (tmp > cols) {
+//                                cols = tmp;
+//                            }
+//                        }
+//                    }
+//                    for (int r = 0; r < rows; r++) {
+//                        row = sheet.getRow(r);
+//                        if (row != null) {
+//                            for (int c = 0; c < cols; c++) {
+//                                cell = row.getCell((short) c);
+//                                if (cell != null) {
+//                                    // Your code here
+//                                    fulltext.add(cell.toString());
+//                                }
+//                            }
+//                        }
+//                    }
+//                    
+//                }
+//                if (fileAttach.getFileAttachType().equalsIgnoreCase(".XLSX")) {
+//                    File file = new File(url);
+////                    FileInputStream fis = new FileInputStream(file);
+//
+//                    InputStream ExcelFileToRead = new FileInputStream(url);
+//                    XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+//                    
+//                    XSSFWorkbook test = new XSSFWorkbook();
+//                    
+//                    XSSFSheet sheet = wb.getSheetAt(0);
+//                    XSSFRow row;
+//                    XSSFCell cell;
+//                    
+//                    Iterator rows = sheet.rowIterator();
+//                    
+//                    while (rows.hasNext()) {
+//                        row = (XSSFRow) rows.next();
+//                        Iterator cells = row.cellIterator();
+//                        while (cells.hasNext()) {
+//                            cell = (XSSFCell) cells.next();
+//                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+//                                fulltext.add(cell.getStringCellValue());
+//                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+//                            }
+//                            
+//                        }
+//                        
+//                    }
+//                    
+//                }
+////            }
+//
+//                if (searchId == null) {
+//                    DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
+//                    temp.setFileAttachName(attachName);
+//                    temp.setFullText(fulltext);
+//                    result = dmsSearchService.addData(temp);
+//                    document.setDmsSearchId(result.getDmsSearchId());
+//                    document = dmsDocumentService.update(document);
+//                } else {
+//                    DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
+//                    temp.setFileAttachName(attachName);
+//                    temp.setFullText(fulltext);
+//                    result = dmsSearchService.updateData(searchId, temp);
+//                }
+//                
+//            }
+//            status = Response.Status.CREATED;
+//            responseData.put("success", true);
+//            responseData.put("message", "FileAttach created successfully.");
+//        } catch (IOException ex) {
+//            LOG.error("Exception = " + ex.getMessage());
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
     
     @ApiOperation(
             value = "Method for create FileAttach from Base64String",
@@ -1919,65 +1921,65 @@ public class FileAttachResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-
-    //oat-add
-    @ApiOperation(
-            value = "Method for update FileAttach.",
-            notes = "แก้ไขเอกสารแนบ",
-            response = FileAttachModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
-        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @GET
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/updateESFolderId/{contentId}")
-    public Response update_myWorkESFolderId(
-            @BeanParam VersionModel versionModel,
-            @ApiParam(name = "contentId", value = "รหัสหนังสือ", required = true)
-            @PathParam("contentId") int contentId
-    ) {
-        LOG.info("updateESFolderId...");
-        Gson gs = new GsonBuilder()
-                .setVersion(versionModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Response.Status status = Response.Status.NOT_FOUND;
-        responseData.put("success", false);
-        responseData.put("data", null);
-        responseData.put("message", "WfContent by id not found in the database.");
-        responseData.put("errorMessage", "");
-        try {
-            WfContentService contentService = new WfContentService();
-            WfContent content = contentService.getByIdNotRemoved(contentId);
-            if (content != null) {
-                WfSearchService wfSearchService = new WfSearchService();
-                String searchId = content.getWfContentStr01();
-                if (searchId != null && !searchId.equalsIgnoreCase("")) {//null is ok -> not upload FA yet
-                    WfContentESModel searchModel = wfSearchService.getData(searchId);
-                    
-                    searchModel.setFolderId(content.getWfContentFolderId());
-                    wfSearchService.updateData(searchId, searchModel);
-                }
-                status = Response.Status.OK;
-                responseData.put("data ", true);
-                responseData.put("message", "success.");
-            }
-            responseData.put("success", true);
-        } catch (Exception ex) {
-            //ex.printStackTrace();
-            LOG.error("Exception = " + ex.getMessage());
-            status = Response.Status.INTERNAL_SERVER_ERROR;
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
+//ES
+//    //oat-add
+//    @ApiOperation(
+//            value = "Method for update FileAttach.",
+//            notes = "แก้ไขเอกสารแนบ",
+//            response = FileAttachModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+//        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @GET
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Path(value = "/updateESFolderId/{contentId}")
+//    public Response update_myWorkESFolderId(
+//            @BeanParam VersionModel versionModel,
+//            @ApiParam(name = "contentId", value = "รหัสหนังสือ", required = true)
+//            @PathParam("contentId") int contentId
+//    ) {
+//        LOG.info("updateESFolderId...");
+//        Gson gs = new GsonBuilder()
+//                .setVersion(versionModel.getVersion())
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Response.Status status = Response.Status.NOT_FOUND;
+//        responseData.put("success", false);
+//        responseData.put("data", null);
+//        responseData.put("message", "WfContent by id not found in the database.");
+//        responseData.put("errorMessage", "");
+//        try {
+//            WfContentService contentService = new WfContentService();
+//            WfContent content = contentService.getByIdNotRemoved(contentId);
+//            if (content != null) {
+//                WfSearchService wfSearchService = new WfSearchService();
+//                String searchId = content.getWfContentStr01();
+//                if (searchId != null && !searchId.equalsIgnoreCase("")) {//null is ok -> not upload FA yet
+//                    WfContentESModel searchModel = wfSearchService.getData(searchId);
+//                    
+//                    searchModel.setFolderId(content.getWfContentFolderId());
+//                    wfSearchService.updateData(searchId, searchModel);
+//                }
+//                status = Response.Status.OK;
+//                responseData.put("data ", true);
+//                responseData.put("message", "success.");
+//            }
+//            responseData.put("success", true);
+//        } catch (Exception ex) {
+//            //ex.printStackTrace();
+//            LOG.error("Exception = " + ex.getMessage());
+//            status = Response.Status.INTERNAL_SERVER_ERROR;
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
     
     @ApiOperation(
             value = "Method for update FileAttach referenceId.",

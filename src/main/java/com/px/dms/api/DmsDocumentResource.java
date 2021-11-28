@@ -19,7 +19,7 @@ import com.px.dms.model.ReportInputModel;
 import com.px.dms.model.sendEmailModel;
 import com.px.dms.service.DmsDocumentService;
 import com.px.dms.service.DmsFolderService;
-import com.px.dms.service.DmsSearchService;
+//import com.px.dms.service.DmsSearchService;
 import com.px.dms.service.WfDocumentTypeService;
 import com.px.share.entity.FileAttach;
 import com.px.share.entity.Param;
@@ -451,14 +451,17 @@ public class DmsDocumentResource {
                         }
                     }
                 }
-                DmsSearchService dmsSearchService = new DmsSearchService();
+//ES
+//                DmsSearchService dmsSearchService = new DmsSearchService();
 //                String searchId = document.getDmsSearchId();
 //                String useElastic = paramService.getByParamName("USE_ELASTICSEARCH").getParamValue();
 
                 System.out.println("--search table--");
                 //search table
                 System.out.println("--------0001");
-                String temp = dmsSearchService.changDocumntToSearchField(document);
+//ES
+//                String temp = dmsSearchService.changDocumntToSearchField(document);
+                String temp = dmsDocumentService.changDocumntToSearchField(document);
                 System.out.println("--------0002");
                 temp = temp + attachName;
                 temp = temp + fulltext;
@@ -1639,144 +1642,145 @@ public class DmsDocumentResource {
 
     }
 
-    @ApiOperation(
-            value = "Method for create Document and search data",
-            notes = "สร้างข้อมูลเอกสาร และ ข้อมูลการค้นหา ",
-            response = DmsDocumentModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "Document created successfully."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/createDoc/createSearch")
-    public Response createAndSearchData(
-            @BeanParam VersionModel versionModel,
-            DmsDocumentModel dmsDocumentModel
-    ) {
-        LOG.debug("create DmsDocument and seearch data ...");
-
-        Gson gs = new GsonBuilder()
-                .setVersion(versionModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
-        responseData.put("success", false);
-        responseData.put("data", null);
-        responseData.put("message", "Internal Server Error!");
-        responseData.put("errorMessage", "");
-        try {
-            DmsDocument document = new DmsDocument();
-//userID =1;
-            document.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
-
-            document.setDocumentTypeId(dmsDocumentModel.getDocumentTypeId());
-            document.setDmsDocumentName(dmsDocumentModel.getDocumentName());
-            document.setDmsFolderId(dmsDocumentModel.getDocumentFolderId());
-            document.setDmsDocumentPublicStatus(dmsDocumentModel.getDocumentPublicStatus());
-
-            if (dmsDocumentModel.getExpType() != "" && dmsDocumentModel.getExpType() != null) {
-                LocalDateTime nowDate = LocalDateTime.now();
-                if (dmsDocumentModel.getExpNumber() > 0) {
-                    if (dmsDocumentModel.getExpType().equalsIgnoreCase("Y")) {
-                        nowDate.plusYears(dmsDocumentModel.getExpNumber());
-                        document.setDmsDocumentExpireDate(nowDate);
-                    }
-                    if (dmsDocumentModel.getExpType().equalsIgnoreCase("M")) {
-                        nowDate.plusMonths(dmsDocumentModel.getExpNumber());
-                        document.setDmsDocumentExpireDate(nowDate);
-                    }
-                    if (dmsDocumentModel.getExpType().equalsIgnoreCase("D")) {
-                        nowDate.plusDays(dmsDocumentModel.getExpNumber());
-                        document.setDmsDocumentExpireDate(nowDate);
-                    }
-
-                }
-            }
-
-            if (dmsDocumentModel.getDocumentPublicDate() != null) {
-                document.setDmsDocumentPublicDate(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentPublicDate()));
-            }
-
-            if (dmsDocumentModel.getDocumentExpireDate() != null) {
-                document.setDmsDocumentExpireDate(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentExpireDate()));
-            }
-
-            if (dmsDocumentModel.getDocumentDate01() != null) {
-                document.setDmsDocumentDatetime01(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate01()));
-            }
-            if (dmsDocumentModel.getDocumentDate02() != null) {
-                document.setDmsDocumentDatetime02(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate02()));
-            }
-            if (dmsDocumentModel.getDocumentDate03() != null) {
-                document.setDmsDocumentDatetime03(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate03()));
-            }
-            if (dmsDocumentModel.getDocumentDate04() != null) {
-                document.setDmsDocumentDatetime04(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate04()));
-            }
-
-            document.setDmsDocumentFloat01(dmsDocumentModel.getDocumentFloat01());
-            document.setDmsDocumentFloat02(dmsDocumentModel.getDocumentFloat02());
-
-            document.setDmsDocumentVarchar01(dmsDocumentModel.getDocumentVarchar01());
-            document.setDmsDocumentVarchar02(dmsDocumentModel.getDocumentVarchar02());
-            document.setDmsDocumentVarchar03(dmsDocumentModel.getDocumentVarchar03());
-            document.setDmsDocumentVarchar04(dmsDocumentModel.getDocumentVarchar04());
-            document.setDmsDocumentVarchar05(dmsDocumentModel.getDocumentVarchar05());
-            document.setDmsDocumentVarchar06(dmsDocumentModel.getDocumentVarchar06());
-            document.setDmsDocumentVarchar07(dmsDocumentModel.getDocumentVarchar07());
-            document.setDmsDocumentVarchar08(dmsDocumentModel.getDocumentVarchar08());
-            document.setDmsDocumentVarchar09(dmsDocumentModel.getDocumentVarchar09());
-            document.setDmsDocumentVarchar10(dmsDocumentModel.getDocumentVarchar10());
-
-            document.setDmsDocumentText01(dmsDocumentModel.getDocumentText01());
-            document.setDmsDocumentText02(dmsDocumentModel.getDocumentText02());
-            document.setDmsDocumentText03(dmsDocumentModel.getDocumentText03());
-            document.setDmsDocumentText04(dmsDocumentModel.getDocumentText04());
-            document.setDmsDocumentText05(dmsDocumentModel.getDocumentText05());
-
-            document.setDmsDocumentInt01(dmsDocumentModel.getDocumentInt01());
-            document.setDmsDocumentInt02(dmsDocumentModel.getDocumentInt02());
-            document.setDmsDocumentInt03(dmsDocumentModel.getDocumentInt03());
-            document.setDmsDocumentInt04(dmsDocumentModel.getDocumentInt04());
-            document.setDmsDocumentIntComma(dmsDocumentModel.getDmsDocumentIntComma());
-
-//            document.setDmsDocumentIntComma(dmsDocumentPostModel.getDmsDocumentIntComma());
-            document.setDmsDocumentSec(dmsDocumentModel.getDmsDocumentSec());
-
-            DmsDocumentService dmsDocumentService = new DmsDocumentService();
-
-            document = dmsDocumentService.create(document);
-
-            //log 
-            System.out.println("aaaaa222");
-            dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
-            System.out.println("aaaa3333");
-
-            DmsSearchService dmsSearchService = new DmsSearchService();
-            DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
-            temp.setType("DOC");
-            DmsSearchModel result = dmsSearchService.addData(temp);
-            document.setDmsSearchId(result.getDmsSearchId());
-            document = dmsDocumentService.update(document);
-
-            LOG.debug(document);
-            LOG.debug(dmsDocumentService.tranformToModel(document));
-            responseData.put("data", dmsDocumentService.tranformToModel(document));
-            status = Response.Status.CREATED;
-            responseData.put("success", true);
-            responseData.put("message", "Document created successfully.");
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
+//ES
+//    @ApiOperation(
+//            value = "Method for create Document and search data",
+//            notes = "สร้างข้อมูลเอกสาร และ ข้อมูลการค้นหา ",
+//            response = DmsDocumentModel.class
+//    )
+//    @ApiResponses({
+//        @ApiResponse(code = 201, message = "Document created successfully."),
+//        @ApiResponse(code = 500, message = "Internal Server Error!")
+//    })
+//    @POST
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Path(value = "/createDoc/createSearch")
+//    public Response createAndSearchData(
+//            @BeanParam VersionModel versionModel,
+//            DmsDocumentModel dmsDocumentModel
+//    ) {
+//        LOG.debug("create DmsDocument and seearch data ...");
+//
+//        Gson gs = new GsonBuilder()
+//                .setVersion(versionModel.getVersion())
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .disableHtmlEscaping()
+//                .setPrettyPrinting()
+//                .serializeNulls()
+//                .create();
+//        HashMap responseData = new HashMap();
+//        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+//        responseData.put("success", false);
+//        responseData.put("data", null);
+//        responseData.put("message", "Internal Server Error!");
+//        responseData.put("errorMessage", "");
+//        try {
+//            DmsDocument document = new DmsDocument();
+////userID =1;
+//            document.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+//
+//            document.setDocumentTypeId(dmsDocumentModel.getDocumentTypeId());
+//            document.setDmsDocumentName(dmsDocumentModel.getDocumentName());
+//            document.setDmsFolderId(dmsDocumentModel.getDocumentFolderId());
+//            document.setDmsDocumentPublicStatus(dmsDocumentModel.getDocumentPublicStatus());
+//
+//            if (dmsDocumentModel.getExpType() != "" && dmsDocumentModel.getExpType() != null) {
+//                LocalDateTime nowDate = LocalDateTime.now();
+//                if (dmsDocumentModel.getExpNumber() > 0) {
+//                    if (dmsDocumentModel.getExpType().equalsIgnoreCase("Y")) {
+//                        nowDate.plusYears(dmsDocumentModel.getExpNumber());
+//                        document.setDmsDocumentExpireDate(nowDate);
+//                    }
+//                    if (dmsDocumentModel.getExpType().equalsIgnoreCase("M")) {
+//                        nowDate.plusMonths(dmsDocumentModel.getExpNumber());
+//                        document.setDmsDocumentExpireDate(nowDate);
+//                    }
+//                    if (dmsDocumentModel.getExpType().equalsIgnoreCase("D")) {
+//                        nowDate.plusDays(dmsDocumentModel.getExpNumber());
+//                        document.setDmsDocumentExpireDate(nowDate);
+//                    }
+//
+//                }
+//            }
+//
+//            if (dmsDocumentModel.getDocumentPublicDate() != null) {
+//                document.setDmsDocumentPublicDate(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentPublicDate()));
+//            }
+//
+//            if (dmsDocumentModel.getDocumentExpireDate() != null) {
+//                document.setDmsDocumentExpireDate(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentExpireDate()));
+//            }
+//
+//            if (dmsDocumentModel.getDocumentDate01() != null) {
+//                document.setDmsDocumentDatetime01(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate01()));
+//            }
+//            if (dmsDocumentModel.getDocumentDate02() != null) {
+//                document.setDmsDocumentDatetime02(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate02()));
+//            }
+//            if (dmsDocumentModel.getDocumentDate03() != null) {
+//                document.setDmsDocumentDatetime03(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate03()));
+//            }
+//            if (dmsDocumentModel.getDocumentDate04() != null) {
+//                document.setDmsDocumentDatetime04(dateThaiToLocalDateTime(dmsDocumentModel.getDocumentDate04()));
+//            }
+//
+//            document.setDmsDocumentFloat01(dmsDocumentModel.getDocumentFloat01());
+//            document.setDmsDocumentFloat02(dmsDocumentModel.getDocumentFloat02());
+//
+//            document.setDmsDocumentVarchar01(dmsDocumentModel.getDocumentVarchar01());
+//            document.setDmsDocumentVarchar02(dmsDocumentModel.getDocumentVarchar02());
+//            document.setDmsDocumentVarchar03(dmsDocumentModel.getDocumentVarchar03());
+//            document.setDmsDocumentVarchar04(dmsDocumentModel.getDocumentVarchar04());
+//            document.setDmsDocumentVarchar05(dmsDocumentModel.getDocumentVarchar05());
+//            document.setDmsDocumentVarchar06(dmsDocumentModel.getDocumentVarchar06());
+//            document.setDmsDocumentVarchar07(dmsDocumentModel.getDocumentVarchar07());
+//            document.setDmsDocumentVarchar08(dmsDocumentModel.getDocumentVarchar08());
+//            document.setDmsDocumentVarchar09(dmsDocumentModel.getDocumentVarchar09());
+//            document.setDmsDocumentVarchar10(dmsDocumentModel.getDocumentVarchar10());
+//
+//            document.setDmsDocumentText01(dmsDocumentModel.getDocumentText01());
+//            document.setDmsDocumentText02(dmsDocumentModel.getDocumentText02());
+//            document.setDmsDocumentText03(dmsDocumentModel.getDocumentText03());
+//            document.setDmsDocumentText04(dmsDocumentModel.getDocumentText04());
+//            document.setDmsDocumentText05(dmsDocumentModel.getDocumentText05());
+//
+//            document.setDmsDocumentInt01(dmsDocumentModel.getDocumentInt01());
+//            document.setDmsDocumentInt02(dmsDocumentModel.getDocumentInt02());
+//            document.setDmsDocumentInt03(dmsDocumentModel.getDocumentInt03());
+//            document.setDmsDocumentInt04(dmsDocumentModel.getDocumentInt04());
+//            document.setDmsDocumentIntComma(dmsDocumentModel.getDmsDocumentIntComma());
+//
+////            document.setDmsDocumentIntComma(dmsDocumentPostModel.getDmsDocumentIntComma());
+//            document.setDmsDocumentSec(dmsDocumentModel.getDmsDocumentSec());
+//
+//            DmsDocumentService dmsDocumentService = new DmsDocumentService();
+//
+//            document = dmsDocumentService.create(document);
+//
+//            //log 
+//            System.out.println("aaaaa222");
+//            dmsDocumentService.saveLogForCreate(document, httpHeaders.getHeaderString("clientIp"));
+//            System.out.println("aaaa3333");
+//
+//            DmsSearchService dmsSearchService = new DmsSearchService();
+//            DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
+//            temp.setType("DOC");
+//            DmsSearchModel result = dmsSearchService.addData(temp);
+//            document.setDmsSearchId(result.getDmsSearchId());
+//            document = dmsDocumentService.update(document);
+//
+//            LOG.debug(document);
+//            LOG.debug(dmsDocumentService.tranformToModel(document));
+//            responseData.put("data", dmsDocumentService.tranformToModel(document));
+//            status = Response.Status.CREATED;
+//            responseData.put("success", true);
+//            responseData.put("message", "Document created successfully.");
+//        } catch (Exception ex) {
+//            LOG.error("Exception = " + ex.getMessage());
+//            responseData.put("errorMessage", ex.getMessage());
+//        }
+//        return Response.status(status).entity(gs.toJson(responseData)).build();
+//    }
 
     @ApiOperation(
             value = "Method for update dmsDocument and search data.",
@@ -1881,10 +1885,11 @@ public class DmsDocumentResource {
 
                 dmsDocumentService.saveLogForUpdate(document, documentNew, httpHeaders.getHeaderString("clientIp"));
 
-                DmsSearchService dmsSearchService = new DmsSearchService();
-                DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
-                String searchId = documentNew.getDmsSearchId();
-                temp.setType("DOC");
+//ES
+//                DmsSearchService dmsSearchService = new DmsSearchService();
+//                DmsSearchModel temp = dmsSearchService.changDocumntToSearch(document);
+//                String searchId = documentNew.getDmsSearchId();
+//                temp.setType("DOC");
 //                DmsSearchModel result = dmsSearchService.updateData(searchId, temp);
 
 //                dmsDocumentService.saveLogForUpdate(document, documentNew, dmsDocumentPostModel.getClientIp());
@@ -2210,14 +2215,17 @@ public class DmsDocumentResource {
                         }
                     }
                 }
-                DmsSearchService dmsSearchService = new DmsSearchService();
+//ES
+//                DmsSearchService dmsSearchService = new DmsSearchService();
 //                String searchId = document.getDmsSearchId();
 //                String useElastic = paramService.getByParamName("USE_ELASTICSEARCH").getParamValue();
 
                 System.out.println("--search table--");
                 //search table
                 System.out.println("--------0001");
-                String temp = dmsSearchService.changDocumntToSearchField(document);
+//ES                
+//                String temp = dmsSearchService.changDocumntToSearchField(document);
+                String temp = dmsDocumentService.changDocumntToSearchField(document);
                 System.out.println("--------0002");
                 temp = temp + attachName;
                 temp = temp + fulltext;
@@ -2287,7 +2295,8 @@ public class DmsDocumentResource {
             DmsDocumentService dmsDocumentService = new DmsDocumentService();
 //            DmsDocument dmsDocument = dmsDocumentService.remove(id, Integer.parseInt(httpHeaders.getHeaderString("userID")));
 //            dmsDocumentService.saveLogForMove(dmsDocument, httpHeaders.getHeaderString("clientIp"), Integer.parseInt(httpHeaders.getHeaderString("userID"));
-            DmsSearchService dmsSearchService = new DmsSearchService();
+//ES
+//            DmsSearchService dmsSearchService = new DmsSearchService();
             String[] parts = id.split(",");
             if (parts.length == 0) {
                 parts[0] = id;

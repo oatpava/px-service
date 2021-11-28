@@ -13,13 +13,11 @@ import com.px.admin.entity.UserProfile;
 import com.px.admin.service.StructureService;
 import com.px.admin.service.SubmoduleService;
 import com.px.admin.service.UserProfileService;
-import com.px.authority.entity.Auth;
 import com.px.authority.entity.SubmoduleAuth;
 import com.px.authority.entity.SubmoduleAuthTemplate;
 import com.px.authority.entity.SubmoduleUserAuth;
 import com.px.authority.model.AuthEnableDisableIdListModel;
 import com.px.authority.model.SubmoduleAuthTemplateModel;
-import com.px.authority.model.SubmoduleUserAuthModel;
 import com.px.authority.service.SubmoduleAuthService;
 import com.px.authority.service.SubmoduleAuthTemplateService;
 import com.px.authority.service.SubmoduleUserAuthService;
@@ -34,7 +32,7 @@ import com.px.dms.model.DmsFolderModel;
 import com.px.dms.model.DmsSearchModel;
 import com.px.dms.service.DmsDocumentService;
 import com.px.dms.service.DmsFolderService;
-import com.px.dms.service.DmsSearchService;
+//import com.px.dms.service.DmsSearchService;
 import com.px.dms.service.DocumentTypeDetailService;
 import com.px.dms.service.DocumentTypeService;
 import com.px.dms.service.WfDocumentTypeService;
@@ -349,16 +347,18 @@ public class DmsFolderResource {
             DmsFolder folder = dmsFolderService.remove(id, userID);
             System.out.println("userID = " + userID);
             System.out.println("folder.getRemovedBy()  = " + folder.getRemovedBy());
-            DmsSearchService dmsSearchService = new DmsSearchService();
-            DmsSearchModel temp = dmsSearchService.changFolderToSearch(folder);
+//            DmsSearchService dmsSearchService = new DmsSearchService();
+//            DmsSearchModel temp = dmsSearchService.changFolderToSearch(folder);
+            DmsSearchModel temp = dmsFolderService.changFolderToSearch(folder);
             temp.setRemovedBy(userID);
 
             String searchId = folder.getDmsSearchId();
             System.out.println("searchId = " + searchId);
             System.out.println("temp remove 2 = " + temp.getRemovedBy());
-            if (searchId != null) {
-                DmsSearchModel result = dmsSearchService.updateData(searchId, temp);
-            }
+//ES            
+//            if (searchId != null) {
+//                DmsSearchModel result = dmsSearchService.updateData(searchId, temp);
+//            }
             if (folder != null) {
 
                 //add log
