@@ -71,24 +71,25 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         checkNotNull(wfContent, "wfContent entity must not be null");
         checkNotNull(wfContent.getCreatedBy(), "create by must not be null");
 
-        WfContent result = null;
-        int count = 0;
-        while (count < 5) {
-            if (wfContent.getWfContentContentNumber() != 0 && wfContent.getWfContentContentPoint() == 0) {
+        WfReserveContentNo reserve = new WfReserveContentNoService().getContentNoByFolderId(wfContent.getWfContentFolderId(), wfContent.getWfContentContentNo());
+        if (reserve == null && wfContent.getWfContentContentNumber() != 0 && wfContent.getWfContentContentPoint() == 0) {
+            WfContent result = null;
+            int count = 0;
+            while (count < 5) {
                 wfContent = updateContentNo(wfContent);
                 count++;
-            } else {//mwp, point do only 1 time
-                count = 5;
+                try {
+                    Thread.sleep((count * 1000) - 1000);
+                    result = WfContentDaoImpl.create(wfContent);
+                    break;
+                } catch (Exception ex) {
+                    log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo() != null ? wfContent.getWfContentContentNo() : "-");
+                }
             }
-            try {
-                Thread.sleep((count * 1000) - 1000);
-                result = WfContentDaoImpl.create(wfContent);
-                break;
-            } catch (Exception ex) {
-                log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo() != null ? wfContent.getWfContentContentNo() : "-");
-            }
+            return result;
+        } else {//reserve, mwp, point
+            return WfContentDaoImpl.create(wfContent);
         }
-        return result;
     }
 
     @Override
@@ -1503,7 +1504,10 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
     }
 
     private WfContent updateContentNo(WfContent wfContent) {
-        final int max = getMaxContentNo(wfContent.getWfContentContentPre(), wfContent.getWfContentFolderId(), wfContent.getWfContentContentYear());
+        final int maxNumber = getMaxContentNo(wfContent.getWfContentContentPre(), wfContent.getWfContentFolderId(), wfContent.getWfContentContentYear());
+        final int maxReserve = new WfReserveContentNoService().getMaxContentNumber(wfContent.getWfContentFolderId(), wfContent.getWfContentContentYear());
+        final int max = (maxNumber < maxReserve) ? maxReserve : maxNumber;
+
         if (max != wfContent.getWfContentContentNumber()) {
             final String contentNo = wfContent.getWfContentContentNo();
             final String pre = wfContent.getWfContentContentPre() == null ? "" : wfContent.getWfContentContentPre();
