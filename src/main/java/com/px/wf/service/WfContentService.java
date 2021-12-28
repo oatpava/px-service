@@ -70,18 +70,22 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
     public WfContent create(WfContent wfContent) {
         checkNotNull(wfContent, "wfContent entity must not be null");
         checkNotNull(wfContent.getCreatedBy(), "create by must not be null");
-        
+
         WfContent result = null;
         int count = 0;
         while (count < 5) {
-            wfContent = updateContentNo(wfContent);
-            count++;
+            if (wfContent.getWfContentContentNumber() != 0 && wfContent.getWfContentContentPoint() == 0) {
+                wfContent = updateContentNo(wfContent);
+                count++;
+            } else {//mwp, point do only 1 time
+                count = 5;
+            }
             try {
                 Thread.sleep((count * 1000) - 1000);
                 result = WfContentDaoImpl.create(wfContent);
                 break;
             } catch (Exception ex) {
-                log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo());
+                log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo() != null ? wfContent.getWfContentContentNo() : "-");
             }
         }
         return result;
@@ -1498,7 +1502,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         return WfContentDaoImpl.listByDocumentId(documentId);
     }
 
-    private WfContent updateContentNo(WfContent wfContent) {//* still not format for contentPoint
+    private WfContent updateContentNo(WfContent wfContent) {
         final int max = getMaxContentNo(wfContent.getWfContentContentPre(), wfContent.getWfContentFolderId(), wfContent.getWfContentContentYear());
         if (max != wfContent.getWfContentContentNumber()) {
             final String contentNo = wfContent.getWfContentContentNo();
