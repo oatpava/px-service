@@ -59,8 +59,7 @@ public class WfReserveContentNoResource {
     //response = WfReserveContentNoModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "WfReserveContentNo created successfully.")
-        ,
+        @ApiResponse(code = 201, message = "WfReserveContentNo created successfully."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -102,13 +101,13 @@ public class WfReserveContentNoResource {
                 if (lastContentNumber < reserveContentNumber) {
                     lastContentNumber = reserveContentNumber;
                 }
-                
+
                 if (style == 1) {
                     lastContentNumber += num;
                     num = 1;
                 }
-                
-                for (int i = 0; i < num; i++) {
+
+                for (int i = num - 1; i >= 0; i--) {
                     int tmpContentNumber = lastContentNumber + i;
                     String tmpContentNo = wfContentService.convertContentNo(reserveModel.getReserveContentNoContentYear(), tmpContentNumber, 0,
                             wfFolder.getWfFolderPreContentNo(), contentFormat);
@@ -150,10 +149,8 @@ public class WfReserveContentNoResource {
             notes = "ยกเลิกการจองเลข/ใช้เลขจอง"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfReserveContentNo updeted by id success.")
-        ,
-        @ApiResponse(code = 404, message = "WfReserveContentNo by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfReserveContentNo updeted by id success."),
+        @ApiResponse(code = 404, message = "WfReserveContentNo by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
@@ -206,10 +203,8 @@ public class WfReserveContentNoResource {
             response = WfReserveContentNoModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfReserveContentNo list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfReserveContentNo list success."),
+        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -343,10 +338,8 @@ public class WfReserveContentNoResource {
             response = WfReserveContentNoModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfReserveContentNo list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfReserveContentNo list success."),
+        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -402,10 +395,8 @@ public class WfReserveContentNoResource {
             response = WfReserveContentNoModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfReserveContentNo list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfReserveContentNo list success."),
+        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
@@ -458,10 +449,8 @@ public class WfReserveContentNoResource {
             notes = "ลบข้อมูลเลขจอง"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Outbox delete by id success.")
-        ,
-        @ApiResponse(code = 404, message = "Outbox by id not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "Outbox delete by id success."),
+        @ApiResponse(code = 404, message = "Outbox by id not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @DELETE
@@ -500,7 +489,7 @@ public class WfReserveContentNoResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "Method for get list of WfReserveContentNo.",
             notes = "รายการเลขจอง",
@@ -508,10 +497,8 @@ public class WfReserveContentNoResource {
             response = WfReserveContentNoModel.class
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "WfReserveContentNo list success.")
-        ,
-        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database.")
-        ,
+        @ApiResponse(code = 200, message = "WfReserveContentNo list success."),
+        @ApiResponse(code = 404, message = "WfReserveContentNo list not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @GET
