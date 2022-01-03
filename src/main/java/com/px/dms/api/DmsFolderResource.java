@@ -2185,35 +2185,39 @@ public class DmsFolderResource {
             MenuTypeService menuTypeService = new MenuTypeService();
             MenuService menuService = new MenuService();
             MenuType menuType = menuTypeService.getByMenuTypeCode("dms");
-//            List<Menu> menu;
+
             SubmoduleService subModuleService = new SubmoduleService();
             SubmoduleUserAuthService submoduleUserAuthService = new SubmoduleUserAuthService();
             UserProfileService userProfileService = new UserProfileService();
 
             Submodule submodule = subModuleService.getBySubmoduleCode("dms");
-            List<UserProfile> listUserProfile = new ArrayList<>();
-            UserProfile userProfile = userProfileService.getById(userID);
-            listUserProfile.add(userProfile);
+            List<Menu> menu = new ArrayList<>();
+            
+            if (userID == 1) {
+                menu = menuService.listByMenuType(menuType, "orderNo", "asc");
+            } else {
+              List<UserProfile> listUserProfile = new ArrayList<>();
+              UserProfile userProfile = userProfileService.getById(userID);
+              listUserProfile.add(userProfile);
 
-            BaseTreeEntity treeEntity = new BaseTreeEntity() {
-            };
+              BaseTreeEntity treeEntity = new BaseTreeEntity() {
+              };
 
-            DmsFolder dmsFolder = dmsFolderService.getById(folderId);
-            treeEntity = dmsFolder;
+              DmsFolder dmsFolder = dmsFolderService.getById(folderId);
+              treeEntity = dmsFolder;
 
-            List<SubmoduleUserAuth> listSubModuleUserAuth = submoduleUserAuthService.getAuthorityFromTreeByUserProfile(submodule, listUserProfile, treeEntity);
-//            System.out.println("List<SubmoduleUserAuth>= " + listSubModuleUserAuth.size());
-            if (!listSubModuleUserAuth.isEmpty()) {
-                status = Response.Status.OK;
-                List<Menu> menu = menuService.listByMenuTypeSubmoduleUserAuth(menuType, listSubModuleUserAuth, "orderNo", "asc");
-//                System.out.println("List<Menu> ="+menu.size());
-                responseData.put("data", menuService.tranformToModelTree(menu, 0));
-                responseData.put("message", "");
-            }
+              List<SubmoduleUserAuth> listSubModuleUserAuth = submoduleUserAuthService.getAuthorityFromTreeByUserProfile(submodule, listUserProfile, treeEntity);
+              if (!listSubModuleUserAuth.isEmpty()) {
+                  menu = menuService.listByMenuTypeSubmoduleUserAuth(menuType, listSubModuleUserAuth, "orderNo", "asc");
+              }  
+            }           
 
             Boolean haveDocInFolder = dmsDocumentService.checkDocmentInFolder(folderId);
             responseData.put("haveDocInFolder", haveDocInFolder);
-
+            
+            status = Response.Status.OK;
+            responseData.put("data", menuService.tranformToModelTree(menu, 0));
+            responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
             log.error("Exception = " + ex.getMessage());
