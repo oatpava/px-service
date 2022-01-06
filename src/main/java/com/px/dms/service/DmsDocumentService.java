@@ -1365,5 +1365,10 @@ public class DmsDocumentService implements GenericService<DmsDocument, DmsDocume
         return returnData;
 
     }
+    
+    //oat-add
+    public void delete(DmsDocument t) {
+        dmsDocumentDaoImpl.delete(t);
+    }
 
 }

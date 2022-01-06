@@ -90,17 +90,14 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.dms.api.DmsDocumentResource.class);
         resources.add(com.px.dms.api.DmsFieldResource.class);
         resources.add(com.px.dms.api.DmsFolderResource.class);
-        resources.add(com.px.dms.api.DmsSearchResource.class);
         resources.add(com.px.dms.api.DocumentTypeDetailResource.class);
         resources.add(com.px.dms.api.DocumentTypeResource.class);
-        resources.add(com.px.dms.api.ElasticSearchResource.class);
         resources.add(com.px.dms.api.WfDocumentTypeResource.class);
         resources.add(com.px.dms.api.borrowResource.class);
         resources.add(com.px.documentfile.api.DocumentFileResource.class);
         resources.add(com.px.menu.api.MenuResource.class);
         resources.add(com.px.menu.api.MenuSubmoduleAuthResource.class);
         resources.add(com.px.menu.api.MenuTypeResource.class);
-        resources.add(com.px.mwp.api.ElasticSearchResource.class);
         resources.add(com.px.mwp.api.InOutAssignResource.class);
         resources.add(com.px.mwp.api.InboxResource.class);
         resources.add(com.px.mwp.api.InoutFieldResource.class);
@@ -120,7 +117,6 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.share.api.NotificationsResource.class);
         resources.add(com.px.share.api.ParamResource.class);
         resources.add(com.px.share.api.RecycleBinResource.class);
-        resources.add(com.px.share.api.SearchAllModuleResource.class);
         resources.add(com.px.share.api.TempTableResource.class);
         resources.add(com.px.share.filter.RequestFilter.class);
         resources.add(com.px.wf.api.FolderPropertyResource.class);

@@ -70,7 +70,26 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
     public WfContent create(WfContent wfContent) {
         checkNotNull(wfContent, "wfContent entity must not be null");
         checkNotNull(wfContent.getCreatedBy(), "create by must not be null");
-        return WfContentDaoImpl.create(wfContent);
+
+        WfReserveContentNo reserve = new WfReserveContentNoService().getContentNoByFolderId(wfContent.getWfContentFolderId(), wfContent.getWfContentContentNo());
+        if (reserve == null && wfContent.getWfContentContentNumber() != 0 && wfContent.getWfContentContentPoint() == 0) {
+            WfContent result = null;
+            int count = 0;
+            while (count < 5) {
+                wfContent = updateContentNo(wfContent);
+                count++;
+                try {
+                    Thread.sleep((count * 1000) - 1000);
+                    result = WfContentDaoImpl.create(wfContent);
+                    break;
+                } catch (Exception ex) {
+                    log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo() != null ? wfContent.getWfContentContentNo() : "-");
+                }
+            }
+            return result;
+        } else {//reserve, mwp, point
+            return WfContentDaoImpl.create(wfContent);
+        }
     }
 
     @Override
@@ -1462,7 +1481,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
                 }
                 if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
                     File myFile = new File(url);
-                    try (PDDocument doc = PDDocument.load(myFile)) {
+                    try ( PDDocument doc = PDDocument.load(myFile)) {
                         PDFTextStripper stripper = new PDFTextStripper();
                         String text = stripper.getText(doc);
                         fulltext.add(text);
@@ -1482,6 +1501,30 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
     public List<WfContent> listByDocumentId(int documentId) {
         checkNotNull(documentId, "documentId must not be null");
         return WfContentDaoImpl.listByDocumentId(documentId);
+    }
+
+    private WfContent updateContentNo(WfContent wfContent) {
+        final int maxNumber = getMaxContentNo(wfContent.getWfContentContentPre(), wfContent.getWfContentFolderId(), wfContent.getWfContentContentYear());
+        final int maxReserve = new WfReserveContentNoService().getMaxContentNumber(wfContent.getWfContentFolderId(), wfContent.getWfContentContentYear());
+        final int max = (maxNumber < maxReserve) ? maxReserve : maxNumber;
+
+        if (max != wfContent.getWfContentContentNumber()) {
+            final String contentNo = wfContent.getWfContentContentNo();
+            final String pre = wfContent.getWfContentContentPre() == null ? "" : wfContent.getWfContentContentPre();
+            final String num = Integer.toString(wfContent.getWfContentContentNumber());
+            final String year = Integer.toString(wfContent.getWfContentContentYear());
+
+            final String numFormat = contentNo.replace(pre, "").replace(year, "");
+            String tmp = numFormat.replace(num + "/", max + "/");
+
+            if (tmp.length() != numFormat.length()) {
+                tmp = tmp.substring(1);
+            }
+
+            wfContent.setWfContentContentNumber(max);
+            wfContent.setWfContentContentNo(pre + tmp + year);
+        }
+        return wfContent;
     }
 
 }

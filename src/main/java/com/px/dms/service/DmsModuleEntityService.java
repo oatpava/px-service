@@ -49,7 +49,8 @@ public class DmsModuleEntityService {
         createDocumentTypeDrtail();
         System.out.println(" createDocumentTypeDrtail ");
         createDmsFolder();
-        setupElasticSearch();
+//ES       
+//        setupElasticSearch();
     }
 
     public void createDocumentType() {
@@ -229,21 +230,22 @@ public class DmsModuleEntityService {
 
         }
     }
-    
-     public void setupElasticSearch(){
-        try {
-             DmsSearchService DmsSearchService= new DmsSearchService();
-        
-            if(!DmsSearchService.isIndexExist()){
-                LOG.info("searchCCIndex not found!! Auto create searchCCIndex. ");
-                long t1 = -System.currentTimeMillis();
-                boolean result = DmsSearchService.setup();
-                if(result==true){
-                    LOG.info("searchCCIndex created successfully."+(t1+System.currentTimeMillis()));
-                }
-            }
-        } catch(Exception e){
-            LOG.info("Exception:SearchCCModuleEntityService[setupElasticSearch] = "+e);
-        }
-    }
+
+//ES    
+//     public void setupElasticSearch(){
+//        try {
+//             DmsSearchService DmsSearchService= new DmsSearchService();
+//        
+//            if(!DmsSearchService.isIndexExist()){
+//                LOG.info("searchCCIndex not found!! Auto create searchCCIndex. ");
+//                long t1 = -System.currentTimeMillis();
+//                boolean result = DmsSearchService.setup();
+//                if(result==true){
+//                    LOG.info("searchCCIndex created successfully."+(t1+System.currentTimeMillis()));
+//                }
+//            }
+//        } catch(Exception e){
+//            LOG.info("Exception:SearchCCModuleEntityService[setupElasticSearch] = "+e);
+//        }
+//    }
 }
