@@ -672,14 +672,20 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
 //        System.out.println("1111");
         String folderParentKeyTemp = folderCopy.getParentKey();
 //        System.out.println("2222");
-        DmsSearchService dmsSearchService = new DmsSearchService();
+//ES
+//        DmsSearchService dmsSearchService = new DmsSearchService();
         DmsFolderService dmsFolderService = new DmsFolderService();
 //        System.out.println("33333");
-        DmsSearchModel tempDoc = dmsSearchService.changFolderToSearch(folderCopy);
+//ES
+//        DmsSearchModel tempDoc = dmsSearchService.changFolderToSearch(folderCopy);
+        DmsSearchModel tempDoc = changFolderToSearch(folderCopy);
 //        System.out.println("4444");
-        DmsSearchModel resultSearch = dmsSearchService.addDataFolder(tempDoc, folderParentKeyTemp);
+//ES
+//        DmsSearchModel resultSearch = dmsSearchService.addDataFolder(tempDoc, folderParentKeyTemp);
 //        System.out.println("55555");
-        folderCopy.setDmsSearchId(resultSearch.getDmsSearchId());
+//ES
+//        folderCopy.setDmsSearchId(resultSearch.getDmsSearchId());
+          folderCopy.setDmsSearchId(null);
 //        System.out.println("666666666");
         String fullPath = dmsFolderService.getFullPathName(folderParentKeyTemp);
 //        System.out.println("77777");
@@ -764,56 +770,57 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
                     }
                 }
 
-                DmsSearchService dmsSearchService = new DmsSearchService();
-                for (int i = 0; i < listDmsDocument.size(); i++) {
-//                    folderMove(listFolderChild.get(i).getId(), folderMove.getId(), userId);
-                    DmsDocument temp = listDmsDocument.get(i);
-                    temp.setFullPathName(listId);
-                    DmsDocumentService.update(temp);
-                    DmsSearchModel result = dmsSearchService.getData(temp.getDmsSearchId());
-
-                    if (result.getUpdatedDate() != null) {
-//                        System.out.println("aaaa");
-                        result.setUpdatedDate(localDateTimeToString2(temp.getUpdatedDate()));
-                    }
-                    if (result.getDocumentPublicStatus() != null) {
-//                        System.out.println("bbbb");
-                        result.setDocumentPublicDate(localDateTimeToString2(temp.getDmsDocumentPublicDate()));
-                    }
-                    if (result.getDocumentDate01() != null) {
-//                        System.out.println("cccc");
-                        result.setDocumentDate01(localDateTimeToString2(temp.getDmsDocumentDatetime01()));
-                    }
-                    if (result.getDocumentDate01() != null) {
-//                        System.out.println("dddd");
-                        result.setDocumentDate02(localDateTimeToString2(temp.getDmsDocumentDatetime02()));
-                    }
-                    if (result.getDocumentDate01() != null) {
-//                        System.out.println("eeee");
-                        result.setDocumentDate03(localDateTimeToString2(temp.getDmsDocumentDatetime03()));
-                    }
-                    if (result.getDocumentDate01() != null) {
-//                        System.out.println("ffff");
-                        result.setDocumentDate04(localDateTimeToString2(temp.getDmsDocumentDatetime04()));
-                    }
-//                    System.out.println("aaaaa1234");
-                    System.out.println("exp " + result.getDocumentExpireDate());
-                    if (result.getDocumentExpireDate() != null) {
-//                        System.out.println("gggg");
-                        result.setDocumentExpireDate(localDateTimeToString2(temp.getDmsDocumentExpireDate()));
-                    }
-//                    result.setParentKey(parentKey);
-                    String[] parts2 = parentKey.split("฿");
-                    List<String> temp2 = new ArrayList<String>();
-                    for (int j = 1; j < parts2.length; j++) {
-
-                        temp2.add(parts2[j]);
-
-                    }
-                    result.setParentKey(temp2);
-
-                    dmsSearchService.updateData(temp.getDmsSearchId(), result);
-                }
+                //ES
+//                DmsSearchService dmsSearchService = new DmsSearchService();
+//                for (int i = 0; i < listDmsDocument.size(); i++) {
+////                    folderMove(listFolderChild.get(i).getId(), folderMove.getId(), userId);
+//                    DmsDocument temp = listDmsDocument.get(i);
+//                    temp.setFullPathName(listId);
+//                    DmsDocumentService.update(temp);
+//                    DmsSearchModel result = dmsSearchService.getData(temp.getDmsSearchId());
+//
+//                    if (result.getUpdatedDate() != null) {
+////                        System.out.println("aaaa");
+//                        result.setUpdatedDate(localDateTimeToString2(temp.getUpdatedDate()));
+//                    }
+//                    if (result.getDocumentPublicStatus() != null) {
+////                        System.out.println("bbbb");
+//                        result.setDocumentPublicDate(localDateTimeToString2(temp.getDmsDocumentPublicDate()));
+//                    }
+//                    if (result.getDocumentDate01() != null) {
+////                        System.out.println("cccc");
+//                        result.setDocumentDate01(localDateTimeToString2(temp.getDmsDocumentDatetime01()));
+//                    }
+//                    if (result.getDocumentDate01() != null) {
+////                        System.out.println("dddd");
+//                        result.setDocumentDate02(localDateTimeToString2(temp.getDmsDocumentDatetime02()));
+//                    }
+//                    if (result.getDocumentDate01() != null) {
+////                        System.out.println("eeee");
+//                        result.setDocumentDate03(localDateTimeToString2(temp.getDmsDocumentDatetime03()));
+//                    }
+//                    if (result.getDocumentDate01() != null) {
+////                        System.out.println("ffff");
+//                        result.setDocumentDate04(localDateTimeToString2(temp.getDmsDocumentDatetime04()));
+//                    }
+////                    System.out.println("aaaaa1234");
+//                    System.out.println("exp " + result.getDocumentExpireDate());
+//                    if (result.getDocumentExpireDate() != null) {
+////                        System.out.println("gggg");
+//                        result.setDocumentExpireDate(localDateTimeToString2(temp.getDmsDocumentExpireDate()));
+//                    }
+////                    result.setParentKey(parentKey);
+//                    String[] parts2 = parentKey.split("฿");
+//                    List<String> temp2 = new ArrayList<String>();
+//                    for (int j = 1; j < parts2.length; j++) {
+//
+//                        temp2.add(parts2[j]);
+//
+//                    }
+//                    result.setParentKey(temp2);
+//
+//                    dmsSearchService.updateData(temp.getDmsSearchId(), result);
+//                }
             }
         }
         return folderMove;
@@ -888,6 +895,27 @@ public class DmsFolderService implements GenericTreeService<DmsFolder, DmsFolder
         }
 
         return result;
+    }
+    
+    //oat-add //ES
+    public DmsSearchModel changFolderToSearch(DmsFolder folder) {
+
+//        DmsDocumentService dmsDocumentService = new DmsDocumentService();
+        DmsSearchModel dmsSearchModel = new DmsSearchModel();
+        dmsSearchModel.setCreatedBy(folder.getCreatedBy());
+        dmsSearchModel.setUpdatedBy(folder.getUpdatedBy());
+        dmsSearchModel.setId(folder.getId());
+
+        dmsSearchModel.setDmsSearchId(folder.getDmsSearchId());
+
+        dmsSearchModel.setType(folder.getDmsFolderType());
+        dmsSearchModel.setFolderName(folder.getDmsFolderName());
+        dmsSearchModel.setFolderDescription(folder.getDmsFolderDescription());
+        dmsSearchModel.setDocumentFolderId(folder.getId());
+        System.out.println("in = " + folder.getRemovedBy());
+
+        dmsSearchModel.setRemovedBy(folder.getRemovedBy());
+        return (dmsSearchModel);
     }
 
 }
