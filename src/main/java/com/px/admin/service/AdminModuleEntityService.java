@@ -492,11 +492,11 @@ public class AdminModuleEntityService {
                 module.setModuleNameEng(moduleNameEng[i]);
                 module = moduleService.create(module);
                 module.setOrderNo(module.getId());
-                moduleService.update(module);
+                module = moduleService.update(module);
 
                 MenuType menuType = new MenuType();
                 menuType.setCreatedBy(this.createdBy);
-                menuType.setModule(moduleService.getByModuleCode(moduleCode[i]));
+                menuType.setModule(module);
                 menuType.setMenuTypeCode(moduleCode[i]);
                 menuType.setMenuTypeName(moduleName[i]);
                 menuType = menuTypeService.create(menuType);
