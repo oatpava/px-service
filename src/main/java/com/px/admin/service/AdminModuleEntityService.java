@@ -4,6 +4,7 @@ import com.px.share.service.ParamService;
 import com.px.admin.entity.Ad;
 import com.px.admin.entity.Module;
 import com.px.admin.entity.ModuleConfig;
+import com.px.admin.entity.Organize;
 import com.px.share.entity.Param;
 import com.px.admin.entity.Position;
 import com.px.admin.entity.PositionType;
@@ -107,6 +108,7 @@ public class AdminModuleEntityService {
         createDataModule();
         createDataModuleConfig();
         createDataStructure(structureName);
+        createDataOrganize(structureName + "ภายนอก");
         createDataUser(adminUserName, adminPassword, adminFullName);
         createMonth();
         createListAd();
@@ -269,7 +271,7 @@ public class AdminModuleEntityService {
             UserProfileType userProfileType = new UserProfileType();
             userProfileType.setId(1);
             userProfile.setUserProfileType(userProfileType);
-            
+
             userProfile = userProfileService.create(userProfile);
             userProfile.setOrderNo(userProfile.getId());
             userProfileService.update(userProfile);
@@ -305,22 +307,35 @@ public class AdminModuleEntityService {
 
     private void createDataStructure(String structureName) {
         StructureService structureService = new StructureService();
-        Structure structure = structureService.getById(1);
-        Structure result = null;
-        if (structure == null) {
+        if (structureService.countAll() == 0) {
             LOG.info("Structure not found!! Auto create Structure. ");
-            long t1 = -System.currentTimeMillis();
-            structure = new Structure();
+            Structure structure = new Structure();
             structure.setCreatedBy(this.createdBy);
             structure.setStructureName(structureName);
-//            structure.setStructureShortName(" ");
             structure.setParentId(0);
             structure.setNodeLevel(0);
             structure.setParentKey(PxInit.Separator + "1" + PxInit.Separator);
-            result = structureService.create(structure);
-            result.setOrderNo(result.getId());
-            result = structureService.update(result);
-            LOG.info("Structure created successfully." + (t1 + System.currentTimeMillis()));
+            structure = structureService.create(structure);
+            structure.setOrderNo(structure.getId());
+            structureService.update(structure);
+            LOG.info("Structure created successfully.");
+        }
+    }
+
+    private void createDataOrganize(String organizeName) {
+        OrganizeService organizeService = new OrganizeService();
+        if (organizeService.countAll() == 0) {
+            LOG.info("Organize not found!! Auto create Organize. ");
+            Organize organize = new Organize();
+            organize.setCreatedBy(this.createdBy);
+            organize.setOrganizeName(organizeName);
+            organize.setParentId(0);
+            organize.setNodeLevel(0);
+            organize.setParentKey(PxInit.Separator + "1" + PxInit.Separator);
+            organize = organizeService.create(organize);
+            organize.setOrderNo(organize.getId());
+            organizeService.update(organize);
+            LOG.info("Organize created successfully.");
         }
     }
 
@@ -382,33 +397,26 @@ public class AdminModuleEntityService {
 
     private void createDataParam() {
         Map<String, String> listParam = new HashMap();
-        listParam.put("PATH_DOCUMENT", "D:\\dbPraxticol\\Data\\Document\\");
-        listParam.put("PATH_DOCUMENT_TEMP", "D:\\dbPraxticol\\Data\\Document\\Temp\\");
-        listParam.put("PATH_DOCUMENT_HTTP", "http://192.168.142.149:80/document/");
-        listParam.put("REPORT_USERNAME", "jasperadmin");
-        listParam.put("REPORT_PASSWORD", "jasperadmin");
-        listParam.put("REPORT_URI", "http://192.168.142.149:85/jasperserver/rest_v2/reports/reports");
+        listParam.put("PATH_DOCUMENT", "C:\\dbPraxticol\\Data\\Document\\");
+        listParam.put("PATH_DOCUMENT_TEMP", "C:\\dbPraxticol\\Data\\Document\\Temp\\");
+        listParam.put("PATH_DOCUMENT_HTTP", "http://127.0.0.1:82/document/");
         listParam.put("USE_AD", "N");
         listParam.put("ENCODE_FILE", "Y");
-        listParam.put("EMAIL_SERVER", "mail.praxis.co.th");
-        listParam.put("EMAIL_PORT", "25");
-        listParam.put("EMAIL_SYSTEM_FROM", "admin@praxis.co.th");
-        listParam.put("EMAIL_USER_NAME", "opas@praxis.co.th");
-        listParam.put("EMAIL_USER_PASS", " ");
-        listParam.put("ELASTICSEARCH_SERVER_NAME", "localhost");
-        listParam.put("ELASTICSEARCH_SERVER_PORT", "9300");
-        listParam.put("ELASTICSEARCH_CLUSTER_NAME", "elasticsearch");
-        listParam.put("WATERMARK", "N");
+        listParam.put("EMAIL_SERVER", "");//mail.praxis.co.th
+        listParam.put("EMAIL_PORT", "");//25
+        listParam.put("EMAIL_SYSTEM_FROM", "");//admin@praxis.co.th
+        listParam.put("EMAIL_USER_NAME", "");//opas@praxis.co.th
+        listParam.put("EMAIL_USER_PASS", "");
+//        listParam.put("ELASTICSEARCH_SERVER_NAME", "localhost");
+//        listParam.put("ELASTICSEARCH_SERVER_PORT", "9300");
+//        listParam.put("ELASTICSEARCH_CLUSTER_NAME", "elasticsearch");
         listParam.put("PATH_FILE_WATERMARK", "C:\\dbPraxticol\\Data\\Document\\Watermark\\watermark.png");
-        listParam.put("USE_FTS", "N");
-        listParam.put("FORGOT_PASS_PATH", "http://192.168.142.149:80/forgot");
-        listParam.put("TIMEOUT", "1800");
-        listParam.put("PASSEXPIRATION", "90");
+        listParam.put("FORGOT_PASS_PATH", "");//http://192.168.142.149:80/forgot
         listParam.put("ANDTXT", "&");
         listParam.put("ORTXT", ",");
         listParam.put("NOTTXT", "!");
         listParam.put("NULLTXT", "NULL");
-        listParam.put("PATHHRIS", "http://192.168.142.148:8080/");
+        listParam.put("PATHHRIS", "");//http://192.168.142.148:8080/
         listParam.put("DEFAULT_PASSWORD", "1234");
         listParam.put("TIMEOUT", "30000");
         listParam.put("PASSEXPIRATION", "90");
