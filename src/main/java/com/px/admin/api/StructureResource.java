@@ -1329,7 +1329,7 @@ public class StructureResource {
                     structureFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     structureFolder.setStructureFolderDetail("หนังสือเข้าของ " + structure.getStructureName());
                     structureFolder.setStructureFolderLinkId(0);
-                    structureFolder.setStructureFolderName("กล่องหนังสือเข้า");
+                    structureFolder.setStructureFolderName("กล่องหนังสือเข้า (inbox)");
                     structureFolder.setStructureFolderType("I");
                     structureFolder.setStructureId(structure.getId());
                     structureFolder = structureFolderService.create(structureFolder);
@@ -1338,7 +1338,7 @@ public class StructureResource {
                     structureFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     structureFolder.setStructureFolderDetail("หนังสือออกของ " + structure.getStructureName());
                     structureFolder.setStructureFolderLinkId(0);
-                    structureFolder.setStructureFolderName("กล่องหนังสือออก");
+                    structureFolder.setStructureFolderName("กล่องหนังสือออก (outbox)");
                     structureFolder.setStructureFolderType("O");
                     structureFolder.setStructureId(structure.getId());
                     structureFolder = structureFolderService.create(structureFolder);

@@ -1820,7 +1820,7 @@ public class UserProfileResource {
                     userProfileFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     userProfileFolder.setUserProfileFolderDetail("หนังสือเข้าของ " + userProfile.getUserProfileFullName());
                     userProfileFolder.setUserProfileFolderLinkId(0);
-                    userProfileFolder.setUserProfileFolderName("กล่องหนังสือเข้า");
+                    userProfileFolder.setUserProfileFolderName("กล่องหนังสือเข้า (inbox)");
                     userProfileFolder.setUserProfileFolderType("I");
                     userProfileFolder.setUserProfileId(userProfile.getId());
                     if (userProfileFolder != null) {
@@ -1831,7 +1831,7 @@ public class UserProfileResource {
                     userProfileFolder.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     userProfileFolder.setUserProfileFolderDetail("หนังสือออกของ " + userProfile.getUserProfileFullName());
                     userProfileFolder.setUserProfileFolderLinkId(0);
-                    userProfileFolder.setUserProfileFolderName("กล่องหนังสือออก");
+                    userProfileFolder.setUserProfileFolderName("กล่องหนังสือออก (outbox)");
                     userProfileFolder.setUserProfileFolderType("O");
                     userProfileFolder.setUserProfileId(userProfile.getId());
                     if (userProfileFolder != null) {
