@@ -71,24 +71,28 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         checkNotNull(wfContent, "wfContent entity must not be null");
         checkNotNull(wfContent.getCreatedBy(), "create by must not be null");
 
-        WfReserveContentNo reserve = new WfReserveContentNoService().getContentNoByFolderId(wfContent.getWfContentFolderId(), wfContent.getWfContentContentNo());
-        if (reserve == null && wfContent.getWfContentContentNumber() != 0 && wfContent.getWfContentContentPoint() == 0) {
-            WfContent result = null;
-            int count = 0;
-            while (count < 5) {
-                wfContent = updateContentNo(wfContent);
-                count++;
-                try {
-                    Thread.sleep((count * 1000) - 1000);
-                    result = WfContentDaoImpl.create(wfContent);
-                    break;
-                } catch (Exception ex) {
-                    log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo() != null ? wfContent.getWfContentContentNo() : "-");
-                }
-            }
-            return result;
-        } else {//reserve, mwp, point
+        if (wfContent.getWfContentContentNo() == null) {//myWork
             return WfContentDaoImpl.create(wfContent);
+        } else {
+            WfReserveContentNo reserve = new WfReserveContentNoService().getContentNoByFolderId(wfContent.getWfContentFolderId(), wfContent.getWfContentContentNo());
+            if (reserve == null && wfContent.getWfContentContentNumber() != 0 && wfContent.getWfContentContentPoint() == 0) {
+                WfContent result = null;
+                int count = 0;
+                while (count < 5) {
+                    wfContent = updateContentNo(wfContent);
+                    count++;
+                    try {
+                        Thread.sleep((count * 1000) - 1000);
+                        result = WfContentDaoImpl.create(wfContent);
+                        break;
+                    } catch (Exception ex) {
+                        log.error("insert (" + count + "): " + wfContent.getWfContentFolderId() + " " + wfContent.getWfContentContentNo() != null ? wfContent.getWfContentContentNo() : "-");
+                    }
+                }
+                return result;
+            } else {//reserve, mwp, point
+                return WfContentDaoImpl.create(wfContent);
+            }
         }
     }
 
@@ -1481,7 +1485,7 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
                 }
                 if (fileAttach.getFileAttachType().equalsIgnoreCase(".PDF")) {
                     File myFile = new File(url);
-                    try ( PDDocument doc = PDDocument.load(myFile)) {
+                    try (PDDocument doc = PDDocument.load(myFile)) {
                         PDFTextStripper stripper = new PDFTextStripper();
                         String text = stripper.getText(doc);
                         fulltext.add(text);
