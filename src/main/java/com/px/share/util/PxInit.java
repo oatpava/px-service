@@ -38,13 +38,12 @@ public class PxInit implements ServletContextListener {
     public static String Version = "8.0";
     public static String ProjectName = "Praxticol";
     public static final String ISSUER = "https://praxis.co.th/";
-//    public static final String KEY = "42444678902180239428359892197310423042347238957274623846238423423423546";
     public static final String KEY = "42444678902180239428358646519815165132078951561321646432131696998878616";
     public static final String HEADER = "ATENCODE01";
     public static final String DEFAULT_PASSWORD = "12345678";
-    public static String PathDocument = "/Users/Oat/dbPraxticol/Data/Document/";
-    public static String PathDocumentTemp = "/Users/Oat/dbPraxticol/Data/Document/Temp/";
-    public static String PathWatermark = "/Users/Oat/dbPraxticol/Data/Document/Watermark/";
+    public static String PathDocument = "C:\\dbPraxticol\\Data\\Document\\";
+    public static String PathDocumentTemp = "C:\\dbPraxticol\\Data\\Document\\Temp\\";
+    public static String PathWatermark = "C:\\dbPraxticol\\Data\\Document\\Watermark\\";
     public static String PathMasterFile = "masterFile/";
     public static String MasterFileSplitBy = "\\|";
     public static String PathLog = "logs\\";
@@ -58,7 +57,6 @@ public class PxInit implements ServletContextListener {
     public static List ListAd = new ArrayList();
     public static Metadata METADATA = null;
 
-//    private static Scheduler scheduler;
     public static String getVersion() {
         return "1.0";
     }
@@ -74,17 +72,8 @@ public class PxInit implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         LOG.info(appName + " Service Start... ");
-//        Locale.setDefault(new Locale("en", "EN"));
-//        LOG.info("Default Locale en_EN");
         String modules = "admin,wf,mwp,dms,";
-
-        long t1 = -System.currentTimeMillis();
-        sc = sce.getServletContext();
-
         try {
-//            PathDocument = Common.noNull(sc.getInitParameter("PathDocument"), "D:\\dbPraxticol\\Data\\Document\\");
-//            PathDocumentTemp = Common.noNull(sc.getInitParameter("PathDocumentTemp"), "D:\\dbPraxticol\\Data\\Document\\Temp\\");
-            //create default data
             createPathFile();
 
             //Add Entity
@@ -93,27 +82,22 @@ public class PxInit implements ServletContextListener {
                     .build();
             MetadataSources metadataSource;
             metadataSource = new MetadataSources(standardRegistry);
-           
             if (modules.contains("admin")) {
                 AdminModuleEntityService adminModuleEntityService = new AdminModuleEntityService();
                 metadataSource = adminModuleEntityService.listCreateEntity(metadataSource);
             }
-             
-            if(modules.contains("dms")){
+            if (modules.contains("dms")) {
                 DmsModuleEntityService dmsModuleEntityService = new DmsModuleEntityService();
-                metadataSource = dmsModuleEntityService.listCreateEntity(metadataSource);                
+                metadataSource = dmsModuleEntityService.listCreateEntity(metadataSource);
             }
-
             if (modules.contains("wf")) {
                 WfModuleEntityService wfModuleEntityService = new WfModuleEntityService();
                 metadataSource = wfModuleEntityService.listCreateEntity(metadataSource);
             }
-            
             if (modules.contains("mwp")) {
                 MwpModuleEntityService mwpModuleEntityService = new MwpModuleEntityService();
                 metadataSource = mwpModuleEntityService.listCreateEntity(metadataSource);
             }
-
             METADATA = metadataSource.getMetadataBuilder().applyImplicitNamingStrategy(ImplicitNamingStrategyJpaCompliantImpl.INSTANCE).build();
 
             //Create default Data
@@ -121,18 +105,14 @@ public class PxInit implements ServletContextListener {
                 AdminModuleEntityService adminModuleEntityService = new AdminModuleEntityService();
                 adminModuleEntityService.createDefaultData(structureName, adminUserName, adminPassword, adminFullName);
             }
-            
-            if(modules.contains("dms")){
+            if (modules.contains("dms")) {
                 DmsModuleEntityService dmsModuleEntityService = new DmsModuleEntityService();
                 dmsModuleEntityService.createDefaultData();
             }
-
-            //Create default Data
             if (modules.contains("wf")) {
                 WfModuleEntityService wfModuleEntityService = new WfModuleEntityService();
                 wfModuleEntityService.createDefaultData();
             }
-
             if (modules.contains("mwp")) {
                 MwpModuleEntityService mwpModuleEntityService = new MwpModuleEntityService();
                 mwpModuleEntityService.createDefaultData();
@@ -140,7 +120,6 @@ public class PxInit implements ServletContextListener {
         } catch (Exception e) {
             LOG.error("Exception = " + e);
         } finally {
-            LOG.info(appName + " Version " + Version + " Initializing Usage Time " + (t1 + System.currentTimeMillis()) + " milliseconds. ***");
             LOG.info(appName + " Version " + Version + " RUNNING.");
         }
     }
@@ -167,13 +146,13 @@ public class PxInit implements ServletContextListener {
             f.mkdirs();
             LOG.info("PathDocumentTemp Not Found!!! .... Auto Create PathDocumentTemp =  " + f.exists());
         }
-        
+
         f = new File(PathWatermark);
-        if(f.exists()){
-            LOG.info("PathWatermark .... OK.");                                
-        }else{
+        if (f.exists()) {
+            LOG.info("PathWatermark .... OK.");
+        } else {
             f.mkdirs();
-            LOG.info("PathWatermark Not Found!!! .... Auto Create PathWatermark =  "+f.exists());
+            LOG.info("PathWatermark Not Found!!! .... Auto Create PathWatermark =  " + f.exists());
         }
     }
 }
