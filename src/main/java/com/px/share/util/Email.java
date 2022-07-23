@@ -112,22 +112,23 @@ public class Email {
 
     public boolean send(String mailSubject, String mailTo, String mailCC, String mailBCC, String mailBody, ArrayList<String> fileAttachPath, String mailType, boolean debug) {
         boolean result = false;
+        String smtp = server.contains(".mail.go.th") ? "smtps" : "smtp";
         Properties props = new Properties();
-        props.put("mail.smtp.host", server);
+        props.put("mail." + smtp + ".host", server);
         props.put("mail.debug", debug);
         if (!port.equals("")) {
-            props.put("mail.smtp.port", port);
+            props.put("mail." + smtp + ".port", port);
             if (port.equals("587")) {
-                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail." + smtp + ".starttls.enable", "true");
             }
         }
         javax.mail.Authenticator auth = null;
         if (user.equalsIgnoreCase("")) {
-            //props.put("mail.smtp.auth", "false");
+            //props.put("mail." + smtp + ".auth", "false");
             props.put("mail.imap.auth.plain.disable", "true");
             props.put("mail.imap.auth.ntlm.disable", "true");
         } else {
-            props.put("mail.smtp.auth", "true");
+            props.put("mail." + smtp + ".auth", "true");
             auth = new SMTPAuthenticator(user, pass);
         }
 //        Session mailSession = Session.getDefaultInstance(props, auth);
@@ -139,7 +140,7 @@ public class Email {
         });
         mailSession.setDebug(debug);
         try {
-            Transport transport = mailSession.getTransport("smtp");
+            Transport transport = mailSession.getTransport(smtp);
             MimeMessage message = new MimeMessage(mailSession);
 
             message.setSubject(mailSubject, "UTF-8");
