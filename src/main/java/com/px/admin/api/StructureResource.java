@@ -212,7 +212,8 @@ public class StructureResource {
                     structureUpdate = structureService.updateByParentId(structure);
                     if (!structureModel.getCode().equals(structure.getStructureCode())
                             || !structureModel.getName().equals(structure.getStructureName())
-                            || !structureModel.getDetail().equals(structure.getStructureDetail())) {
+                            || !structureModel.getDetail().equals(structure.getStructureDetail())
+                            || !structureModel.getShortName().equals(structure.getStructureShortName())) {
                         structure.setStructureDetail(structureModel.getDetail());
                         structure.setStructureName(structureModel.getName());
                         structure.setStructureShortName(structureModel.getShortName());
