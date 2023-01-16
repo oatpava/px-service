@@ -421,6 +421,7 @@ public class AdminModuleEntityService {
         listParam.put("TIMEOUT", "30000");
         listParam.put("PASSEXPIRATION", "90");
         listParam.put("PASSEXPIRATIONTYPE", "60");
+        listParam.put("FILE_SIZE_LIMIT", "100");
 
         ParamService paramService = new ParamService();
         Param param = null;
