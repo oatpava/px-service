@@ -358,74 +358,13 @@ public class WfContentResource {
                 wfContent.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 //wfContentService.updateWorkflow(wfContentOld, wfContent, Integer.parseInt(httpHeaders.getHeaderString("userID")));
                 wfContent = wfContentService.update(wfContent);
-                
-                if (wfContentPostModel.getWfContentInt01() == 1) {//ต้นเรื่อง
+
+                if (wfContentPostModel.getWfContentInt01() == 1 && !wfContentOld.getWfContentTitle().equals(wfContentPostModel.getWfContentTitle())) {//ต้นเรื่อง แก้ไขเรื่อง
                     List<WfContent> listWfContentInflow = wfContentService.listByDocumentId(wfContentPostModel.getWfDocumentId());
                     if (!listWfContentInflow.isEmpty()) {
                         for (WfContent contentInflow : listWfContentInflow) {
                             if (contentInflow.getId() != wfContentPostModel.getId()) {
-                                contentInflow.setWfContentBookPre(wfContentPostModel.getWfContentBookPre());
-                                contentInflow.setWfContentBookYear(wfContentPostModel.getWfContentBookYear());
-                                contentInflow.setWfContentBookNo(wfContentPostModel.getWfContentBookNo());
-                                contentInflow.setWfContentBookNumber(wfContentPostModel.getWfContentBookNumber());
-                                contentInflow.setWfContentBookPoint(wfContentPostModel.getWfContentBookPoint());
-                                if (wfContentPostModel.getWfContentBookDate() != null) {
-                                    contentInflow.setWfContentBookDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentBookDate()));
-                                } else {
-                                    contentInflow.setWfContentBookDate(null);
-                                }
-                                contentInflow.setWfContentFrom(wfContentPostModel.getWfContentFrom());
-                                contentInflow.setWfContentTo(wfContentPostModel.getWfContentTo());
                                 contentInflow.setWfContentTitle(wfContentPostModel.getWfContentTitle());
-                                contentInflow.setWfContentSpeed(wfContentPostModel.getWfContentSpeed());
-                                contentInflow.setWfContentSecret(wfContentPostModel.getWfContentSecret());
-                                contentInflow.setWfContentDescription(wfContentPostModel.getWfContentDescription());
-                                contentInflow.setWfContentReference(wfContentPostModel.getWfContentReference());
-                                contentInflow.setWfContentAttachment(wfContentPostModel.getWfContentAttachment());
-//                              contentInflow.setWfContentExpireDate(dateThaiToLocalDateTime(wfContentPostModel.getWfContentExpireDate()));
-//                              contentInflow.setWfContentOwnername(wfContentPostModel.getWfContentOwnername());
-//                              contentInflow.setWfDocumentId(wfContentPostModel.getWfDocumentId());
-//                              contentInflow.setWorkflowId(wfContentPostModel.getWorkflowId());
-//                              contentInflow.setWfContentStr01(wfContentPostModel.getWfContentStr01());//ES searchId
-                                contentInflow.setWfContentStr02(wfContentPostModel.getWfContentStr02());
-//                              contentInflow.setWfContentStr03(wfContentPostModel.getWfContentStr03());//ไปรษณีย์ลงทะเบียน
-                                contentInflow.setWfContentStr04(wfContentPostModel.getWfContentStr04());
-                                contentInflow.setWfContentStr05(wfContentPostModel.getWfContentStr05());
-                                contentInflow.setWfContentStr06(wfContentPostModel.getWfContentStr06());
-                                contentInflow.setWfContentStr07(wfContentPostModel.getWfContentStr07());
-                                contentInflow.setWfContentStr08(wfContentPostModel.getWfContentStr08());
-                                contentInflow.setWfContentStr09(wfContentPostModel.getWfContentStr09());
-                                contentInflow.setWfContentStr10(wfContentPostModel.getWfContentStr10());
-                                contentInflow.setWfContentText01(wfContentPostModel.getWfContentText01());
-                                contentInflow.setWfContentText02(wfContentPostModel.getWfContentText02());
-                                contentInflow.setWfContentText03(wfContentPostModel.getWfContentText03());
-                                contentInflow.setWfContentText04(wfContentPostModel.getWfContentText04());
-                                contentInflow.setWfContentText05(wfContentPostModel.getWfContentText05());
-                                contentInflow.setWfContentText06(wfContentPostModel.getWfContentText06());
-                                contentInflow.setWfContentText07(wfContentPostModel.getWfContentText07());
-                                contentInflow.setWfContentText08(wfContentPostModel.getWfContentText08());
-                                contentInflow.setWfContentText09(wfContentPostModel.getWfContentText09());
-                                contentInflow.setWfContentText10(wfContentPostModel.getWfContentText10());
-//                              contentInflow.setWfContentInt01(wfContentPostModel.getWfContentInt01());//head content
-//                              contentInflow.setWfContentInt02(wfContentPostModel.getWfContentInt02());//contentId (อ้างถึง)
-//                              contentInflow.setWfContentInt03(wfContentPostModel.getWfContentInt03());//sent status
-                                contentInflow.setWfContentInt04(wfContentPostModel.getWfContentInt04());
-                                contentInflow.setWfContentInt05(wfContentPostModel.getWfContentInt05());
-                                contentInflow.setWfContentInt06(wfContentPostModel.getWfContentInt06());
-                                contentInflow.setWfContentInt07(wfContentPostModel.getWfContentInt07());
-                                contentInflow.setWfContentInt08(wfContentPostModel.getWfContentInt08());
-                                contentInflow.setWfContentInt09(wfContentPostModel.getWfContentInt09());
-                                contentInflow.setWfContentInt10(wfContentPostModel.getWfContentInt10());
-//                              contentInflow.setWfContentDate01(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate01()));//hardCopyRecieved
-                                contentInflow.setWfContentDate02(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate02()));
-                                contentInflow.setWfContentDate03(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate03()));
-                                contentInflow.setWfContentDate04(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate04()));
-                                contentInflow.setWfContentDate05(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate05()));
-                                contentInflow.setWfContentDate06(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate06()));
-                                contentInflow.setWfContentDate07(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate07()));
-                                contentInflow.setWfContentDate08(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate08()));
-                                contentInflow.setWfContentDate09(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate09()));
-                                contentInflow.setWfContentDate10(dateThaiToLocalDateTime(wfContentPostModel.getWfContentDate10()));
                                 contentInflow.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                                 wfContentService.update(contentInflow);
                             }
