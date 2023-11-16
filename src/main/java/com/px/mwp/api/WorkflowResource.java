@@ -91,7 +91,11 @@ public class WorkflowResource {
             }
 
             if (workflowPostModel.getWorkflowActionPosition() == null) {
-                actionPosition = userProfile.getPosition().getPositionName();
+                if (userProfile.getPosition() != null) {
+                    actionPosition = userProfile.getPosition().getPositionName();
+                } else {
+                    actionPosition = "";
+                }
             } else {
                 actionPosition = workflowPostModel.getWorkflowActionPosition();
             }
@@ -103,8 +107,6 @@ public class WorkflowResource {
             workflow.setLinkId3(workflowPostModel.getLinkId3());
             workflow.setWorkflowActionId(Integer.parseInt(httpHeaders.getHeaderString("userID")));
             workflow.setWorkflowActionIdType(0);
-            //workflow.setWorkflowActionName(userProfile.getUserProfileFullName());
-            //workflow.setWorkflowActionPosition(userProfile.getPosition().getPositionName());
             workflow.setWorkflowActionName(actionName);
             workflow.setWorkflowActionPosition(actionPosition);
             workflow.setWorkflowActionType(workflowPostModel.getWorkflowActionType());
