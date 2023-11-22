@@ -124,6 +124,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.share.api.TempTableResource.class);
         resources.add(com.px.share.filter.RequestFilter.class);
         resources.add(com.px.wf.api.FolderPropertyResource.class);
+        resources.add(com.px.wf.api.ImportResource.class);
         resources.add(com.px.wf.api.ThegifDepartmentResource.class);
         resources.add(com.px.wf.api.ThegifDocFileResource.class);
         resources.add(com.px.wf.api.ThegifResource.class);

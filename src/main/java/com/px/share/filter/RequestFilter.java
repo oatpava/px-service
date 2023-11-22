@@ -89,7 +89,8 @@ public class RequestFilter implements ContainerRequestFilter {
                 && !path.startsWith("v1/users/changePass")
                 && !path.startsWith("v1/users/sendEmail")
                 && !path.startsWith("swagger.json")                 
-                && !path.startsWith("v1/users/getMocktoken")) {
+                && !path.startsWith("v1/users/getMocktoken")
+                && !path.startsWith("v1/imports")) {
             if (token != null && token.length() > 0) {
                 try {
                     Algorithm algorithm = Algorithm.HMAC256(PxInit.KEY);

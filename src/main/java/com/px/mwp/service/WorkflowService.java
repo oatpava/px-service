@@ -220,8 +220,15 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 int folderId = new WfContentService().getById(workflow.getLinkId2()).getWfContentFolderId();
                 String folderType = new WfFolderService().getById(folderId).getWfContentType().getContentTypeName();
                 String str01 = workflow.getWorkflowStr01();
-                String registerAgain = (str01 != null && str01.equals("1")) ? "(รับเรื่องอีกครั้ง)" : "";
-                detail = name + " [ลง" + folderType + registerAgain + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
+                String extraAction = "";
+                if (str01 != null) {
+                    if (str01.equals("1")) {
+                        extraAction = "(รับเรื่องอีกครั้ง)";
+                    } else if (str01.equals("2")) {
+                        extraAction = "(เชื่อมโยงข้อมูล)";
+                    }
+                }
+                detail = name + " [ลง" + folderType + extraAction + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
             case ('S'): {
@@ -282,7 +289,7 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
             }
             break;
             case ('C'): {
-                String action = (workflow.getWorkflowDescription() !=null && workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
+                String action = (workflow.getWorkflowDescription() != null && workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
                 detail = name + " [" + action + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
@@ -594,7 +601,14 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 break;
             case 'R':
                 String str01 = workflow.getWorkflowStr01();
-                action = (str01 != null && str01.equals("1")) ? "ลงทะเบียน" + "\r\n" + "(รับเรื่องอีกครั้ง)" : "ลงทะเบียน";
+                action = "ลงทะเบียน";
+                if (str01 != null) {
+                    if (str01.equals("1")) {
+                        action = "ลงทะเบียน" + "\r\n" + "(รับเรื่องอีกครั้ง)";
+                    } else if (str01.equals("2")) {
+                        action = "ลงทะเบียน" + "\r\n" + "(เชื่อมโยงข้อมูล)";
+                    }
+                }
                 break;
             case 'S':
                 action = "ส่งหนังสือให้";

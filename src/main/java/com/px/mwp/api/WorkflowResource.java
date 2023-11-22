@@ -94,7 +94,7 @@ public class WorkflowResource {
                 if (userProfile.getPosition() != null) {
                     actionPosition = userProfile.getPosition().getPositionName();
                 } else {
-                    actionPosition = "";
+                    actionPosition = null;
                 }
             } else {
                 actionPosition = workflowPostModel.getWorkflowActionPosition();
