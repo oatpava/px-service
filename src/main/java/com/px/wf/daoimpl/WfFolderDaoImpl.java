@@ -105,12 +105,15 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
         return this.countAll(criteria);
     }
 
-    public List<WfFolder> listByContentTypeIdAndStructureId(int contentTypeId, int contentType2Id, int structureId) {
+    public List<WfFolder> listShortcutByUserProfileId(int userProfileId, int contentTypeId, int contentType2Id, Integer structureId) {
         Conjunction conjunction = Restrictions.conjunction();
-        conjunction.add(Restrictions.eq("wfFolderLinkId", structureId));
+        conjunction.add(Restrictions.eq("wfFolderOwnerId", userProfileId));
+        conjunction.add(Restrictions.eq("wfFolderType", "SC"));
+        if (structureId != null && structureId > 0) {
+            conjunction.add(Restrictions.eq("wfFolderLinkId", structureId));
+        }
         conjunction.add(Restrictions.eq("ct.id", contentTypeId));
         conjunction.add(Restrictions.eq("ct2.id", contentType2Id));
-        conjunction.add(Restrictions.eq("wfFolderType", "T"));
         conjunction.add(Restrictions.eq("removedBy", 0));
         DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
         criteria.createCriteria("wfContentType", "ct", JoinType.INNER_JOIN);

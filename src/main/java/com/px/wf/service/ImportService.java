@@ -42,7 +42,6 @@ public class ImportService {
 
     private static final Logger LOG = Logger.getLogger(ImportService.class.getName());
     private UserProfile userProfile;
-    private Structure structure;
     private WfFolder wfFolder;
     private DmsDocument dmsDocument;
     private WfContent wfContent;
@@ -252,19 +251,18 @@ public class ImportService {
 
     public String checkUserProfile(String username) {
         userProfile = new UserProfileService().getByUsername(username);
-        structure = userProfile.getStructure();
         return userProfile == null ? "ไม่พบข้อมูลผู้ใช้งาน (username: " + username + ")" : null;
     }
 
     public String checkStructure(int structureId) {
-        structure = new StructureService().getByIdNotRemoved(structureId);
+        Structure structure = new StructureService().getByIdNotRemoved(structureId);
         return structure == null ? "ไม่พบข้อมูลหน่วยงาน (structureId: " + structureId + ")" : null;
     }
 
-    public String checkWfFolder() {
-        List<WfFolder> listWfFolder = new WfFolderService().listByContentTypeIdAndStructureId(1, 3, structure.getId());
+    public String checkWfFolder(Integer structureId) {
+        List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 1, 3, structureId);
         if (listWfFolder.isEmpty()) {
-            return "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (หน่วยงาน: " + structure.getStructureName() + ")";
+            return "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")";
         } else {
             wfFolder = listWfFolder.get(0);
             return null;
