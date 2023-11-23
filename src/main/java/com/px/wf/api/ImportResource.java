@@ -2,7 +2,6 @@ package com.px.wf.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.px.wf.model.WfContentModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,8 +19,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 import com.px.wf.model.ImportWfContentModel;
 import com.px.wf.service.ImportService;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.GET;
 
 /**
  *
@@ -32,15 +30,11 @@ import javax.ws.rs.core.HttpHeaders;
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ImportResource {
 
-    @Context
-    HttpHeaders httpHeaders;
-
     private static final Logger LOG = Logger.getLogger(ImportResource.class.getName());
 
     @ApiOperation(
             value = "เชื่อมโยงข้อมูลหนังสือ (LDAP)",
-            notes = "เชื่อมโยงข้อมูลหนังสือ (LDAP)",
-            response = WfContentModel.class
+            notes = "เชื่อมโยงข้อมูลหนังสือ (LDAP)"
     )
     @ApiResponses({
         @ApiResponse(code = 201, message = "WfContent created successfully."),
@@ -100,7 +94,7 @@ public class ImportResource {
                 }
             }
 
-            errorMessage = importService.checkWfFolder();
+            errorMessage = importService.checkWfFolder(structureId);
             if (errorMessage != null) {
                 error.put("code", 404);
                 error.put("message", errorMessage);
@@ -167,4 +161,66 @@ public class ImportResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
+    
+    @ApiOperation(
+            value = "ขอรหัสหน่วยงาน",
+            notes = "ขอรหัสหน่วยงาน"
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Structure list success."),
+        @ApiResponse(code = 404, message = "Structure list not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/structure")
+    public Response listStructure(
+            @ApiParam(name = "username", value = "username", required = true)
+            @QueryParam("username") String username,
+            @ApiParam(name = "password", value = "password", required = true)
+            @QueryParam("password") String password
+    ) {
+        LOG.info("listStructure...");
+        Gson gs = new GsonBuilder()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        HashMap error = new HashMap();
+        ImportService importService = new ImportService();
+        try {
+            String errorMessage = importService.checkAuthentication(username, password);
+            if (errorMessage != null) {
+                error.put("code", 401);
+                error.put("message", errorMessage);
+                throw new Exception();
+            }
+
+            errorMessage = importService.checkUserProfile(username);
+            if (errorMessage != null) {
+                error.put("code", 404);
+                error.put("message", errorMessage);
+                throw new Exception();
+            }
+
+            errorMessage = importService.listWfFolder();
+            if (errorMessage != null) {
+                error.put("code", 404);
+                error.put("message", errorMessage);
+                throw new Exception();
+            }
+
+            responseData.put("success", true);
+            responseData.put("data", importService.getListData());
+        } catch (Exception ex) {
+            responseData.put("success", false);
+            responseData.put("error", error);
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+    
 }

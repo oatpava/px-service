@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
@@ -48,6 +49,7 @@ public class ImportService {
     private FileAttach fileAttach;
     private File file;
     private Workflow workflow;
+    private List<Structure> listStructure;
 
     public ImportService() {
     }
@@ -608,6 +610,40 @@ public class ImportService {
         data.put("contentTime", contentDate.split(" ")[1]);
         data.put("bookNo", wfContent.getWfContentBookNo());
         data.put("bookDate", Common.localDateTimeToString4(wfContent.getWfContentBookDate()));
+        return data;
+    }
+
+    public String listWfFolder() {
+        List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 1, 3, null);
+        if (listWfFolder.isEmpty()) {
+            return "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")";
+        } else {
+            StructureService structureService = new StructureService();
+            listStructure = new ArrayList<>();
+            for (WfFolder wfFolder : listWfFolder) {
+                Structure structure = new Structure();
+                try {
+                    structure = structureService.getById(wfFolder.getWfFolderLinkId());
+                } catch (Exception ex) {
+                    structure.setId(wfFolder.getWfFolderLinkId());
+                    structure.setStructureName("");
+                    LOG.error("/imports listWfFloder().structure.id: " + structure.getId() + ": " + ex.getMessage());
+                }
+                listStructure.add(structure);
+            }
+            return null;
+        }
+    }
+
+    public List<HashMap> getListData() {
+        List<HashMap> data = new ArrayList<>();
+        for (Structure structure : listStructure) {
+            HashMap tmp = new HashMap();
+            tmp.put("structureName", structure.getStructureName());
+            tmp.put("structureId", structure.getId());
+
+            data.add(tmp);
+        }
         return data;
     }
 
