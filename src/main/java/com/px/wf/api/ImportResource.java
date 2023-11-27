@@ -37,7 +37,10 @@ public class ImportResource {
             notes = "เชื่อมโยงข้อมูลหนังสือ (LDAP)"
     )
     @ApiResponses({
-        @ApiResponse(code = 201, message = "WfContent created successfully."),
+        @ApiResponse(code = 201, message = "Create Success."),
+        @ApiResponse(code = 400, message = "Bad Request!."),
+        @ApiResponse(code = 401, message = "Unauthorized!."),
+        @ApiResponse(code = 404, message = "Not Found!."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @POST
@@ -68,6 +71,7 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 400);
                 error.put("message", errorMessage);
+                status = Response.Status.BAD_REQUEST;
                 throw new Exception();
             }
 
@@ -75,6 +79,7 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 401);
                 error.put("message", errorMessage);
+                status = Response.Status.UNAUTHORIZED;
                 throw new Exception();
             }
 
@@ -82,6 +87,7 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 404);
                 error.put("message", errorMessage);
+                status = Response.Status.NOT_FOUND;
                 throw new Exception();
             }
 
@@ -90,6 +96,7 @@ public class ImportResource {
                 if (errorMessage != null) {
                     error.put("code", 404);
                     error.put("message", errorMessage);
+                    status = Response.Status.NOT_FOUND;
                     throw new Exception();
                 }
             }
@@ -98,6 +105,7 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 404);
                 error.put("message", errorMessage);
+                status = Response.Status.NOT_FOUND;
                 throw new Exception();
             }
 
@@ -154,6 +162,7 @@ public class ImportResource {
 
             responseData.put("success", true);
             responseData.put("data", importService.getData());
+            status = Response.Status.CREATED;
         } catch (Exception ex) {
             importService.deleteEntities();
             responseData.put("success", false);
@@ -161,16 +170,18 @@ public class ImportResource {
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
     @ApiOperation(
             value = "ขอรหัสหน่วยงาน",
             notes = "ขอรหัสหน่วยงาน"
     )
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Structure list success."),
-        @ApiResponse(code = 404, message = "Structure list not found in the database."),
+        @ApiResponse(code = 200, message = "Success."),
+        @ApiResponse(code = 401, message = "Unauthorized!."),
+        @ApiResponse(code = 404, message = "Not Found!."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
+    }
+    )
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/structure")
@@ -197,6 +208,7 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 401);
                 error.put("message", errorMessage);
+                status = Response.Status.UNAUTHORIZED;
                 throw new Exception();
             }
 
@@ -204,6 +216,7 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 404);
                 error.put("message", errorMessage);
+                status = Response.Status.NOT_FOUND;
                 throw new Exception();
             }
 
@@ -211,16 +224,18 @@ public class ImportResource {
             if (errorMessage != null) {
                 error.put("code", 404);
                 error.put("message", errorMessage);
+                status = Response.Status.NOT_FOUND;
                 throw new Exception();
             }
 
             responseData.put("success", true);
             responseData.put("data", importService.getListData());
+            status = Response.Status.OK;
         } catch (Exception ex) {
             responseData.put("success", false);
             responseData.put("error", error);
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
-    
+
 }
