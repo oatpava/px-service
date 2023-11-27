@@ -22,6 +22,7 @@ import com.px.wf.daoimpl.WfContentDaoImpl;
 import com.px.wf.entity.WfContent;
 import com.px.wf.entity.WfFolder;
 import com.px.wf.model.ImportFileAttachModel;
+import com.px.wf.model.ImportStatusModel;
 import com.px.wf.model.ImportWfContentModel;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,90 +55,90 @@ public class ImportService {
     public ImportService() {
     }
 
-    public String checkData(ImportWfContentModel importWfContentModel) {
+    public ImportStatusModel checkData(ImportWfContentModel importWfContentModel) {
         String errorMessage = isValid(importWfContentModel.getBookDate(), true, false);
         if (errorMessage != null) {
-            return "bookDate " + errorMessage;
+            return new ImportStatusModel(400, "bookDate " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getSpeedLevel(), true, 1, 4);
         if (errorMessage != null) {
-            return "speedLevel " + errorMessage;
+            return new ImportStatusModel(400, "speedLevel " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getSecretLevel(), true, 1, 4);
         if (errorMessage != null) {
-            return "secretLevel " + errorMessage;
+            return new ImportStatusModel(400, "secretLevel " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getFrom(), true, 4000);
         if (errorMessage != null) {
-            return "from " + errorMessage;
+            return new ImportStatusModel(400, "from " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getTo(), true, 4000);
         if (errorMessage != null) {
-            return "to " + errorMessage;
+            return new ImportStatusModel(400, "to " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getThru(), false, 4000);
         if (errorMessage != null) {
-            return "thru " + errorMessage;
+            return new ImportStatusModel(400, "thru " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getTitle(), true, 4000);
         if (errorMessage != null) {
-            return "title " + errorMessage;
+            return new ImportStatusModel(400, "title " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getReferTo(), false, 4000);
         if (errorMessage != null) {
-            return "referTo " + errorMessage;
+            return new ImportStatusModel(400, "referTo " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getAttachWith(), false, 4000);
         if (errorMessage != null) {
-            return "attachWith " + errorMessage;
+            return new ImportStatusModel(400, "attachWith " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getProcedure(), false, 4000);
         if (errorMessage != null) {
-            return "procedure " + errorMessage;
+            return new ImportStatusModel(400, "procedure " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getRemark(), false, 4000);
         if (errorMessage != null) {
-            return "remark " + errorMessage;
+            return new ImportStatusModel(400, "remark " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getHardCopyReceiveDateTime(), false, true);
         if (errorMessage != null) {
-            return "hardCopyReceiveDate " + errorMessage;
+            return new ImportStatusModel(400, "hardCopyReceiveDate " + errorMessage);
         }
 
         errorMessage = isValid(importWfContentModel.getPostNo(), false, 255);
         if (errorMessage != null) {
-            return "postNo " + errorMessage;
+            return new ImportStatusModel(400, "postNo " + errorMessage);
         }
 
         if (importWfContentModel.getFileAttach() != null) {
             errorMessage = isValid(importWfContentModel.getFileAttach().getName(), true, 255);
             if (errorMessage != null) {
-                return "fileAttach.name " + errorMessage;
+                return new ImportStatusModel(400, "fileAttach.name " + errorMessage);
             }
 
             errorMessage = isValid(importWfContentModel.getFileAttach().getSecretLevel(), true, 1, 4);
             if (errorMessage != null) {
-                return "fileAttach.secretLevel " + errorMessage;
+                return new ImportStatusModel(400, "fileAttach.secretLevel " + errorMessage);
             }
 
             errorMessage = isValid(importWfContentModel.getFileAttach().getFileBase64());
             if (errorMessage != null) {
-                return "fileAttach.fileBase64 " + errorMessage;
+                return new ImportStatusModel(400, "fileAttach.fileBase64 " + errorMessage);
             }
         }
 
-        return null;
+        return new ImportStatusModel();
     }
 
     private boolean isNull(String input) {
@@ -246,32 +247,66 @@ public class ImportService {
         return null;
     }
 
-    public String checkAuthentication(String username, String password) {
-        final boolean result = new UserService().authenticationUser(username, password);
-        return !result ? "การยืนยันตัวตนไม่สำเร็จ" : null;
-    }
-
-    public String checkUserProfile(String username) {
-        userProfile = new UserProfileService().getByUsername(username);
-        return userProfile == null ? "ไม่พบข้อมูลผู้ใช้งาน (username: " + username + ")" : null;
-    }
-
-    public String checkStructure(int structureId) {
-        Structure structure = new StructureService().getByIdNotRemoved(structureId);
-        return structure == null ? "ไม่พบข้อมูลหน่วยงาน (structureId: " + structureId + ")" : null;
-    }
-
-    public String checkWfFolder(Integer structureId) {
-        List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 1, 3, structureId);
-        if (listWfFolder.isEmpty()) {
-            return "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")";
-        } else {
-            wfFolder = listWfFolder.get(0);
-            return null;
+    public ImportStatusModel checkAuthentication(String username, String password) {
+        ImportStatusModel status = new ImportStatusModel();
+        try {
+            final boolean result = new UserService().authenticationUser(username, password);
+            if (!result) {
+                return new ImportStatusModel(401, "การยืนยันตัวตนไม่สำเร็จ");
+            } else {
+                return new ImportStatusModel();
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports checkAuthentication(): " + ex.getMessage());
+            return new ImportStatusModel(500, ex.getMessage());
         }
     }
 
-    public String createDmsDocument() {
+    public ImportStatusModel checkUserProfile(String username) {
+        try {
+            userProfile = new UserProfileService().getByUsername(username);
+            if (userProfile == null) {
+                return new ImportStatusModel(404, "ไม่พบข้อมูลผู้ใช้งาน (username: " + username + ")");
+            } else {
+                return new ImportStatusModel();
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports checkAuthentication(): " + ex.getMessage());
+            return new ImportStatusModel(500, ex.getMessage());
+        }
+    }
+
+    public ImportStatusModel checkStructure(int structureId) {
+        try {
+            Structure structure = new StructureService().getByIdNotRemoved(structureId);
+            if (structure == null) {
+                return new ImportStatusModel(404, "ไม่พบข้อมูลหน่วยงาน (structureId: " + structureId + ")");
+            } else {
+                return new ImportStatusModel();
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports checkAuthentication(): " + ex.getMessage());
+            return new ImportStatusModel(500, ex.getMessage());
+        }
+    }
+
+    public ImportStatusModel checkWfFolder(Integer structureId) {
+        try {
+            List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 1, 3, structureId);
+            if (listWfFolder.isEmpty()) {
+                return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")");
+            } else {
+                wfFolder = listWfFolder.get(0);
+                return new ImportStatusModel();
+
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports checkAuthentication(): " + ex.getMessage());
+            return new ImportStatusModel(500, ex.getMessage());
+        }
+    }
+
+    public ImportStatusModel createDmsDocument() {
         DmsDocumentService dmsDocumentService = new DmsDocumentService();
         try {
             dmsDocument = new DmsDocument();
@@ -280,21 +315,21 @@ public class ImportService {
             dmsDocument = dmsDocumentService.create(dmsDocument);
             dmsDocument.setRemovedBy(-1);
             dmsDocument = dmsDocumentService.update(dmsDocument);
-            return null;
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports createDmsDocument(): " + ex.getMessage());
-            return "ไม่สามารถบันทึกรายการหนังสือ (createDmsDocument())";
+            return new ImportStatusModel(500, "ไม่สามารถบันทึกรายการหนังสือ (createDmsDocument())");
         }
     }
 
-    public String createWfContent(ImportWfContentModel importWfContentModel) {
+    public ImportStatusModel createWfContent(ImportWfContentModel importWfContentModel) {
         ParamService paramservice = new ParamService();
         final int contentNoFormat;
         try {
             contentNoFormat = Integer.parseInt(paramservice.getByParamName("CONTENTFORMAT").getParamValue());
         } catch (Exception ex) {
             LOG.error("/imports createWfContent().getByParamName(\"CONTENTFORMAT\"): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().contentNoFormat)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().contentNoFormat)");
         }
 
         final int bookNoFormat;
@@ -302,7 +337,8 @@ public class ImportService {
             bookNoFormat = Integer.parseInt(paramservice.getByParamName("BOOKNOFORMAT").getParamValue());
         } catch (Exception ex) {
             LOG.error("/imports createWfContent().getByParamName(\"BOOKNOFORMAT\"): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().bookNoFormat)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().bookNoFormat)");
+
         }
 
         WfContentService wfContentService = new WfContentService();
@@ -313,7 +349,7 @@ public class ImportService {
             conentNumber = wfContentService.getMaxContentNo(contentPre, wfFolder.getId(), conentYear);
         } catch (Exception ex) {
             LOG.error("/imports createWfContent().getMaxContentNo(" + contentPre + ", " + wfFolder.getId() + ", " + conentYear + "): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().conentNumber)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().conentNumber)");
         }
         final String contentNo = wfContentService.convertContentNo(conentYear, conentNumber, 0, contentPre, contentNoFormat);
 
@@ -327,12 +363,13 @@ public class ImportService {
 
         final HashMap hashTo = prepareTo(importWfContentModel.getTo());
         if (hashTo == null) {
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().hashTo)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().hashTo)");
+
         }
 
         final HashMap hashThru = prepareTo(importWfContentModel.getThru());
         if (hashThru == null) {
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().hashThru)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent().hashThru)");
         }
 
         try {
@@ -376,10 +413,10 @@ public class ImportService {
             wfContent.setWfContentDate01(Common.dateThaiToLocalDateTime(importWfContentModel.getHardCopyReceiveDateTime()));
             wfContent.setFullText("");
             wfContent = wfContentService.create(wfContent);
-            return null;
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports createWfContent(): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent())";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWfContent())");
         }
     }
 
@@ -432,7 +469,7 @@ public class ImportService {
         }
     }
 
-    public String createWorkflow() {
+    public ImportStatusModel createWorkflow() {
         WorkflowService workflowService = new WorkflowService();
         final String positionName = userProfile.getPosition() != null ? userProfile.getPosition().getPositionName() : null;
         final String str02 = wfContent.getWfContentDate01() != null ? Common.localDateTimeToString(wfContent.getWfContentDate01()).substring(0, 16) : null;
@@ -457,14 +494,14 @@ public class ImportService {
             workflow = workflowService.create(workflow);
             workflow.setOrderNo(workflow.getId());
             workflow = workflowService.update(workflow);
-            return null;
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports createWorkflow(): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createWorkflow())";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createWorkflow())");
         }
     }
 
-    public String updateWfContent() {
+    public ImportStatusModel updateWfContent() {
         WfContentService wfContentService = new WfContentService();
         try {
             wfContent.setOrderNo(wfContent.getId());
@@ -472,14 +509,14 @@ public class ImportService {
             wfContent.setWorkflowId(workflow.getId());
             wfContent.setFullText(wfContentService.genFullText(dmsDocument.getId()));
             wfContent = wfContentService.update(wfContent);
-            return null;
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports updateWfContent(): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (updateWfContent())";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (updateWfContent())");
         }
     }
 
-    public String createFileAttach(ImportFileAttachModel importFileAttachModel) {
+    public ImportStatusModel createFileAttach(ImportFileAttachModel importFileAttachModel) {
         FileAttachService fileAttachService = new FileAttachService();
         try {
             fileAttach = new FileAttach();
@@ -491,15 +528,14 @@ public class ImportService {
             fileAttach.setReferenceId(0);
             fileAttach.setSecrets(importFileAttachModel.getSecretLevel());
             fileAttach = fileAttachService.create(fileAttach);
-
-            return null;
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports createFileAttach(): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (createFileAttach())";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createFileAttach())");
         }
     }
 
-    public String saveFileBase64(ImportFileAttachModel importFileAttachModel) {
+    public ImportStatusModel saveFileBase64(ImportFileAttachModel importFileAttachModel) {
         FileAttachService fileAttachService = new FileAttachService();
 
         final String pathDocumentTemp;
@@ -507,7 +543,7 @@ public class ImportService {
             pathDocumentTemp = new ParamService().getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
         } catch (Exception ex) {
             LOG.error("/imports saveFileBase64().getByParamName(\"PATH_DOCUMENT_TEMP\"): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64().pathDocumentTemp)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64().pathDocumentTemp)");
         }
 
         final String filePathTmp = pathDocumentTemp + fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
@@ -521,7 +557,7 @@ public class ImportService {
             dataByteArray = Base64.decodeBase64(importFileAttachModel.getFileBase64());
         } catch (Exception ex) {
             LOG.error("/imports saveFileBase64().dataByteArray: " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64()dataByteArray)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64()dataByteArray)");
         }
 
         try (OutputStream outpuStream = new FileOutputStream(new File(filePathTmp))) {
@@ -530,30 +566,29 @@ public class ImportService {
             outpuStream.close();
         } catch (Exception ex) {
             LOG.error("/imports saveFileBase64().outpuStream: " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64().outpuStream)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64().outpuStream)");
         }
 
         try {
             final String filePath = fileAttachService.moveToRealPath(fileAttach.getId());
             file = new File(filePath);
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports saveFileBase64().filePath: " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64().filePath)";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (saveFileBase64().filePath)");
         }
-
-        return null;
     }
 
-    public String updateFileAttach() {
+    public ImportStatusModel updateFileAttach() {
         FileAttachService fileAttachService = new FileAttachService();
         try {
             fileAttach.setOrderNo(wfContent.getId());
             fileAttach.setFileAttachSize(file.length());
             fileAttach = fileAttachService.update(fileAttach);
-            return null;
+            return new ImportStatusModel();
         } catch (Exception ex) {
             LOG.error("/imports updateFileAttach(): " + ex.getMessage());
-            return "บันทึกรายการหนังสือไม่สำเร็จ (updateFileAttach())";
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (updateFileAttach())");
         }
     }
 
@@ -613,10 +648,10 @@ public class ImportService {
         return data;
     }
 
-    public String listWfFolder() {
+    public ImportStatusModel listWfFolder() {
         List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 1, 3, null);
         if (listWfFolder.isEmpty()) {
-            return "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")";
+            return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")");
         } else {
             StructureService structureService = new StructureService();
             listStructure = new ArrayList<>();
@@ -631,7 +666,7 @@ public class ImportService {
                 }
                 listStructure.add(structure);
             }
-            return null;
+            return new ImportStatusModel();
         }
     }
 
