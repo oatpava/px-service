@@ -37,6 +37,13 @@ public class ImportStatusModel {
                 responseStatus = Response.Status.INTERNAL_SERVER_ERROR;
         }
     }
+    
+    
+    public ImportStatusModel(Exception ex) {
+        this.isSuccess = false;
+        this.errorMessage = ex.getMessage();
+        this.statusCode = 500;
+    }
 
     public boolean getIsSuccess() {
         return isSuccess;
