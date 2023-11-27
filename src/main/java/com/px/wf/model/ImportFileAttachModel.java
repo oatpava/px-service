@@ -5,7 +5,6 @@ import com.google.gson.annotations.Since;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,8 +20,7 @@ public class ImportFileAttachModel {
     @ApiParam(name = "name", value = "ชื่อไฟล์", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "name", dataType = "String", value = "ชื่อไฟล์", required = true)
-    @Size(max = 255)
+    @ApiModelProperty(name = "name", dataType = "string", value = "ชื่อไฟล์", required = true)
     private String name;
 
     @XmlElement(name = "secretLevel")
@@ -30,14 +28,13 @@ public class ImportFileAttachModel {
     @Expose
     @Since(1.0)
     @ApiModelProperty(name = "secretLevel", dataType = "int", value = "ชั้นความลับ", required = true)
-    @Size(max = 255)
     private int secretLevel;
 
     @XmlElement(name = "fileBase64")
     @ApiParam(name = "fileBase64", value = "ไฟล์", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "fileBase64", dataType = "Base64", value = "ไฟล์", required = true)
+    @ApiModelProperty(name = "fileBase64", dataType = "string", value = "ไฟล์", required = true)
     private String fileBase64;
 
     public ImportFileAttachModel() {
@@ -66,5 +63,5 @@ public class ImportFileAttachModel {
     public void setFileBase64(String fileBase64) {
         this.fileBase64 = fileBase64;
     }
-    
+
 }

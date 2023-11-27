@@ -21,28 +21,28 @@ public class ImportWfContentModel {
     @ApiParam(name = "bookDate", example = "31/01/2566", value = "ลงวันที่", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "bookDate", example = "31/01/2566", dataType = "String", value = "ลงวันที่", required = true)
+    @ApiModelProperty(name = "bookDate", example = "31/01/2566", dataType = "string", value = "ลงวันที่", required = true)
     private String bookDate;
 
     @XmlElement(name = "speedLevel")
     @ApiParam(name = "speedLevel", value = "ชั้นเร่งด่วน", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "speedLevel", dataType = "Integer", value = "ชั้นเร่งด่วน", required = true)
+    @ApiModelProperty(name = "speedLevel", dataType = "int", value = "ชั้นเร่งด่วน", required = true)
     private Integer speedLevel;
 
     @XmlElement(name = "secretLevel")
     @ApiParam(name = "secretLevel", value = "ชั้นความลับ", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "secretLevel", dataType = "Integer", value = "ชั้นความลับ", required = true)
+    @ApiModelProperty(name = "secretLevel", dataType = "int", value = "ชั้นความลับ", required = true)
     private Integer secretLevel;
 
     @XmlElement(name = "from")
     @ApiParam(name = "from", value = "จาก", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "from", dataType = "String", value = "จาก", required = true)
+    @ApiModelProperty(name = "from", dataType = "string", value = "จาก", required = true)
     @Size(max = 1000)
     private String from;
 
@@ -50,7 +50,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "to", value = "ถึง", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "to", dataType = "String[]", value = "ถึง", required = true)
+    @ApiModelProperty(name = "to", value = "ถึง", required = true)
     @Size(max = 4000)
     private String[] to;
 
@@ -58,7 +58,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "thru", value = "ผ่าน", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "thru", dataType = "String[]", value = "ผ่าน", required = false)
+    @ApiModelProperty(name = "thru", value = "ผ่าน", required = false)
     @Size(max = 4000)
     private String[] thru;
 
@@ -66,7 +66,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "title", value = "เรื่อง", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "title", dataType = "String", value = "เรื่อง", required = true)
+    @ApiModelProperty(name = "title", dataType = "string", value = "เรื่อง", required = true)
     @Size(max = 4000)
     private String title;
 
@@ -74,7 +74,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "referTo", value = "อ้างถึง", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "referTo", dataType = "String", value = "อ้างถึง", required = false)
+    @ApiModelProperty(name = "referTo", dataType = "string", value = "อ้างถึง", required = false)
     @Size(max = 4000)
     private String referTo;
 
@@ -82,7 +82,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "attachWith", value = "สิ่งที่ส่งมาด้วย", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "attachWith", dataType = "String", value = "สิ่งที่ส่งมาด้วย", required = false)
+    @ApiModelProperty(name = "attachWith", dataType = "string", value = "สิ่งที่ส่งมาด้วย", required = false)
     @Size(max = 4000)
     private String attachWith;
 
@@ -90,7 +90,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "procedure", value = "การปฏิบัติ", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "procedure", dataType = "String", value = "การปฏิบัติ", required = false)
+    @ApiModelProperty(name = "procedure", dataType = "string", value = "การปฏิบัติ", required = false)
     @Size(max = 4000)
     private String procedure;
 
@@ -98,7 +98,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "remark", value = "หมายเหตุ", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "remark", dataType = "String", value = "หมายเหตุ", required = false)
+    @ApiModelProperty(name = "remark", dataType = "string", value = "หมายเหตุ", required = false)
     @Size(max = 4000)
     private String remark;
 
@@ -106,7 +106,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "hardCopyReceiveDateTime", example = "31/01/2566 10:30", value = "วันเวลาที่ได้รับเอกสารตัวจริง", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "hardCopyReceiveDateTime", example = "31/01/2566  10:30", dataType = "String", value = "วันเวลาที่ได้รับเอกสารตัวจริง", required = false)
+    @ApiModelProperty(name = "hardCopyReceiveDateTime", example = "31/01/2566  10:30", dataType = "string", value = "วันเวลาที่ได้รับเอกสารตัวจริง", required = false)
     private String hardCopyReceiveDateTime;
    
 
@@ -114,7 +114,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "postNo", value = "ไปรษณีย์ลงทะเบียน", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "postNo", dataType = "String", value = "ไปรษณีย์ลงทะเบียน", required = false)
+    @ApiModelProperty(name = "postNo", dataType = "string", value = "ไปรษณีย์ลงทะเบียน", required = false)
     @Size(max = 255)
     private String postNo;
 
@@ -122,7 +122,7 @@ public class ImportWfContentModel {
     @ApiParam(name = "fileAttach", value = "เอกสารแนบ", required = false)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "fileAttach", dataType = "JSON", value = "เอกสารแนบ", required = false)
+    @ApiModelProperty(name = "fileAttach", value = "เอกสารแนบ", required = false)
     private ImportFileAttachModel fileAttach;
 
     public ImportWfContentModel() {
