@@ -501,8 +501,8 @@ public class ImportService {
 
     private Integer getUserType(String name) {
         try {
-            List<Structure> listStructure = new StructureService().listByName(name);
-            if (!listStructure.isEmpty()) {
+            List<Structure> listStructureLocal = new StructureService().listByName(name);
+            if (!listStructureLocal.isEmpty()) {
                 return 1;
             }
 
