@@ -579,7 +579,7 @@ public class ImportService {
         try {
             fileAttach = new FileAttach();
             fileAttach.setCreatedBy(userProfile.getId());
-            fileAttach.setFileAttachName(importFileAttachModel.getName() + ".pdf");
+            fileAttach.setFileAttachName(this.noSpecialChar(importFileAttachModel.getName()) + ".pdf");
             fileAttach.setFileAttachType(".PDF");
             fileAttach.setLinkType("dms");
             fileAttach.setLinkId(dmsDocument.getId());
@@ -591,6 +591,11 @@ public class ImportService {
             LOG.error("/imports createFileAttach()", ex);
             return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createFileAttach())");
         }
+    }
+    
+    private String noSpecialChar(String input) {
+        final String result = input.replaceAll("[^ก-๚a-zA-Z0-9_-]", "");
+        return result.length() == 0 ? "untitled" : result;
     }
 
     public ImportStatusModel saveFileBase64(ImportFileAttachModel importFileAttachModel) {
