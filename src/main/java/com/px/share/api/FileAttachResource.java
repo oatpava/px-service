@@ -669,7 +669,7 @@ public class FileAttachResource {
             if (fileAttach != null) {
                 String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
                 FileAttachModel fileAttachModel = fileAttachService.tranformToModel(fileAttach);
-                String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
+//                String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
                 String url = pathDocumentHttp + "Temp/" + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
                 String urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName2(fileAttach.getId());
@@ -737,7 +737,7 @@ public class FileAttachResource {
                 
                 String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
-                String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
+//                String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
                 String url = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
                 String urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName(fileAttach.getId());
@@ -814,7 +814,7 @@ public class FileAttachResource {
                 
                 String pathDocumentHttp = paramService.getByParamName("PATH_DOCUMENT_HTTP").getParamValue();
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttachVersionControl);
-                String fileSave = fileAttachService.moveToTempPath(fileAttachVersionControl.getId());
+//                String fileSave = fileAttachService.moveToTempPath(fileAttachVersionControl.getId());
                 String url = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttachVersionControl.getId()) + fileAttachVersionControl.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
                 String urlNoName = pathDocumentHttp + "Temp/" + fileAttachModel.getLinkType() + "/" + fileAttachService.buildHtmlPathExtNoName(fileAttachVersionControl.getId());
@@ -935,7 +935,7 @@ public class FileAttachResource {
                         fileAttachService.delete(fileAttach);
                     } else {
                         fileAttachModel = fileAttachService.tranformToModel2(fileAttach);
-                        String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
+//                        String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
                         url = pathDocumentHttp + "Temp/" + fileAttach.getLinkType() + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
 //                    url = pathDocumentHttp+fileAttachService.buildHtmlPathExt(fileAttach.getId())+fileAttach.getFileAttachType();
                         thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
@@ -1043,7 +1043,6 @@ public class FileAttachResource {
                 fileName = fileAttach.getFileAttachName();
                 fileName = URLEncoder.encode(fileName, "UTF-8");
                 String fileSave = fileAttachService.moveToTempPath(fileAttach.getId());
-//                String fileSave = "C:\\dbPraxticol\\Data\\Document\\Temp\\dms\\EXT0\\25316.PDF";
                 fileStream = new StreamingOutput() {
                     @Override
                     public void write(java.io.OutputStream output) throws IOException, WebApplicationException {
