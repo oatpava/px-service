@@ -485,7 +485,8 @@ public class ImportService {
         String listId = userType.toString();
 
         for (int i = 1; i < tos.length; i++) {
-            listName += ", " + tos[i];
+            final String name = tos[i].replace(", ", " และ ");
+            listName += ", " + name;
             userType = getUserType(tos[0]);
             if (userType == null) {
                 return null;
