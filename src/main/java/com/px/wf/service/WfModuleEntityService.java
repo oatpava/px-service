@@ -98,8 +98,8 @@ public class WfModuleEntityService {
         WfContentType contentType = contentTypeService.getById(1);
         WfContentType result = null;
         if (contentType == null) {
-            String name = "ทะเบียนรับ,ทะเบียนส่ง,ทะเบียนอื่นๆ,หนังสือเวียน";
-            String child = "1,2,3,4,5-1,2,3,4,5-1-6,7,8,9,10";
+            String name = "ทะเบียนรับ,ทะเบียนส่ง,ทะเบียนอื่นๆ,หนังสือเวียน,รับคำขออิเล็กทรอนิกส์";
+            String child = "1,2,3,4,5-1,2,3,4,5-1-6,7,8,9,10-2,3";
             String[] nameArray = name.split(",");
             String[] childArray = child.split("-");
             int i = 0;
