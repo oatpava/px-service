@@ -292,15 +292,15 @@ public class ImportService {
     public ImportStatusModel checkWfFolder(Integer structureId) {
         WfFolderService wfFolderService = new WfFolderService();
         try {
-            List<WfFolder> listWfFolder = wfFolderService.listShortcutByUserProfileId(userProfile.getId(), 1, 3, structureId);
+            List<WfFolder> listWfFolder = wfFolderService.listShortcutByUserProfileId(userProfile.getId(), 5, 2, structureId);
             if (listWfFolder.isEmpty()) {
-                return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")");
+                return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับคำขออิเล็กทรอนิกส์ (" + userProfile.getUserProfileFullName() + ")");
             } else {
                 final int folderId = listWfFolder.get(0).getWfFolderLinkFolderId();
                 try {
                     wfFolder = wfFolderService.getByIdNotRemoved(folderId);
                     if (wfFolder == null) {
-                        return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")");
+                        return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับคำขออิเล็กทรอนิกส์ (" + userProfile.getUserProfileFullName() + ")");
                     } else {
                         return new ImportStatusModel();
                     }
@@ -715,18 +715,18 @@ public class ImportService {
     }
 
     public ImportStatusModel listWfFolder() {
-        List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 1, 3, null);
+        List<WfFolder> listWfFolder = new WfFolderService().listShortcutByUserProfileId(userProfile.getId(), 5, 2, null);
         if (listWfFolder.isEmpty()) {
-            return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับหนังสือภายนอก (" + userProfile.getUserProfileFullName() + ")");
+            return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับคำขออิเล็กทรอนิกส์ (" + userProfile.getUserProfileFullName() + ")");
         } else {
             StructureService structureService = new StructureService();
             listStructure = new ArrayList<>();
-            for (WfFolder wfFolder : listWfFolder) {
+            for (WfFolder wfFolderLocal : listWfFolder) {
                 Structure structure = new Structure();
                 try {
-                    structure = structureService.getById(wfFolder.getWfFolderLinkId());
+                    structure = structureService.getById(wfFolderLocal.getWfFolderLinkId());
                 } catch (Exception ex) {
-                    structure.setId(wfFolder.getWfFolderLinkId());
+                    structure.setId(wfFolderLocal.getWfFolderLinkId());
                     structure.setStructureName("");
                     LOG.error("/imports listWfFloder().structure.id: " + structure.getId() + "", ex);
                 }
