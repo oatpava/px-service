@@ -7,6 +7,7 @@ import com.px.admin.entity.ModuleConfig;
 import com.px.share.entity.Param;
 import com.px.admin.entity.Position;
 import com.px.admin.entity.PositionType;
+import com.px.admin.entity.Province;
 import com.px.admin.entity.Structure;
 import com.px.admin.entity.Title;
 import com.px.admin.entity.User;
@@ -79,6 +80,7 @@ public class AdminModuleEntityService {
         metadataSource.addAnnotatedClass(com.px.menu.entity.MenuSubmoduleAuth.class);
         metadataSource.addAnnotatedClass(com.px.menu.entity.MenuType.class);
         metadataSource.addAnnotatedClass(com.px.share.entity.Month.class);
+        metadataSource.addAnnotatedClass(com.px.admin.entity.Province.class);
 
         return metadataSource;
     }
@@ -97,6 +99,7 @@ public class AdminModuleEntityService {
         createDataUser(adminUserName, adminPassword, adminFullName);
         createMonth();
         createListAd();
+        createDataProvince("pc_province.csv");
     }
 
     private void createListAd() {
@@ -500,4 +503,30 @@ public class AdminModuleEntityService {
 
         }
     }
+
+    private void createDataProvince(String masterFileName) {
+        ProvinceService provinceService = new ProvinceService();
+        Province province = provinceService.getById(1);
+        Province result = null;
+        if (province == null) {
+            LOG.info("Province not found!! Auto create Province. ");
+            long t1 = -System.currentTimeMillis();
+            Common common = new Common();
+            List<String> listMasterData = (ArrayList<String>) common.readMasterFileToList(masterFileName);
+            if (listMasterData.size() > 1) {
+                for (String masterData : listMasterData) {
+                    String[] masterDataArray = masterData.split(PxInit.MasterFileSplitBy);
+                    province = new Province();
+                    province.setCreatedBy(this.createdBy);
+                    province.setCode(masterDataArray[0]);
+                    province.setName(masterDataArray[1]);
+                    result = provinceService.create(province);
+                    result.setOrderNo(result.getId());
+                    result = provinceService.update(result);
+                }
+            }
+            LOG.info("Province created successfully." + (t1 + System.currentTimeMillis()));
+        }
+    }
+
 }

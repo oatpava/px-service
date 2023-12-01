@@ -70,6 +70,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.admin.api.OrganizeResource.class);
         resources.add(com.px.admin.api.PositionResource.class);
         resources.add(com.px.admin.api.PositionTypeResource.class);
+        resources.add(com.px.admin.api.ProvinceResource.class);
         resources.add(com.px.admin.api.StructureResource.class);
         resources.add(com.px.admin.api.SubmoduleResource.class);
         resources.add(com.px.admin.api.TitleResource.class);
