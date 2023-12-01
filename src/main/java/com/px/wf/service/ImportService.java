@@ -290,6 +290,10 @@ public class ImportService {
     }
 
     public ImportStatusModel checkWfFolder(Integer structureId) {
+        if (isNull(structureId) || structureId == 0) {
+            structureId = userProfile.getStructure().getId();
+        }
+
         WfFolderService wfFolderService = new WfFolderService();
         try {
             List<WfFolder> listWfFolder = wfFolderService.listShortcutByUserProfileId(userProfile.getId(), 5, 2, structureId);
@@ -310,7 +314,7 @@ public class ImportService {
                 }
             }
         } catch (Exception ex) {
-            LOG.error("/imports checkWfFolder().listShortcutByUserProfileId(" + userProfile.getId() + ", 1, 3, " + structureId + ")", ex);
+            LOG.error("/imports checkWfFolder().listShortcutByUserProfileId(" + userProfile.getId() + ", 5, 2, " + structureId + ")", ex);
             return new ImportStatusModel(500, "เกิดข้อผิดพลาด (checkWfFolder())");
         }
     }
@@ -728,7 +732,7 @@ public class ImportService {
                 } catch (Exception ex) {
                     structure.setId(wfFolderLocal.getWfFolderLinkId());
                     structure.setStructureName("");
-                    LOG.error("/imports listWfFloder().structure.id: " + structure.getId() + "", ex);
+                    LOG.error("/imports/structure listWfFloder().structure.id: " + structure.getId() + "", ex);
                 }
                 listStructure.add(structure);
             }
