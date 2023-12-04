@@ -122,4 +122,19 @@ public class WfFolderDaoImpl extends GenericTreeDaoImpl<WfFolder, Integer> imple
         return this.listByCriteria(criteria);
     }
 
+    public WfFolder getExternalByProvinceId(int provinceId) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("wfFolderLinkId", provinceId));
+        conjunction.add(Restrictions.eq("wfFolderType", "T"));
+        conjunction.add(Restrictions.eq("ct.id", 5));
+        conjunction.add(Restrictions.eq("ct2.id", 3));
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(WfFolder.class);
+        criteria.createCriteria("wfContentType", "ct", JoinType.INNER_JOIN);
+        criteria.createCriteria("wfContentType2", "ct2", JoinType.INNER_JOIN);
+        criteria.add(conjunction).addOrder(Order.asc("orderNo"));
+        List<WfFolder> result = this.listByCriteria(criteria);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
 }

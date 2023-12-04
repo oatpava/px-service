@@ -203,7 +203,6 @@ public class UserProfileService implements GenericService<UserProfile, UserProfi
 //        checkNotNull(userId, "userId must not be null");
 //        return userProfileDaoImpl.getByUserId(userId);
 //    }
-
     public UserProfile getByUsername(String username) {
         checkNotNull(username, "username must not be null");
         return userProfileDaoImpl.getByUsername(username);
@@ -574,4 +573,9 @@ public class UserProfileService implements GenericService<UserProfile, UserProfi
     public List<UserProfile> listByName(String userProfileFullName) {
         return userProfileDaoImpl.listByName(userProfileFullName);
     }
+
+    public UserProfile getByCode(String userProfileCode) {
+        return userProfileDaoImpl.getByCode(userProfileCode);
+    }
+    
 }

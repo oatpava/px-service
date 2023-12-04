@@ -269,4 +269,157 @@ public class ImportResource {
         return Response.status(responseStatus).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "เชื่อมโยงข้อมูลหนังสือ (ภายนอก)",
+            notes = "เชื่อมโยงข้อมูลหนังสือ (ภายนอก)"
+    )
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Create Success."),
+        @ApiResponse(code = 400, message = "Bad Request!."),
+        @ApiResponse(code = 401, message = "Unauthorized!."),
+        @ApiResponse(code = 404, message = "Not Found!."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/external")
+    public Response importWfContentExternal(
+            @ApiParam(name = "key", value = "key", required = true)
+            @QueryParam("key") String key,
+            @ApiParam(name = "provinceCode", value = "provinceCode", required = true)
+            @QueryParam("provinceCode") String provinceCode,
+            ImportWfContentModel importWfContentModel
+    ) {
+        LOG.info("importWfContentExternal...");
+        Gson gs = new GsonBuilder()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status responseStatus = Response.Status.INTERNAL_SERVER_ERROR;
+        HashMap error = new HashMap();
+        ImportService importService = new ImportService();
+        try {
+            ImportStatusModel status = importService.checkData(importWfContentModel);
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("checkData");
+
+            status = importService.checkAuthentication(key);
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("checkAuthentication");
+
+            status = importService.checkProvince(provinceCode);
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("checkUserProfile");
+
+            status = importService.checkWfFolder();
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("checkWfFolder");
+
+            status = importService.createDmsDocument();
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("createDmsDocument");
+
+            status = importService.createWfContent(importWfContentModel);
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("createWfContent");
+
+            status = importService.createWorkflow();
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("createWorkflow");
+
+            status = importService.updateWfContent();
+            if (!status.getIsSuccess()) {
+                error.put("code", status.getStatusCode());
+                error.put("message", status.getErrorMessage());
+                responseStatus = status.getResponseStatus();
+                throw new Exception(status.getErrorMessage());
+            }
+            System.out.println("updateWfContent");
+
+            if (importWfContentModel.getFileAttach() != null) {
+                status = importService.createFileAttach(importWfContentModel.getFileAttach());
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
+                System.out.println("createFileAttach");
+
+                status = importService.saveFileBase64(importWfContentModel.getFileAttach());
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
+                System.out.println("saveFileBase64");
+
+                status = importService.updateFileAttach();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
+                System.out.println("updateFileAttach");
+
+            }
+
+            responseData.put("success", true);
+            responseData.put("data", importService.getData());
+            responseStatus = Response.Status.CREATED;
+            System.out.println("success");
+        } catch (Exception ex) {
+            if (error.get("code") == null) {
+                error.put("code", 500);
+                error.put("message", ex.getMessage());
+                System.out.println("err: " + ex.getMessage());
+            }
+            responseData.put("success", false);
+            responseData.put("error", error);
+            importService.deleteEntities();
+        }
+        return Response.status(responseStatus).entity(gs.toJson(responseData)).build();
+    }
+
 }

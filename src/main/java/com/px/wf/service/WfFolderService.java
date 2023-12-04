@@ -675,5 +675,9 @@ public class WfFolderService implements GenericTreeService<WfFolder, WfFolderMod
     public List<WfFolder> listShortcutByUserProfileId(int userProfileId, int contentTypeId, int contentType2Id, Integer structureId) {
         return WfFolderDaoImpl.listShortcutByUserProfileId(userProfileId, contentTypeId, contentType2Id, structureId);
     }
+    
+    public WfFolder getExternalByProvinceId(int provinceId) {
+        return WfFolderDaoImpl.getExternalByProvinceId(provinceId);
+    }
         
 }

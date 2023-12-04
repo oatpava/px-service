@@ -310,4 +310,14 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
         return this.listByCriteria(criteria);
     }
 
+    public UserProfile getByCode(String userProfileCode) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("userProfileCode", userProfileCode));
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
+        criteria.add(conjunction);
+        List<UserProfile> result = this.listByCriteria(criteria);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
 }

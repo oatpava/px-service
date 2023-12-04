@@ -1,9 +1,11 @@
 package com.px.wf.service;
 
 import com.px.admin.entity.Organize;
+import com.px.admin.entity.Province;
 import com.px.admin.entity.Structure;
 import com.px.admin.entity.UserProfile;
 import com.px.admin.service.OrganizeService;
+import com.px.admin.service.ProvinceService;
 import com.px.admin.service.StructureService;
 import com.px.admin.service.UserProfileService;
 import com.px.admin.service.UserService;
@@ -51,6 +53,7 @@ public class ImportService {
     private File file;
     private Workflow workflow;
     private List<Structure> listStructure;
+    private Province province;
 
     public ImportService() {
     }
@@ -597,7 +600,7 @@ public class ImportService {
             return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createFileAttach())");
         }
     }
-    
+
     private String noSpecialChar(String input) {
         final String result = input.replaceAll("[^ก-๚a-zA-Z0-9_-]", "");
         return result.length() == 0 ? "untitled" : result;
@@ -750,6 +753,48 @@ public class ImportService {
             data.add(tmp);
         }
         return data;
+    }
+
+    public ImportStatusModel checkAuthentication(String key) {
+        try {
+            userProfile = new UserProfileService().getByCode(key);
+            if (userProfile == null) {
+                return new ImportStatusModel(401, "การยืนยันตัวตนไม่สำเร็จ");
+            } else {
+                return new ImportStatusModel();
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports/external checkAuthentication()", ex);
+            return new ImportStatusModel(500, "เกิดข้อผิดพลาด (checkAuthentication())");
+        }
+    }
+
+    public ImportStatusModel checkProvince(String provinceCode) {
+        try {
+            province = new ProvinceService().getByCode(provinceCode);
+            if (province == null) {
+                return new ImportStatusModel(404, "ไม่พบข้อมูลจังหวัด (provinceCode: " + provinceCode + ")");
+            } else {
+                return new ImportStatusModel();
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports/external checkProvince()", ex);
+            return new ImportStatusModel(500, "เกิดข้อผิดพลาด (checkProvince())");
+        }
+    }
+
+    public ImportStatusModel checkWfFolder() {
+        try {
+            wfFolder = new WfFolderService().getExternalByProvinceId(province.getId());
+            if (wfFolder == null) {
+                return new ImportStatusModel(404, "ไม่พบข้อมูลแฟ้มทะเบียนรับคำขออิเล็กทรอนิกส์ (" + province.getId() + ")");
+            } else {
+                return new ImportStatusModel();
+            }
+        } catch (Exception ex) {
+            LOG.error("/imports/external checkWfFolder()", ex);
+            return new ImportStatusModel(500, "เกิดข้อผิดพลาด (checkWfFolder())");
+        }
     }
 
 }
