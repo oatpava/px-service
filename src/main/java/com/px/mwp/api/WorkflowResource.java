@@ -79,9 +79,10 @@ public class WorkflowResource {
         responseData.put("errorMessage", "");
         try {
             WorkflowService workflowService = new WorkflowService();
-            UserProfileService userProfileService = new UserProfileService();
-            UserProfile userProfile = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID")));
 
+            final int userProfileId = (workflowPostModel.getWorkflowActionId() > 0) ? workflowPostModel.getWorkflowActionId() : Integer.parseInt(httpHeaders.getHeaderString("userID"));
+            UserProfile userProfile = new UserProfileService().getById(userProfileId);
+            
             String actionName;
             String actionPosition;
             if (workflowPostModel.getWorkflowActionName() == null) {
@@ -105,7 +106,7 @@ public class WorkflowResource {
             workflow.setLinkId(workflowPostModel.getLinkId());
             workflow.setLinkId2(workflowPostModel.getLinkId2());
             workflow.setLinkId3(workflowPostModel.getLinkId3());
-            workflow.setWorkflowActionId(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+            workflow.setWorkflowActionId(userProfileId);
             workflow.setWorkflowActionIdType(0);
             workflow.setWorkflowActionName(actionName);
             workflow.setWorkflowActionPosition(actionPosition);
