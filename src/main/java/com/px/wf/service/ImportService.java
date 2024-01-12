@@ -124,7 +124,9 @@ public class ImportService {
             return new ImportStatusModel(400, "postNo " + errorMessage);
         }
 
-        if (importWfContentModel.getFileAttach() != null) {
+        if (importWfContentModel.getFileAttach() == null) {
+            return new ImportStatusModel(400, "fileAttach ห้ามเป็นค่าว่าง");
+        } else {
             errorMessage = isValid(importWfContentModel.getFileAttach().getName(), true, 255);
             if (errorMessage != null) {
                 return new ImportStatusModel(400, "fileAttach.name " + errorMessage);

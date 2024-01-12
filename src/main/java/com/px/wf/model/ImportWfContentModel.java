@@ -119,10 +119,10 @@ public class ImportWfContentModel {
     private String postNo;
 
     @XmlElement(name = "fileAttach")
-    @ApiParam(name = "fileAttach", value = "เอกสารแนบ", required = false)
+    @ApiParam(name = "fileAttach", value = "เอกสารแนบ", required = true)
     @Expose
     @Since(1.0)
-    @ApiModelProperty(name = "fileAttach", value = "เอกสารแนบ", required = false)
+    @ApiModelProperty(name = "fileAttach", value = "เอกสารแนบ", required = true)
     private ImportFileAttachModel fileAttach;
 
     public ImportWfContentModel() {
