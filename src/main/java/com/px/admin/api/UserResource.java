@@ -1484,4 +1484,49 @@ public class UserResource {
         return Response.status(status).header(HTTPHeaderNames.AUTH_TOKEN, token).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "ยืนยันรหัสผ่าน",
+            notes = "ยืนยันรหัสผ่าน",
+            response = UserModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Check password success."),
+        @ApiResponse(code = 404, message = "Check password fail."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/checkPassword")
+    public Response checkPassword(
+            @BeanParam VersionModel versionModel,
+            @ApiParam(name = "username", value = "ชื่อผู้ใช้", required = true)
+            @QueryParam("username") String username,
+            @ApiParam(name = "password", value = "รหัสผ่าน", required = true)
+            @QueryParam("password") String password
+    ) {
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.OK;
+        responseData.put("data", null);
+        responseData.put("success", false);
+        responseData.put("message", "Check password fail.");
+        responseData.put("errorMessage", "");
+        try {
+            responseData.put("data", new UserService().authenticationUser(username, password));
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 }
