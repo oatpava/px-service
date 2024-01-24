@@ -82,7 +82,7 @@ public class FileAttachApproveResource {
         try {
             FileAttachService fielAttachService = new FileAttachService();
             UserProfile userProfile = new UserProfileService().getById(fileAttachApproveModel.getUserProfileId());
-            
+
             fileAttachApprove.setCreatedBy(Integer.valueOf(httpHeaders.getHeaderString("userID")));
             fileAttachApprove.setFileAttach(fielAttachService.getById(fileAttachApproveModel.getFileAttachId()));
             fileAttachApprove.setUserProfile(userProfile);
@@ -90,7 +90,7 @@ public class FileAttachApproveResource {
 
             final String issuedBy = "Issued by: DPIM Certification Authority";
             final String signedBy = "Digitally Signed by: "
-                    + (userProfile.getUserProfileFullNameEng() != null ? userProfile.getUserProfileFullNameEng() : "") 
+                    + (userProfile.getUserProfileFullNameEng() != null ? userProfile.getUserProfileFullNameEng() : "")
                     + " "
                     + (Common.localDateTimeToString(fileAttachApprove.getCreatedDate()));
 
@@ -297,16 +297,16 @@ public class FileAttachApproveResource {
         try {
             FileAttachApproveService fileAttachApproveService = new FileAttachApproveService();
             List<FileAttachApprove> listFileAttachApprove = fileAttachApproveService.listAll(listOptionModel.getSort(), listOptionModel.getDir(), fileAttachId);
+            ArrayList<FileAttachApproveModel> listFileAttachApproveModel = new ArrayList<>();
             if (!listFileAttachApprove.isEmpty()) {
-                ArrayList<FileAttachApproveModel> listFileAttachApproveModel = new ArrayList<>();
                 for (FileAttachApprove fileAttachApprove : listFileAttachApprove) {
                     listFileAttachApproveModel.add(fileAttachApproveService.tranformToModel(fileAttachApprove));
                 }
                 listFileAttachApproveModel.trimToSize();
-                status = Response.Status.OK;
-                responseData.put("data", listFileAttachApproveModel);
-                responseData.put("message", "");
             }
+            status = Response.Status.OK;
+            responseData.put("data", listFileAttachApproveModel);
+            responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
