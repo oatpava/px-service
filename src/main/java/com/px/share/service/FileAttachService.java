@@ -5,10 +5,10 @@ import com.aspose.pdf.Font;
 import com.aspose.pdf.FontRepository;
 import com.aspose.pdf.License;
 import com.aspose.pdf.PKCS1;
-import com.aspose.pdf.PKCS7;
 import com.aspose.pdf.Page;
 import com.aspose.pdf.Signature;
 import com.aspose.pdf.TextStamp;
+import com.aspose.pdf.facades.PdfContentEditor;
 import com.aspose.pdf.facades.PdfFileSignature;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.lowagie.text.Image;
@@ -519,15 +519,15 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
     }
 
     public String cert(FileAttachApprove fielAttachApprove, String caPassword, String issuedBy, String signedBy) {
-        final FileAttach fielattach = fielAttachApprove.getFileAttach();
+        final FileAttach fileAttach = fielAttachApprove.getFileAttach();
         final String encodeFile;
         final String pathDocumentTemp;
         final String pathDocument;
         final String pathCa;
         final String srcFilePath;
         final String tmpFilePath;
-        final String dstFilePath;
         final String pfxPath;
+        final boolean flagCa = (fileAttach.getFlagCa() != null && fileAttach.getFlagCa().equalsIgnoreCase("Y"));
         try {
             ParamService paramService = new ParamService();
             encodeFile = paramService.getByParamName("ENCODE_FILE").getParamValue();
@@ -535,12 +535,11 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
             pathCa = paramService.getByParamName("PATH_CA").getParamValue();
 
-            final String fileAttachType = fielattach.getFileAttachType();
-            final String filePath = fielattach.getLinkType() + File.separator + buildFilePathExt(fielattach.getId()) + fileAttachType;
-            final String filePathCa = "ca" + File.separator + fielattach.getId() + fileAttachType;
+            final String fileAttachType = fileAttach.getFileAttachType();
+            final String filePath = fileAttach.getLinkType() + File.separator + buildFilePathExt(fileAttach.getId()) + fileAttachType;
+            final String filePathCa = "ca" + File.separator + fileAttach.getId() + "_" + fielAttachApprove.getUserProfile().getId() + fileAttachType;
             srcFilePath = pathDocument + filePath;//Document/dms/EXTxxx/xxx.PDF
-            tmpFilePath = pathDocumentTemp + filePathCa;//Document/Temp/ca/xxx.PDF
-            dstFilePath = tmpFilePath.replace(fileAttachType, "_signed" + fileAttachType);//Document/Temp/ca/xxx_signed.PDF
+            tmpFilePath = pathDocumentTemp + filePathCa;//Document/Temp/ca/xxx_1.PDF
             pfxPath = pathCa + fielAttachApprove.getUserProfile().getId() + ".pfx";
 //            System.out.println("xxxxxxxxxx srcFilePath: " + srcFilePath);
 //            System.out.println("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
@@ -553,15 +552,11 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 
         File srcFile = new File(srcFilePath);
         if (!srcFile.exists()) {
-            return "file not found.";
+            return "file not found!!!";
         }
         File tmpFile = new File(tmpFilePath);
         if (tmpFile.exists()) {
             tmpFile.delete();
-        }
-        File dstFile = new File(dstFilePath);
-        if (dstFile.exists()) {
-            dstFile.delete();
         }
 
         if (encodeFile.equalsIgnoreCase("Y")) {
@@ -570,7 +565,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //                System.out.println("xxxxxxxxxx decode done.");
             } catch (Exception ex) {
                 LOG.error("cert().decodeFile()", ex);
-                return "file decode error.";
+                return "file decode error!!!";
             }
         } else {
             String p = tmpFilePath.substring(0, tmpFilePath.lastIndexOf(File.separator));
@@ -584,7 +579,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //                System.out.println("xxxxxxxxxx copy done.");
             } catch (IOException ex) {
                 LOG.error("cert().copy()", ex);
-                return "file copy error.";
+                return "file copy error!!!";
             }
         }
 
@@ -594,7 +589,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            System.out.println("xxxxxxxxxx document: " + document.getFileName());
         } catch (Exception ex) {
             LOG.error("cert().new Document()", ex);
-            return "new Document error.";
+            return "new Document error!!!";
         }
 
         License license = new License();
@@ -603,7 +598,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            System.out.println("xxxxxxxxxx license: " + license.toString());
         } catch (Exception ex) {
             LOG.error("cert().setLicense()", ex);
-            return "License not found.";
+            return "license not found!!!";
         }
 
         Font font;
@@ -612,19 +607,50 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            System.out.println("xxxxxxxxxx font: " + font.getFontName());
         } catch (Exception ex) {
             LOG.error("cert().openFont()", ex);
-            return "Font not found.";
+            return "font not found!!!";
         }
 
-        TextStamp tsIssuedBy = new TextStamp(issuedBy);
-        tsIssuedBy.getTextState().setFont(font);
-        tsIssuedBy.getTextState().setFontSize(12.0F);
-        tsIssuedBy.setLeftMargin(32);
-        tsIssuedBy.setBottomMargin(29);
-        tsIssuedBy.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Left);
-        tsIssuedBy.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
-        tsIssuedBy.getTextState().setFontStyle(com.aspose.pdf.FontStyles.Regular);
-        tsIssuedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
-//        System.out.println("xxxxxxxxxx issuedBy: " + issuedBy);
+        try {
+            Signature pkcs = new PKCS1(pfxPath, caPassword);//486185
+            PdfFileSignature signature = new PdfFileSignature();
+            signature.bindPdf(tmpFilePath);
+            signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
+            signature.save(tmpFilePath);
+            signature.close();
+//            System.out.println("xxxxxxxxxx sign done.");
+        } catch (Exception ex) {
+            LOG.error("cert().sign", ex);
+            return "sign document error!!!";
+        }
+
+        TextStamp tsIssuedBy = null;
+        if (flagCa) {
+            try {
+                PdfContentEditor contentEditor = new PdfContentEditor();
+                contentEditor.bindPdf(tmpFilePath);
+                for (int i = 1; i <= document.getPages().size(); i++) {
+                    contentEditor.deleteStamp(i, new int[]{1});
+                }
+                contentEditor.save(tmpFilePath);
+                contentEditor.close();
+                System.out.println("xxxxxxxxxx deleteStamp done.");
+                document = new Document(tmpFilePath);
+            } catch (Exception ex) {
+                LOG.error("cert().deleteStampById()", ex);
+                return "delete stamp erro!!!.";
+            }
+        } else {
+            tsIssuedBy = new TextStamp(issuedBy);
+            tsIssuedBy.getTextState().setFont(font);
+            tsIssuedBy.getTextState().setFontSize(12.0F);
+            tsIssuedBy.setLeftMargin(32);
+            tsIssuedBy.setBottomMargin(29);
+            tsIssuedBy.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Left);
+            tsIssuedBy.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
+            tsIssuedBy.getTextState().setFontStyle(com.aspose.pdf.FontStyles.Regular);
+            tsIssuedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
+//            System.out.println("xxxxxxxxxx issuedBy: " + issuedBy);
+        }
 
         TextStamp tsSignedBy = new TextStamp(signedBy);
         tsSignedBy.getTextState().setFont(font);
@@ -637,28 +663,49 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         tsSignedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
 //        System.out.println("xxxxxxxxxx signedBy: " + signedBy);
 
-        for (int i = 1; i <= document.getPages().size(); i++) {
-            Page page = document.getPages().get_Item(i);
-            page.addStamp(tsIssuedBy);
-            page.addStamp(tsSignedBy);
+        try {
+            for (int i = 1; i <= document.getPages().size(); i++) {
+                Page page = document.getPages().get_Item(i);
+                if (!flagCa) {
+                    page.addStamp(tsIssuedBy);
+                }
+                page.addStamp(tsSignedBy);
+            }
+            document.save(tmpFilePath);
+            document.close();
+        } catch (Exception ex) {
+            LOG.error("cert().addStamp()", ex);
+            return "add stamp error!!!";
         }
 
-        document.save(tmpFilePath);
-        document.close();
+        if (encodeFile.equalsIgnoreCase("Y")) {
+            try {
+                Common.encodeFile(tmpFilePath, srcFilePath);
+            } catch (IOException ex) {
+                LOG.error("cert().encodeFile()", ex);
+                return "file encode error!!!";
+            }
+        } else {
+            try {
+                Files.move(tmpFile.toPath(), srcFile.toPath(), REPLACE_EXISTING);
+            } catch (IOException ex) {
+                LOG.error("cert().move()", ex);
+                return "file move error!!!";
+            }
+        }
 
         try {
-//            Signature pkcs = new PKCS1(pfxPath, "486185");//486185
-//            PdfFileSignature signature = new PdfFileSignature();
-//            signature.bindPdf(tmpFilePath);
-            PKCS1 pkcs = new PKCS1(pfxPath, caPassword);//486185
-            PdfFileSignature signature = new PdfFileSignature(document);
-            signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
-            signature.save(dstFilePath);
-            signature.close();
+            fileAttach.setFileAttachSize(srcFile.length());
+            fileAttach.setUpdatedBy(fielAttachApprove.getUserProfile().getId());
+            fileAttach.setFlagCa("Y");
+            update(fileAttach);
         } catch (Exception ex) {
             LOG.error("cert().sign", ex);
-            return "sign error.";
+            return "update FileAttach error!!!";
         }
+
+        tmpFile.delete();
+//        System.out.println("xxxxxxxxxx done.");
         return null;
     }
 

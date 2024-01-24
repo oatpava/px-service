@@ -1,6 +1,5 @@
 package com.px.share.entity;
 
-import com.px.share.entity.BaseEntity;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -15,32 +14,36 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "PC_FILE_ATTACH")
 @AttributeOverrides({
-    @AttributeOverride(name="id", column=@Column(name="FILE_ATTACH_ID"))
+    @AttributeOverride(name = "id", column = @Column(name = "FILE_ATTACH_ID"))
 })
-public class FileAttach extends BaseEntity{
+public class FileAttach extends BaseEntity {
+
     @Transient
     private static final long serialVersionUID = -8755809664500816196L;
-    
-    @Column(name="FILE_ATTACH_NAME", nullable = false,length = 255)
+
+    @Column(name = "FILE_ATTACH_NAME", nullable = false, length = 255)
     private String fileAttachName;
-    
-    @Column(name="FILE_ATTACH_TYPE", nullable = false,length = 100)
+
+    @Column(name = "FILE_ATTACH_TYPE", nullable = false, length = 100)
     private String fileAttachType;
-        
-    @Column(name="FILE_ATTACH_SIZE", nullable = true)
+
+    @Column(name = "FILE_ATTACH_SIZE", nullable = true)
     private long fileAttachSize;
-    
-    @Column(name="LINK_TYPE", nullable = false,length = 12)
+
+    @Column(name = "LINK_TYPE", nullable = false, length = 12)
     private String linkType;
-    
-    @Column(name="LINK_ID", nullable = false)
+
+    @Column(name = "LINK_ID", nullable = false)
     private int linkId;
-    
-    @Column(name="REFERENCE_ID", columnDefinition="Integer default '0'", nullable = true)
+
+    @Column(name = "REFERENCE_ID", columnDefinition = "Integer default '0'", nullable = true)
     private int referenceId;
-    
-     @Column(name="SECRETS", columnDefinition="Integer default '1'", nullable = true)
+
+    @Column(name = "SECRETS", columnDefinition = "Integer default '1'", nullable = true)
     private int secrets;
+
+    @Column(name = "FLAG_CA", nullable = true, length = 1)
+    private String flagCa;
 
     public FileAttach() {
     }
@@ -100,8 +103,13 @@ public class FileAttach extends BaseEntity{
     public void setSecrets(int secrets) {
         this.secrets = secrets;
     }
-    
-    
 
-    
+    public String getFlagCa() {
+        return flagCa;
+    }
+
+    public void setFlagCa(String flagCa) {
+        this.flagCa = flagCa;
+    }
+
 }
