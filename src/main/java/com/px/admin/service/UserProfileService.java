@@ -12,8 +12,10 @@ import com.px.admin.entity.VUserProfile;
 import com.px.admin.model.UserProfileConvertModel;
 import com.px.admin.model.UserProfileModel;
 import com.px.admin.model.VUserProfileModel;
+import com.px.share.entity.Param;
 import com.px.share.service.FileAttachService;
 import com.px.share.service.GenericService;
+import com.px.share.service.ParamService;
 import com.px.share.util.BCrypt;
 import com.px.share.util.Common;
 import java.io.BufferedReader;
@@ -577,5 +579,22 @@ public class UserProfileService implements GenericService<UserProfile, UserProfi
     public UserProfile getByCode(String userProfileCode) {
         return userProfileDaoImpl.getByCode(userProfileCode);
     }
-    
+
+    public boolean checkCa(int userProfileId) {
+        try {
+            Param param = new ParamService().getByParamName("PATH_CA");
+            if (param == null) {
+                return false;
+            }
+
+            String path = param.getParamValue() + String.valueOf(userProfileId) +".pfx";
+            File f = new File(path);
+            return f.exists();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.error("Exception = " + e.getMessage());
+            return false;
+        }
+    }
+
 }

@@ -343,6 +343,8 @@ public class UserResource {
                         listUserProfile.forEach(u -> {
                             listUserProfileModel.add(userProfileService.tranformToModel(u));
                         });
+                        responseData.put("userProfiles", listUserProfileModel);
+                        responseData.put("haveCa", userProfileService.checkCa(userProfile.getId()));
                         responseData.put("message", listUserProfileModel);
                     }
 

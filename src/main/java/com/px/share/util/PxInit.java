@@ -45,6 +45,7 @@ public class PxInit implements ServletContextListener {
     public static String PathDocument = "D:\\dbPraxticol\\Data\\Document\\";
     public static String PathDocumentTemp = "D:\\dbPraxticol\\Data\\Document\\Temp\\";
     public static String PathWatermark = "D:\\dbPraxticol\\Data\\Document\\Watermark\\";
+    public static String PathCa = "D:\\dbPraxticol\\Data\\Document\\Watermark\\CA\\";
     public static String PathMasterFile = "masterFile/";
     public static String MasterFileSplitBy = "\\|";
     public static String PathLog = "logs\\";
@@ -93,22 +94,22 @@ public class PxInit implements ServletContextListener {
                     .build();
             MetadataSources metadataSource;
             metadataSource = new MetadataSources(standardRegistry);
-           
+
             if (modules.contains("admin")) {
                 AdminModuleEntityService adminModuleEntityService = new AdminModuleEntityService();
                 metadataSource = adminModuleEntityService.listCreateEntity(metadataSource);
             }
-             
-            if(modules.contains("dms")){
+
+            if (modules.contains("dms")) {
                 DmsModuleEntityService dmsModuleEntityService = new DmsModuleEntityService();
-                metadataSource = dmsModuleEntityService.listCreateEntity(metadataSource);                
+                metadataSource = dmsModuleEntityService.listCreateEntity(metadataSource);
             }
 
             if (modules.contains("wf")) {
                 WfModuleEntityService wfModuleEntityService = new WfModuleEntityService();
                 metadataSource = wfModuleEntityService.listCreateEntity(metadataSource);
             }
-            
+
             if (modules.contains("mwp")) {
                 MwpModuleEntityService mwpModuleEntityService = new MwpModuleEntityService();
                 metadataSource = mwpModuleEntityService.listCreateEntity(metadataSource);
@@ -121,8 +122,8 @@ public class PxInit implements ServletContextListener {
                 AdminModuleEntityService adminModuleEntityService = new AdminModuleEntityService();
                 adminModuleEntityService.createDefaultData(structureName, adminUserName, adminPassword, adminFullName);
             }
-            
-            if(modules.contains("dms")){
+
+            if (modules.contains("dms")) {
                 DmsModuleEntityService dmsModuleEntityService = new DmsModuleEntityService();
                 dmsModuleEntityService.createDefaultData();
             }
@@ -167,13 +168,21 @@ public class PxInit implements ServletContextListener {
             f.mkdirs();
             LOG.info("PathDocumentTemp Not Found!!! .... Auto Create PathDocumentTemp =  " + f.exists());
         }
-        
+
         f = new File(PathWatermark);
-        if(f.exists()){
-            LOG.info("PathWatermark .... OK.");                                
-        }else{
+        if (f.exists()) {
+            LOG.info("PathWatermark .... OK.");
+        } else {
             f.mkdirs();
-            LOG.info("PathWatermark Not Found!!! .... Auto Create PathWatermark =  "+f.exists());
+            LOG.info("PathWatermark Not Found!!! .... Auto Create PathWatermark =  " + f.exists());
+        }
+
+        f = new File(PathCa);
+        if (f.exists()) {
+            LOG.info("PathCa .... OK.");
+        } else {
+            f.mkdirs();
+            LOG.info("PathCa Not Found!!! .... Auto Create PathCa =  " + f.exists());
         }
     }
 }
