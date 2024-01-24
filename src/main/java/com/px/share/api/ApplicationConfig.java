@@ -114,6 +114,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.px.mwp.api.WorkflowToResource.class);
         resources.add(com.px.mwp.api.WorkflowTypeResource.class);
         resources.add(com.px.share.api.DynamicJasperReportResource.class);
+        resources.add(com.px.share.api.FileAttachApproveResource.class);
         resources.add(com.px.share.api.FileAttachResource.class);
         resources.add(com.px.share.api.LevelBarResource.class);
         resources.add(com.px.share.api.LogDataResource.class);

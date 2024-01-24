@@ -1,5 +1,15 @@
 package com.px.share.service;
 
+import com.aspose.pdf.Document;
+import com.aspose.pdf.Font;
+import com.aspose.pdf.FontRepository;
+import com.aspose.pdf.License;
+import com.aspose.pdf.PKCS1;
+import com.aspose.pdf.PKCS7;
+import com.aspose.pdf.Page;
+import com.aspose.pdf.Signature;
+import com.aspose.pdf.TextStamp;
+import com.aspose.pdf.facades.PdfFileSignature;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
@@ -11,6 +21,7 @@ import com.px.admin.entity.UserProfile;
 import com.px.admin.service.UserProfileService;
 import com.px.share.daoimpl.FileAttachDaoImpl;
 import com.px.share.entity.FileAttach;
+import com.px.share.entity.FileAttachApprove;
 import com.px.share.model.FileAttachModel;
 import com.px.share.model.FileAttachModel2;
 import com.px.share.util.Common;
@@ -291,7 +302,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             thumbhunailUrl = "assets/filetype/pdf.svg";
         } else if (fileAttachType.equalsIgnoreCase(".JPEG")) {
             thumbhunailUrl = "assets/filetype/jpeg.svg";
-        } else if (fileAttachType.equalsIgnoreCase(".JPG") || fileAttachType.equalsIgnoreCase(".BMP")  ) {
+        } else if (fileAttachType.equalsIgnoreCase(".JPG") || fileAttachType.equalsIgnoreCase(".BMP")) {
             thumbhunailUrl = "assets/filetype/jpg.svg";
         } else if (fileAttachType.equalsIgnoreCase(".PNG")) {
             thumbhunailUrl = "assets/filetype/png.svg";
@@ -505,6 +516,150 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 
     public boolean checkHaveFile(int id) {
         return true;
+    }
+
+    public String cert(FileAttachApprove fielAttachApprove, String caPassword, String issuedBy, String signedBy) {
+        final FileAttach fielattach = fielAttachApprove.getFileAttach();
+        final String encodeFile;
+        final String pathDocumentTemp;
+        final String pathDocument;
+        final String pathCa;
+        final String srcFilePath;
+        final String tmpFilePath;
+        final String dstFilePath;
+        final String pfxPath;
+        try {
+            ParamService paramService = new ParamService();
+            encodeFile = paramService.getByParamName("ENCODE_FILE").getParamValue();
+            pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
+            pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
+            pathCa = paramService.getByParamName("PATH_CA").getParamValue();
+
+            final String fileAttachType = fielattach.getFileAttachType();
+            final String filePath = fielattach.getLinkType() + File.separator + buildFilePathExt(fielattach.getId()) + fileAttachType;
+            final String filePathCa = "ca" + File.separator + fielattach.getId() + fileAttachType;
+            srcFilePath = pathDocument + filePath;//Document/dms/EXTxxx/xxx.PDF
+            tmpFilePath = pathDocumentTemp + filePathCa;//Document/Temp/ca/xxx.PDF
+            dstFilePath = tmpFilePath.replace(fileAttachType, "_signed" + fileAttachType);//Document/Temp/ca/xxx_signed.PDF
+            pfxPath = pathCa + fielAttachApprove.getUserProfile().getId() + ".pfx";
+//            System.out.println("xxxxxxxxxx srcFilePath: " + srcFilePath);
+//            System.out.println("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
+//            System.out.println("xxxxxxxxxx dstFilePath: " + dstFilePath);
+//            System.out.println("xxxxxxxxxx pfx: " + pfxPath);
+        } catch (Exception ex) {
+            LOG.error("cert().getParam()", ex);
+            return ex.getMessage();
+        }
+
+        File srcFile = new File(srcFilePath);
+        if (!srcFile.exists()) {
+            return "file not found.";
+        }
+        File tmpFile = new File(tmpFilePath);
+        if (tmpFile.exists()) {
+            tmpFile.delete();
+        }
+        File dstFile = new File(dstFilePath);
+        if (dstFile.exists()) {
+            dstFile.delete();
+        }
+
+        if (encodeFile.equalsIgnoreCase("Y")) {
+            try {
+                Common.decodeFile(srcFilePath, tmpFilePath);
+//                System.out.println("xxxxxxxxxx decode done.");
+            } catch (Exception ex) {
+                LOG.error("cert().decodeFile()", ex);
+                return "file decode error.";
+            }
+        } else {
+            String p = tmpFilePath.substring(0, tmpFilePath.lastIndexOf(File.separator));
+            File f = new File(p);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+
+            try {
+                Files.copy(srcFile.toPath(), tmpFile.toPath(), REPLACE_EXISTING);
+//                System.out.println("xxxxxxxxxx copy done.");
+            } catch (IOException ex) {
+                LOG.error("cert().copy()", ex);
+                return "file copy error.";
+            }
+        }
+
+        Document document;
+        try {
+            document = new Document(tmpFilePath);
+//            System.out.println("xxxxxxxxxx document: " + document.getFileName());
+        } catch (Exception ex) {
+            LOG.error("cert().new Document()", ex);
+            return "new Document error.";
+        }
+
+        License license = new License();
+        try {
+            license.setLicense(pathCa + "Aspose.Total.Java.lic");
+//            System.out.println("xxxxxxxxxx license: " + license.toString());
+        } catch (Exception ex) {
+            LOG.error("cert().setLicense()", ex);
+            return "License not found.";
+        }
+
+        Font font;
+        try {
+            font = FontRepository.openFont(pathCa + "THSarabun.ttf");
+//            System.out.println("xxxxxxxxxx font: " + font.getFontName());
+        } catch (Exception ex) {
+            LOG.error("cert().openFont()", ex);
+            return "Font not found.";
+        }
+
+        TextStamp tsIssuedBy = new TextStamp(issuedBy);
+        tsIssuedBy.getTextState().setFont(font);
+        tsIssuedBy.getTextState().setFontSize(12.0F);
+        tsIssuedBy.setLeftMargin(32);
+        tsIssuedBy.setBottomMargin(29);
+        tsIssuedBy.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Left);
+        tsIssuedBy.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
+        tsIssuedBy.getTextState().setFontStyle(com.aspose.pdf.FontStyles.Regular);
+        tsIssuedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
+//        System.out.println("xxxxxxxxxx issuedBy: " + issuedBy);
+
+        TextStamp tsSignedBy = new TextStamp(signedBy);
+        tsSignedBy.getTextState().setFont(font);
+        tsSignedBy.getTextState().setFontSize(12.0F);
+        tsSignedBy.setLeftMargin(32);
+        tsSignedBy.setBottomMargin(15);
+        tsSignedBy.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Left);
+        tsSignedBy.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
+        tsSignedBy.getTextState().setFontStyle(com.aspose.pdf.FontStyles.Regular);
+        tsSignedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
+//        System.out.println("xxxxxxxxxx signedBy: " + signedBy);
+
+        for (int i = 1; i <= document.getPages().size(); i++) {
+            Page page = document.getPages().get_Item(i);
+            page.addStamp(tsIssuedBy);
+            page.addStamp(tsSignedBy);
+        }
+
+        document.save(tmpFilePath);
+        document.close();
+
+        try {
+//            Signature pkcs = new PKCS1(pfxPath, "486185");//486185
+//            PdfFileSignature signature = new PdfFileSignature();
+//            signature.bindPdf(tmpFilePath);
+            PKCS1 pkcs = new PKCS1(pfxPath, caPassword);//486185
+            PdfFileSignature signature = new PdfFileSignature(document);
+            signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
+            signature.save(dstFilePath);
+            signature.close();
+        } catch (Exception ex) {
+            LOG.error("cert().sign", ex);
+            return "sign error.";
+        }
+        return null;
     }
 
 }
