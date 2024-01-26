@@ -601,14 +601,14 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             return "license not found!!!";
         }
 
-        Font font;
-        try {
-            font = FontRepository.openFont(pathCa + "THSarabun.ttf");
-//            System.out.println("xxxxxxxxxx font: " + font.getFontName());
-        } catch (Exception ex) {
-            LOG.error("cert().openFont()", ex);
-            return "font not found!!!";
-        }
+//        Font font;
+//        try {
+//            font = FontRepository.openFont(pathCa + "THSarabun.ttf");
+////            System.out.println("xxxxxxxxxx font: " + font.getFontName());
+//        } catch (Exception ex) {
+//            LOG.error("cert().openFont()", ex);
+//            return "font not found!!!";
+//        }
 
         PdfFileSignature signature = new PdfFileSignature();
         try {
@@ -641,7 +641,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             contentEditor.close();
         } else {
             tsIssuedBy = new TextStamp(issuedBy);
-            tsIssuedBy.getTextState().setFont(font);
+//            tsIssuedBy.getTextState().setFont(font);
             tsIssuedBy.getTextState().setFontSize(12.0F);
             tsIssuedBy.setLeftMargin(32);
             tsIssuedBy.setBottomMargin(29);
@@ -653,7 +653,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         }
 
         TextStamp tsSignedBy = new TextStamp(signedBy);
-        tsSignedBy.getTextState().setFont(font);
+//        tsSignedBy.getTextState().setFont(font);
         tsSignedBy.getTextState().setFontSize(12.0F);
         tsSignedBy.setLeftMargin(32);
         tsSignedBy.setBottomMargin(15);
