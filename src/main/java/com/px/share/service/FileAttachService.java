@@ -610,35 +610,35 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             return "font not found!!!";
         }
 
+        PdfFileSignature signature = new PdfFileSignature();
         try {
             Signature pkcs = new PKCS1(pfxPath, caPassword);//486185
-            PdfFileSignature signature = new PdfFileSignature();
             signature.bindPdf(tmpFilePath);
             signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
             signature.save(tmpFilePath);
-            signature.close();
 //            System.out.println("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
             LOG.error("cert().sign", ex);
             return "sign document error!!!";
         }
+        signature.close();
 
         TextStamp tsIssuedBy = null;
         if (flagCa) {
+            PdfContentEditor contentEditor = new PdfContentEditor();
             try {
-                PdfContentEditor contentEditor = new PdfContentEditor();
                 contentEditor.bindPdf(tmpFilePath);
                 for (int i = 1; i <= document.getPages().size(); i++) {
                     contentEditor.deleteStamp(i, new int[]{1});
                 }
                 contentEditor.save(tmpFilePath);
-                contentEditor.close();
-                System.out.println("xxxxxxxxxx deleteStamp done.");
+//                System.out.println("xxxxxxxxxx deleteStamp done.");
                 document = new Document(tmpFilePath);
             } catch (Exception ex) {
                 LOG.error("cert().deleteStampById()", ex);
                 return "delete stamp erro!!!.";
             }
+            contentEditor.close();
         } else {
             tsIssuedBy = new TextStamp(issuedBy);
             tsIssuedBy.getTextState().setFont(font);
@@ -672,11 +672,11 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 page.addStamp(tsSignedBy);
             }
             document.save(tmpFilePath);
-            document.close();
         } catch (Exception ex) {
             LOG.error("cert().addStamp()", ex);
             return "add stamp error!!!";
         }
+        document.close();
 
         if (encodeFile.equalsIgnoreCase("Y")) {
             try {
