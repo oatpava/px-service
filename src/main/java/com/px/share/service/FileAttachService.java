@@ -618,6 +618,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             signature.save(tmpFilePath);
 //            System.out.println("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
+            tmpFile.delete();
             LOG.error("cert().sign", ex);
             return "sign document error!!!";
         }
@@ -635,6 +636,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //                System.out.println("xxxxxxxxxx deleteStamp done.");
                 document = new Document(tmpFilePath);
             } catch (Exception ex) {
+                tmpFile.delete();
                 LOG.error("cert().deleteStampById()", ex);
                 return "delete stamp erro!!!.";
             }
@@ -673,6 +675,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             }
             document.save(tmpFilePath);
         } catch (Exception ex) {
+            tmpFile.delete();
             LOG.error("cert().addStamp()", ex);
             return "add stamp error!!!";
         }
@@ -682,6 +685,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             try {
                 Common.encodeFile(tmpFilePath, srcFilePath);
             } catch (IOException ex) {
+                tmpFile.delete();
                 LOG.error("cert().encodeFile()", ex);
                 return "file encode error!!!";
             }
@@ -689,6 +693,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             try {
                 Files.move(tmpFile.toPath(), srcFile.toPath(), REPLACE_EXISTING);
             } catch (IOException ex) {
+                tmpFile.delete();
                 LOG.error("cert().move()", ex);
                 return "file move error!!!";
             }
@@ -700,6 +705,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             fileAttach.setFlagCa("Y");
             update(fileAttach);
         } catch (Exception ex) {
+            tmpFile.delete();
             LOG.error("cert().sign", ex);
             return "update FileAttach error!!!";
         }
