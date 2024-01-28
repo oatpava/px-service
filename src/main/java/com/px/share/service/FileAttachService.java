@@ -588,16 +588,15 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             }
         }
 
-        Document document;
-        try {
-            document = new Document(tmpFilePath);
-//            System.out.println("xxxxxxxxxx document: " + document.getFileName());
-            LOG.info("xxxxxxxxxx document: " + document.getFileName());
-        } catch (Exception ex) {
-            LOG.error("cert().new Document()", ex);
-            return "new Document error!!!";
-        }
-
+//        Document document;
+//        try {
+//            document = new Document(tmpFilePath);
+////            System.out.println("xxxxxxxxxx document: " + document.getFileName());
+//            LOG.info("xxxxxxxxxx document: " + document.getFileName());
+//        } catch (Exception ex) {
+//            LOG.error("cert().new Document()", ex);
+//            return "new Document error!!!";
+//        }
         License license = new License();
         try {
             license.setLicense(pathCa + "Aspose.Total.Java.lic");
@@ -615,38 +614,36 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            LOG.error("cert().openFont()", ex);
 //            return "font not found!!!";
 //        }
-        PdfFileSignature signature = new PdfFileSignature();
         try {
             Signature pkcs = new PKCS1(pfxPath, caPassword);//486185
+            PdfFileSignature signature = new PdfFileSignature();
             signature.bindPdf(tmpFilePath);
             signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
             signature.save(tmpFilePath);
             signature.close();
+            pkcs.close();
 //            System.out.println("xxxxxxxxxx sign done.");
             LOG.info("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
             LOG.error("cert().sign", ex);
-            signature.close();
             tmpFile.delete();
             return "sign document error!!!";
         }
 
         TextStamp tsIssuedBy = null;
         if (flagCa) {
-            PdfContentEditor contentEditor = new PdfContentEditor();
             try {
+                PdfContentEditor contentEditor = new PdfContentEditor();
                 contentEditor.bindPdf(tmpFilePath);
-                for (int i = 1; i <= document.getPages().size(); i++) {
+                for (int i = 1; i <= contentEditor.getDocument().getPages().size(); i++) {
                     contentEditor.deleteStamp(i, new int[]{1});
                 }
                 contentEditor.save(tmpFilePath);
                 contentEditor.close();
 //                System.out.println("xxxxxxxxxx deleteStamp done.");
                 LOG.info("xxxxxxxxxx deleteStamp done.");
-                document = new Document(tmpFilePath);
             } catch (Exception ex) {
                 LOG.error("cert().deleteStampById()", ex);
-                contentEditor.close();
                 tmpFile.delete();
                 return "delete stamp erro!!!.";
             }
@@ -675,6 +672,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //        System.out.println("xxxxxxxxxx signedBy: " + signedBy);
 
         try {
+            Document document = new Document(tmpFilePath);
             for (int i = 1; i <= document.getPages().size(); i++) {
                 Page page = document.getPages().get_Item(i);
                 if (!flagCa) {
@@ -688,7 +686,6 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             LOG.info("xxxxxxxxxx addStamp done.");
         } catch (Exception ex) {
             LOG.error("cert().addStamp()", ex);
-            document.close();
             tmpFile.delete();
             return "add stamp error!!!";
         }
