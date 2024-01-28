@@ -612,9 +612,11 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            LOG.error("cert().openFont()", ex);
 //            return "font not found!!!";
 //        }
+        Signature pkcs = null;
+        PdfFileSignature signature = null;
         try {
-            Signature pkcs = new PKCS1(pfxPath, caPassword);//486185
-            PdfFileSignature signature = new PdfFileSignature();
+            pkcs = new PKCS1(pfxPath, caPassword);//486185
+            signature = new PdfFileSignature();
             signature.bindPdf(tmpFilePath);
             signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
             signature.save(tmpFilePath);
@@ -624,14 +626,17 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             LOG.info("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
             LOG.error("cert().sign", ex);
+            signature.close();
+            pkcs.close();
             tmpFile.delete();
             return "sign document error!!!";
         }
 
         TextStamp tsIssuedBy = null;
         if (flagCa) {
+            PdfContentEditor contentEditor = null;
             try {
-                PdfContentEditor contentEditor = new PdfContentEditor();
+                contentEditor = new PdfContentEditor();
                 contentEditor.bindPdf(tmpFilePath);
                 for (int i = 1; i <= contentEditor.getDocument().getPages().size(); i++) {
                     contentEditor.deleteStamp(i, new int[]{1});
@@ -642,6 +647,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 LOG.info("xxxxxxxxxx deleteStamp done.");
             } catch (Exception ex) {
                 LOG.error("cert().deleteStampById()", ex);
+                contentEditor.close();
                 tmpFile.delete();
                 return "delete stamp erro!!!.";
             }
@@ -669,8 +675,9 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         tsSignedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
 //        System.out.println("xxxxxxxxxx signedBy: " + signedBy);
 
+        Document document = null;
         try {
-            Document document = new Document(tmpFilePath);
+            document = new Document(tmpFilePath);
             for (int i = 1; i <= document.getPages().size(); i++) {
                 Page page = document.getPages().get_Item(i);
                 if (!flagCa) {
@@ -684,6 +691,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             LOG.info("xxxxxxxxxx addStamp done.");
         } catch (Exception ex) {
             LOG.error("cert().addStamp()", ex);
+            document.close();
             tmpFile.delete();
             return "add stamp error!!!";
         }
