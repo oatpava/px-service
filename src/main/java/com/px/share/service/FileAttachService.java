@@ -356,12 +356,9 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         String scrFile = pathDocumentTemp + filePath;
         String desFile = pathDocument + filePath;
 
-        LOG.info("scrFile = " + scrFile);
-        LOG.info("desFile = " + desFile);
-        boolean result = false;
         if (encodeFile.equalsIgnoreCase("Y")) {
             try {
-                result = Common.encodeFile(scrFile, desFile);
+                Common.encodeFile(scrFile, desFile);
             } catch (IOException ex) {
                 LOG.error("encodeFile error.");
             }
@@ -398,10 +395,11 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         if (!f.exists()) {
             desFile = "";
         }
-        boolean result = false;
-        if (encodeFile.equalsIgnoreCase("Y")) {
+        final boolean flagCa = (fileAttach.getFlagCa() != null && fileAttach.getFlagCa().equalsIgnoreCase("Y"));
+
+        if (encodeFile.equalsIgnoreCase("Y") && !flagCa) {
             try {
-                result = Common.decodeFile(scrFile, desFile);
+                Common.decodeFile(scrFile, desFile);
             } catch (Exception ex) {
                 LOG.error("encodeFile error.");
             }
@@ -562,7 +560,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             tmpFile.delete();
         }
 
-        if (encodeFile.equalsIgnoreCase("Y")) {
+        if (encodeFile.equalsIgnoreCase("Y") && !flagCa) {
             try {
                 Common.decodeFile(srcFilePath, tmpFilePath);
 //                System.out.println("xxxxxxxxxx decode done.");
@@ -690,22 +688,12 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             return "add stamp error!!!";
         }
 
-        if (encodeFile.equalsIgnoreCase("Y")) {
-            try {
-                Common.encodeFile(tmpFilePath, srcFilePath);
-            } catch (IOException ex) {
-                LOG.error("cert().encodeFile()", ex);
-                tmpFile.delete();
-                return "file encode error!!!";
-            }
-        } else {
-            try {
-                Files.move(tmpFile.toPath(), srcFile.toPath(), REPLACE_EXISTING);
-            } catch (IOException ex) {
-                LOG.error("cert().move()", ex);
-                tmpFile.delete();
-                return "file move error!!!";
-            }
+        try {
+            Files.move(tmpFile.toPath(), srcFile.toPath(), REPLACE_EXISTING);
+        } catch (IOException ex) {
+            LOG.error("cert().move()", ex);
+            tmpFile.delete();
+            return "file move error!!!";
         }
 
         try {
