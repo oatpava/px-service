@@ -545,6 +545,9 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            System.out.println("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
 //            System.out.println("xxxxxxxxxx dstFilePath: " + dstFilePath);
 //            System.out.println("xxxxxxxxxx pfx: " + pfxPath);
+            LOG.debug("xxxxxxxxxx srcFilePath: " + srcFilePath);
+            LOG.debug("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
+            LOG.debug("xxxxxxxxxx pfx: " + pfxPath);
         } catch (Exception ex) {
             LOG.error("cert().getParam()", ex);
             return ex.getMessage();
@@ -563,6 +566,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             try {
                 Common.decodeFile(srcFilePath, tmpFilePath);
 //                System.out.println("xxxxxxxxxx decode done.");
+                LOG.debug("xxxxxxxxxx decode done.");
             } catch (Exception ex) {
                 LOG.error("cert().decodeFile()", ex);
                 return "file decode error!!!";
@@ -577,6 +581,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             try {
                 Files.copy(srcFile.toPath(), tmpFile.toPath(), REPLACE_EXISTING);
 //                System.out.println("xxxxxxxxxx copy done.");
+                LOG.debug("xxxxxxxxxx copy done.");
             } catch (IOException ex) {
                 LOG.error("cert().copy()", ex);
                 return "file copy error!!!";
@@ -587,6 +592,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         try {
             document = new Document(tmpFilePath);
 //            System.out.println("xxxxxxxxxx document: " + document.getFileName());
+            LOG.debug("xxxxxxxxxx document: " + document.getFileName());
         } catch (Exception ex) {
             LOG.error("cert().new Document()", ex);
             return "new Document error!!!";
@@ -609,20 +615,21 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            LOG.error("cert().openFont()", ex);
 //            return "font not found!!!";
 //        }
-
         PdfFileSignature signature = new PdfFileSignature();
         try {
             Signature pkcs = new PKCS1(pfxPath, caPassword);//486185
             signature.bindPdf(tmpFilePath);
             signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
             signature.save(tmpFilePath);
+            signature.close();
 //            System.out.println("xxxxxxxxxx sign done.");
+            LOG.debug("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
-            tmpFile.delete();
             LOG.error("cert().sign", ex);
+            signature.close();
+            tmpFile.delete();
             return "sign document error!!!";
         }
-        signature.close();
 
         TextStamp tsIssuedBy = null;
         if (flagCa) {
@@ -633,14 +640,16 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                     contentEditor.deleteStamp(i, new int[]{1});
                 }
                 contentEditor.save(tmpFilePath);
+                contentEditor.close();
 //                System.out.println("xxxxxxxxxx deleteStamp done.");
+                LOG.debug("xxxxxxxxxx deleteStamp done.");
                 document = new Document(tmpFilePath);
             } catch (Exception ex) {
-                tmpFile.delete();
                 LOG.error("cert().deleteStampById()", ex);
+                contentEditor.close();
+                tmpFile.delete();
                 return "delete stamp erro!!!.";
             }
-            contentEditor.close();
         } else {
             tsIssuedBy = new TextStamp(issuedBy);
 //            tsIssuedBy.getTextState().setFont(font);
@@ -674,27 +683,30 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 page.addStamp(tsSignedBy);
             }
             document.save(tmpFilePath);
+            document.close();
+//            System.out.println("xxxxxxxxxx addStamp done.");
+            LOG.debug("xxxxxxxxxx addStamp done.");
         } catch (Exception ex) {
-            tmpFile.delete();
             LOG.error("cert().addStamp()", ex);
+            document.close();
+            tmpFile.delete();
             return "add stamp error!!!";
         }
-        document.close();
 
         if (encodeFile.equalsIgnoreCase("Y")) {
             try {
                 Common.encodeFile(tmpFilePath, srcFilePath);
             } catch (IOException ex) {
-                tmpFile.delete();
                 LOG.error("cert().encodeFile()", ex);
+                tmpFile.delete();
                 return "file encode error!!!";
             }
         } else {
             try {
                 Files.move(tmpFile.toPath(), srcFile.toPath(), REPLACE_EXISTING);
             } catch (IOException ex) {
-                tmpFile.delete();
                 LOG.error("cert().move()", ex);
+                tmpFile.delete();
                 return "file move error!!!";
             }
         }
@@ -705,13 +717,14 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             fileAttach.setFlagCa("Y");
             update(fileAttach);
         } catch (Exception ex) {
-            tmpFile.delete();
             LOG.error("cert().sign", ex);
+            tmpFile.delete();
             return "update FileAttach error!!!";
         }
 
         tmpFile.delete();
 //        System.out.println("xxxxxxxxxx done.");
+        LOG.debug("xxxxxxxxxx done.");
         return null;
     }
 
