@@ -612,26 +612,6 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 //            LOG.error("cert().openFont()", ex);
 //            return "font not found!!!";
 //        }
-        Signature pkcs = null;
-        PdfFileSignature signature = null;
-        try {
-            pkcs = new PKCS1(pfxPath, caPassword);//486185
-            signature = new PdfFileSignature();
-            signature.bindPdf(tmpFilePath);
-            signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
-            signature.save(tmpFilePath);
-            signature.close();
-            pkcs.close();
-//            System.out.println("xxxxxxxxxx sign done.");
-            LOG.info("xxxxxxxxxx sign done.");
-        } catch (Exception ex) {
-            LOG.error("cert().sign", ex);
-            signature.close();
-            pkcs.close();
-            tmpFile.delete();
-            return "sign document error!!!";
-        }
-
         TextStamp tsIssuedBy = null;
         if (flagCa) {
             PdfContentEditor contentEditor = null;
@@ -694,6 +674,26 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             document.close();
             tmpFile.delete();
             return "add stamp error!!!";
+        }
+
+        Signature pkcs = null;
+        PdfFileSignature signature = null;
+        try {
+            pkcs = new PKCS1(pfxPath, caPassword);//486185
+            signature = new PdfFileSignature();
+            signature.bindPdf(tmpFilePath);
+            signature.sign(1, false, new java.awt.Rectangle(300, 100, 400, 200), pkcs);
+            signature.save(tmpFilePath);
+            signature.close();
+            pkcs.close();
+//            System.out.println("xxxxxxxxxx sign done.");
+            LOG.info("xxxxxxxxxx sign done.");
+        } catch (Exception ex) {
+            LOG.error("cert().sign", ex);
+            signature.close();
+            pkcs.close();
+            tmpFile.delete();
+            return "sign document error!!!";
         }
 
         try {
