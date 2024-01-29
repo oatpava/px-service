@@ -539,13 +539,9 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             srcFilePath = pathDocument + filePath;//Document/dms/EXTxxx/xxx.PDF
             tmpFilePath = pathDocumentTemp + filePathCa;//Document/Temp/ca/xxx_1.PDF
             pfxPath = pathCa + fielAttachApprove.getUserProfile().getId() + ".pfx";
-//            System.out.println("xxxxxxxxxx srcFilePath: " + srcFilePath);
-//            System.out.println("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
-//            System.out.println("xxxxxxxxxx dstFilePath: " + dstFilePath);
-//            System.out.println("xxxxxxxxxx pfx: " + pfxPath);
-            LOG.info("xxxxxxxxxx srcFilePath: " + srcFilePath);
-            LOG.info("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
-            LOG.info("xxxxxxxxxx pfx: " + pfxPath);
+            LOG.debug("xxxxxxxxxx srcFilePath: " + srcFilePath);
+            LOG.debug("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
+            LOG.debug("xxxxxxxxxx pfx: " + pfxPath);
         } catch (Exception ex) {
             LOG.error("cert().getParam()", ex);
             return ex.getMessage();
@@ -563,8 +559,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         if (encodeFile.equalsIgnoreCase("Y") && !flagCa) {
             try {
                 Common.decodeFile(srcFilePath, tmpFilePath);
-//                System.out.println("xxxxxxxxxx decode done.");
-                LOG.info("xxxxxxxxxx decode done.");
+                LOG.debug("xxxxxxxxxx decode done.");
             } catch (Exception ex) {
                 LOG.error("cert().decodeFile()", ex);
                 return "file decode error!!!";
@@ -578,27 +573,16 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 
             try {
                 Files.copy(srcFile.toPath(), tmpFile.toPath(), REPLACE_EXISTING);
-//                System.out.println("xxxxxxxxxx copy done.");
-                LOG.info("xxxxxxxxxx copy done.");
+                LOG.debug("xxxxxxxxxx copy done.");
             } catch (IOException ex) {
                 LOG.error("cert().copy()", ex);
                 return "file copy error!!!";
             }
         }
 
-//        Document document;
-//        try {
-//            document = new Document(tmpFilePath);
-////            System.out.println("xxxxxxxxxx document: " + document.getFileName());
-//            LOG.info("xxxxxxxxxx document: " + document.getFileName());
-//        } catch (Exception ex) {
-//            LOG.error("cert().new Document()", ex);
-//            return "new Document error!!!";
-//        }
         License license = new License();
         try {
             license.setLicense(pathCa + "Aspose.Total.Java.lic");
-//            System.out.println("xxxxxxxxxx license: " + license.toString());
         } catch (Exception ex) {
             LOG.error("cert().setLicense()", ex);
             return "license not found!!!";
@@ -623,8 +607,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 }
                 contentEditor.save(tmpFilePath);
                 contentEditor.close();
-//                System.out.println("xxxxxxxxxx deleteStamp done.");
-                LOG.info("xxxxxxxxxx deleteStamp done.");
+                LOG.debug("xxxxxxxxxx deleteStamp done.");
             } catch (Exception ex) {
                 LOG.error("cert().deleteStampById()", ex);
                 contentEditor.close();
@@ -641,7 +624,6 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             tsIssuedBy.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
             tsIssuedBy.getTextState().setFontStyle(com.aspose.pdf.FontStyles.Regular);
             tsIssuedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
-//            System.out.println("xxxxxxxxxx issuedBy: " + issuedBy);
         }
 
         TextStamp tsSignedBy = new TextStamp(signedBy);
@@ -653,7 +635,6 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         tsSignedBy.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
         tsSignedBy.getTextState().setFontStyle(com.aspose.pdf.FontStyles.Regular);
         tsSignedBy.getTextState().setForegroundColor(com.aspose.pdf.Color.getBlue());
-//        System.out.println("xxxxxxxxxx signedBy: " + signedBy);
 
         Document document = null;
         try {
@@ -667,8 +648,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             }
             document.save(tmpFilePath);
             document.close();
-//            System.out.println("xxxxxxxxxx addStamp done.");
-            LOG.info("xxxxxxxxxx addStamp done.");
+            LOG.debug("xxxxxxxxxx addStamp done.");
         } catch (Exception ex) {
             LOG.error("cert().addStamp()", ex);
             document.close();
@@ -686,8 +666,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             signature.save(tmpFilePath);
             signature.close();
             pkcs.close();
-//            System.out.println("xxxxxxxxxx sign done.");
-            LOG.info("xxxxxxxxxx sign done.");
+            LOG.debug("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
             LOG.error("cert().sign", ex);
             signature.close();
@@ -705,7 +684,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         }
 
         try {
-            fileAttach.setFileAttachSize(srcFile.length());
+            fileAttach.setFileAttachSize(tmpFile.length());
             fileAttach.setUpdatedBy(fielAttachApprove.getUserProfile().getId());
             fileAttach.setFlagCa("Y");
             update(fileAttach);
@@ -716,8 +695,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         }
 
         tmpFile.delete();
-//        System.out.println("xxxxxxxxxx done.");
-        LOG.info("xxxxxxxxxx done.");
+        LOG.debug("xxxxxxxxxx done.");
         return null;
     }
 
