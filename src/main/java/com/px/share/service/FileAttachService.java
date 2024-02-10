@@ -539,9 +539,9 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             srcFilePath = pathDocument + filePath;//Document/dms/EXTxxx/xxx.PDF
             tmpFilePath = pathDocumentTemp + filePathCa;//Document/Temp/ca/xxx_1.PDF
             pfxPath = pathCa + fielAttachApprove.getUserProfile().getId() + ".pfx";
-            LOG.debug("xxxxxxxxxx srcFilePath: " + srcFilePath);
-            LOG.debug("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
-            LOG.debug("xxxxxxxxxx pfx: " + pfxPath);
+//            LOG.debug("xxxxxxxxxx srcFilePath: " + srcFilePath);
+//            LOG.debug("xxxxxxxxxx tmpFilePath: " + tmpFilePath);
+//            LOG.debug("xxxxxxxxxx pfx: " + pfxPath);
         } catch (Exception ex) {
             LOG.error("cert().getParam()", ex);
             return ex.getMessage();
@@ -559,7 +559,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         if (encodeFile.equalsIgnoreCase("Y") && !flagCa) {
             try {
                 Common.decodeFile(srcFilePath, tmpFilePath);
-                LOG.debug("xxxxxxxxxx decode done.");
+//                LOG.debug("xxxxxxxxxx decode done.");
             } catch (Exception ex) {
                 LOG.error("cert().decodeFile()", ex);
                 return "file decode error!!!";
@@ -573,7 +573,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 
             try {
                 Files.copy(srcFile.toPath(), tmpFile.toPath(), REPLACE_EXISTING);
-                LOG.debug("xxxxxxxxxx copy done.");
+//                LOG.debug("xxxxxxxxxx copy done.");
             } catch (IOException ex) {
                 LOG.error("cert().copy()", ex);
                 return "file copy error!!!";
@@ -607,7 +607,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 }
                 contentEditor.save(tmpFilePath);
                 contentEditor.close();
-                LOG.debug("xxxxxxxxxx deleteStamp done.");
+//                LOG.debug("xxxxxxxxxx deleteStamp done.");
             } catch (Exception ex) {
                 LOG.error("cert().deleteStampById()", ex);
                 contentEditor.close();
@@ -648,7 +648,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             }
             document.save(tmpFilePath);
             document.close();
-            LOG.debug("xxxxxxxxxx addStamp done.");
+//            LOG.debug("xxxxxxxxxx addStamp done.");
         } catch (Exception ex) {
             LOG.error("cert().addStamp()", ex);
             document.close();
@@ -666,7 +666,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
             signature.save(tmpFilePath);
             signature.close();
             pkcs.close();
-            LOG.debug("xxxxxxxxxx sign done.");
+//            LOG.debug("xxxxxxxxxx sign done.");
         } catch (Exception ex) {
             LOG.error("cert().sign", ex);
             signature.close();
@@ -695,7 +695,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         }
 
         tmpFile.delete();
-        LOG.debug("xxxxxxxxxx done.");
+//        LOG.debug("xxxxxxxxxx done.");
         return null;
     }
 
