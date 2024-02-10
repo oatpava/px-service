@@ -28,7 +28,10 @@ import com.px.wf.model.ImportStatusModel;
 import com.px.wf.model.ImportWfContentModel;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.YearMonth;
@@ -795,6 +798,74 @@ public class ImportService {
             LOG.error("/imports/external checkWfFolder()", ex);
             return new ImportStatusModel(500, "เกิดข้อผิดพลาด (checkWfFolder())");
         }
+    }
+
+    public ImportStatusModel createFileAttach() {
+        FileAttachService fileAttachService = new FileAttachService();
+        try {
+            fileAttach = new FileAttach();
+            fileAttach.setCreatedBy(userProfile.getId());
+            fileAttach.setFileAttachName("เอกสารแนบคำขออิเล็กทรอนิกส์.pdf");
+            fileAttach.setFileAttachType(".PDF");
+            fileAttach.setLinkType("dms");
+            fileAttach.setLinkId(dmsDocument.getId());
+            fileAttach.setReferenceId(0);
+            fileAttach.setSecrets(1);
+            fileAttach = fileAttachService.create(fileAttach);
+            return new ImportStatusModel();
+        } catch (Exception ex) {
+            LOG.error("/imports createFileAttachFromTemplate()", ex);
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (createFileAttachFromTemplate())");
+        }
+    }
+
+    public ImportStatusModel copyFileFromTemplate() {
+        FileAttachService fileAttachService = new FileAttachService();
+
+        final String encodeFile;
+        final String pathDocument;
+        try {
+            ParamService paramService = new ParamService();
+            encodeFile = paramService.getByParamName("ENCODE_FILE").getParamValue();
+            pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
+        } catch (Exception ex) {
+            LOG.error("/imports createFileFromTemplate().getByParamName(\"PATH_DOCUMENT\", \"ENCODE_FILE\")", ex);
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (copyFileFromTemplate())");
+        }
+
+        final String templateFilePath = pathDocument + "wf" + File.separator + "template_import.pdf";
+        File templateFile = new File(templateFilePath);
+        if (!templateFile.exists()) {
+            LOG.error("/imports createFileFromTemplate().templateFile, file not found!!!");
+            return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (copyFileFromTemplate())");
+        }
+
+        final String filePath = fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+        final String dstFilePath = pathDocument + filePath;
+        file = new File(dstFilePath);
+        
+        if (encodeFile.equalsIgnoreCase("Y")) {
+            try {
+                Common.encodeFile(templateFilePath, dstFilePath);
+            } catch (Exception ex) {
+                LOG.error("/imports createFileFromTemplate().encodeFile()", ex);
+                return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (copyFileFromTemplate())");
+            }
+        } else {
+            String p = dstFilePath.substring(0, dstFilePath.lastIndexOf(File.separator));
+            File f = new File(p);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+
+            try {
+                Files.copy(templateFile.toPath(), file.toPath(), REPLACE_EXISTING);
+            } catch (IOException ex) {
+                LOG.error("/imports createFileFromTemplate().copy()", ex);
+               return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (copyFileFromTemplate())");
+            }
+        }
+        return new ImportStatusModel();
     }
 
 }

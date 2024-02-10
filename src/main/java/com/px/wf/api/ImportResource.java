@@ -178,6 +178,30 @@ public class ImportResource {
                     throw new Exception(status.getErrorMessage());
                 }
 //                System.out.println("updateFileAttach");
+            } else {
+                status = importService.createFileAttach();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
+
+                status = importService.copyFileFromTemplate();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
+
+                status = importService.updateFileAttach();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
             }
 
             responseData.put("success", true);
@@ -401,7 +425,30 @@ public class ImportResource {
                     throw new Exception(status.getErrorMessage());
                 }
 //                System.out.println("updateFileAttach");
+            } else {
+                status = importService.createFileAttach();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
 
+                status = importService.copyFileFromTemplate();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
+
+                status = importService.updateFileAttach();
+                if (!status.getIsSuccess()) {
+                    error.put("code", status.getStatusCode());
+                    error.put("message", status.getErrorMessage());
+                    responseStatus = status.getResponseStatus();
+                    throw new Exception(status.getErrorMessage());
+                }
             }
 
             responseData.put("success", true);
