@@ -167,6 +167,16 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 //oat-add
                 fileAttachModel.setCreatedBy(fileAttach.getCreatedBy());
             }
+            
+            //oat-add
+            fileAttachModel.setUpdatedDate(Common.localDateTimeToString(fileAttach.getUpdatedDate()));
+            if (fileAttach.getUpdatedBy() != 0 && fileAttach.getUpdatedBy() != -1) {
+                if (fileAttach.getUpdatedBy() != fileAttach.getCreatedBy()) {
+                    userProfile = userProfileService.getById(fileAttach.getUpdatedBy());
+                }
+                fileAttachModel.setUpdatedName(userProfile.getUserProfileFullName());
+                fileAttachModel.setUpdatedBy(fileAttach.getUpdatedBy());
+            }
         }
         return fileAttachModel;
     }

@@ -40,7 +40,7 @@ public class FileAttachModel2 extends FileAttachModel {
     @Since(1.0)
     @Expose
     private String createdName;
-    
+
     //oat-add
     @XmlElement(name = "createdBy")
     @ApiParam(name = "createdBy", value = "createdBy", required = false)
@@ -48,11 +48,32 @@ public class FileAttachModel2 extends FileAttachModel {
     @Expose
     private int createdBy;
 
+    //oat-add
+    @XmlElement(name = "updatedDate")
+    @ApiParam(name = "updatedDate", example = "01/01/2559 07:30:45", value = "วันที่แก้ไข", defaultValue = "01/01/2559 07:30:45", hidden = true, required = false)
+    @Since(1.0)
+    @Expose
+    private String updatedDate;
+
+    //oat-add
+    @XmlElement(name = "updatedName")
+    @ApiParam(name = "updatedName", value = "updatedName", required = false)
+    @Since(1.0)
+    @Expose
+    private String updatedName;
+
+    //oat-add
+    @XmlElement(name = "updatedBy")
+    @ApiParam(name = "updatedBy", value = "updatedBy", required = false)
+    @Since(1.0)
+    @Expose
+    private int updatedBy;
+
     public String getCreatedDate() {
         return createdDate;
     }
 
-     @ApiModelProperty(name = "createdDate", example = "01/01/2559 07:30:45", dataType = "string", value = "วันที่สร้าง", hidden = true, required = false)
+    @ApiModelProperty(name = "createdDate", example = "01/01/2559 07:30:45", dataType = "string", value = "วันที่สร้าง", hidden = true, required = false)
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
@@ -61,11 +82,11 @@ public class FileAttachModel2 extends FileAttachModel {
         return createdName;
     }
 
-     @ApiModelProperty(name = "createdName", example = "ชื่อทดสอบ", dataType = "string", value = "ชื่อทดสอบ", hidden = true, required = false)
+    @ApiModelProperty(name = "createdName", example = "ชื่อทดสอบ", dataType = "string", value = "ชื่อทดสอบ", hidden = true, required = false)
     public void setCreatedName(String createdName) {
         this.createdName = createdName;
     }
-    
+
     public int getCreatedBy() {
         return createdBy;
     }
@@ -73,6 +94,33 @@ public class FileAttachModel2 extends FileAttachModel {
     @ApiModelProperty(name = "createdBy", example = "1", dataType = "int", value = "รหัสผู้อัพ", hidden = true, required = false)
     public void setCreatedBy(int createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getUpdatedDate() {
+        return updatedDate;
+    }
+
+    @ApiModelProperty(name = "updated", example = "01/01/2559 07:30:45", dataType = "string", value = "วันที่แก้ไข", hidden = true, required = false)
+    public void setUpdatedDate(String updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public String getUpdatedName() {
+        return updatedName;
+    }
+
+    @ApiModelProperty(name = "updatedName", example = "ชื่อผู้แก้ไข", dataType = "string", value = "ชื่อผู้แก้ไข", hidden = true, required = false)
+    public void setUpdatedName(String updatedName) {
+        this.updatedName = updatedName;
+    }
+
+    public int getUpdatedBy() {
+        return updatedBy;
+    }
+
+    @ApiModelProperty(name = "updated", example = "1", dataType = "int", value = "รหัสผู้แก้ไข", hidden = true, required = false)
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
 }
