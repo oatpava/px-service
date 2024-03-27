@@ -2355,4 +2355,56 @@ public class FileAttachResource {
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "Method for update FileAttach (model2).",
+            notes = "แก้ไขข้อมูลเอกสารแนบ (model2)",
+            response = FileAttachModel2.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "FileAttach updeted by id success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/updateModel2")
+    public Response updateModel2(
+            FileAttachModel fileAttachModel
+    ) {
+        LOG.debug("updateModel2...");
+        Gson gs = new GsonBuilder()
+                .setVersion(fileAttachModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            FileAttachService fileAttachService = new FileAttachService();
+            FileAttach fileAttach = fileAttachService.getById(fileAttachModel.getId());
+            if (fileAttach != null) {
+                fileAttach.setFileAttachName(fileAttachModel.getFileAttachName());
+                fileAttach.setFileAttachType(fileAttachModel.getFileAttachType());
+                fileAttach.setFileAttachSize(fileAttachModel.getFileAttachSize());
+                fileAttach.setLinkType(fileAttachModel.getLinkType());
+                fileAttach.setLinkId(fileAttachModel.getLinkId());
+                fileAttach.setReferenceId(fileAttachModel.getReferenceId());
+                fileAttach.setSecrets(fileAttachModel.getSecrets());
+                fileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                fileAttach = fileAttachService.update(fileAttach);
+                status = Response.Status.OK;
+                responseData.put("data", fileAttachService.tranformToModel2(fileAttach));
+                responseData.put("message", "");
+            }
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 }
