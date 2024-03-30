@@ -767,4 +767,31 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
         return null;
     }
 
+    public String saveFileFromTemplate(FileAttach fileAttach, FileAttach fileAttachTemplate) {
+        final String pathDocument;
+        final String srcFilePath;
+        final String desFilePath;
+        try {
+            ParamService paramService = new ParamService();
+            pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
+            final String filePathTemplate = fileAttachTemplate.getLinkType() + File.separator + buildFilePathExt(fileAttachTemplate.getId()) + fileAttachTemplate.getFileAttachType();
+            final String filePath = fileAttach.getLinkType() + File.separator + buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
+            srcFilePath = pathDocument + filePathTemplate;
+            desFilePath = pathDocument + filePath;
+        } catch (Exception ex) {
+            LOG.error("replaceFile().getParam()", ex);
+            return ex.getMessage();
+        }
+
+        File srcFile = new File(srcFilePath);
+        File desFile = new File(desFilePath);
+        try {
+            Files.copy(srcFile.toPath(), desFile.toPath(), REPLACE_EXISTING);
+        } catch (IOException ex) {
+            LOG.error("saveFileFromTemplate().copy()", ex);
+            return "file copy error!!!";
+        }
+        return null;
+    }
+
 }

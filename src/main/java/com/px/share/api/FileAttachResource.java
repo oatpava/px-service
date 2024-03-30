@@ -2407,4 +2407,66 @@ public class FileAttachResource {
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "Method for create FileAttach from FileAttach templates.",
+            notes = "แก้ไขข้อมูลเอกสารแนบ (model2)",
+            response = FileAttachModel2.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "FileAttach created by templates success."),
+        @ApiResponse(code = 404, message = "FileAttach by id not found in the database."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/createFromtemplates")
+    public Response createFromtemplates(
+            FileAttachModel[] fileAttachModels
+    ) {
+        LOG.debug("createFromtemplates...");
+        Gson gs = new GsonBuilder()
+                .setVersion(fileAttachModels[0].getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            FileAttachService fileAttachService = new FileAttachService();
+            for (FileAttachModel fileAttachModel : fileAttachModels) {
+                FileAttach fileAttachTemplate = fileAttachService.getById(fileAttachModel.getId());
+                if (fileAttachTemplate != null) {
+                    FileAttach fileAttach = new FileAttach();
+                    fileAttach.setCreatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
+                    fileAttach.setFileAttachName(fileAttachModel.getFileAttachName() + fileAttachTemplate.getFileAttachType().toLowerCase());
+                    fileAttach.setFileAttachType(fileAttachTemplate.getFileAttachType());
+                    fileAttach.setLinkType(fileAttachModel.getLinkType());
+                    fileAttach.setLinkId(fileAttachModel.getLinkId());
+                    fileAttach.setReferenceId(0);
+                    fileAttach.setSecrets(fileAttachModel.getSecrets());
+                    fileAttach.setFileAttachSize(fileAttachTemplate.getFileAttachSize());
+                    fileAttach = fileAttachService.create(fileAttach);
+
+                    final String errorMsg = fileAttachService.saveFileFromTemplate(fileAttach, fileAttachTemplate);
+                    if (errorMsg == null) {
+                    } else {
+                        fileAttachService.delete(fileAttach);
+                        throw new Exception(errorMsg);
+                    }
+                }
+            }
+            status = Response.Status.CREATED;
+            responseData.put("data", true);
+            responseData.put("message", "");
+            responseData.put("success", true);
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 }
