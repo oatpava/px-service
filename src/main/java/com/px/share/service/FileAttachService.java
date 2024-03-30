@@ -167,7 +167,7 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
                 //oat-add
                 fileAttachModel.setCreatedBy(fileAttach.getCreatedBy());
             }
-            
+
             //oat-add
             fileAttachModel.setUpdatedDate(Common.localDateTimeToString(fileAttach.getUpdatedDate()));
             if (fileAttach.getUpdatedBy() != 0 && fileAttach.getUpdatedBy() != -1) {
@@ -706,6 +706,64 @@ public class FileAttachService implements GenericService<FileAttach, FileAttachM
 
         tmpFile.delete();
 //        LOG.debug("xxxxxxxxxx done.");
+        return null;
+    }
+
+    public String replaceFile(FileAttach fileAttach, InputStream uploadedInputStream, String fileName) {
+        int partPos = fileName.lastIndexOf(".");
+        String fileType = fileName.substring(partPos).toUpperCase();
+
+        final String encodeFile;
+        final String pathDocument;
+        final String srcFilePath;
+        final String tmpFilePath;
+        final String desFilePath;
+        try {
+            ParamService paramService = new ParamService();
+            encodeFile = paramService.getByParamName("ENCODE_FILE").getParamValue();
+            pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
+            final String fileAttachType = fileAttach.getFileAttachType();
+            final String filePathOld = fileAttach.getLinkType() + File.separator + buildFilePathExt(fileAttach.getId()) + fileAttachType;
+            final String filePath = fileAttach.getLinkType() + File.separator + buildFilePathExt(fileAttach.getId()) + fileType;
+            srcFilePath = pathDocument + filePathOld;
+            tmpFilePath = pathDocument + filePath + "_tmp";
+            desFilePath = pathDocument + filePath;
+        } catch (Exception ex) {
+            LOG.error("replaceFile().getParam()", ex);
+            return ex.getMessage();
+        }
+
+        try {
+            saveFile(uploadedInputStream, tmpFilePath);
+        } catch (IOException ex) {
+            LOG.error("replaceFile().saveFile()", ex);
+            return ex.getMessage();
+        }
+        File tmpFile = new File(tmpFilePath);
+        fileAttach.setFileAttachName(fileName);
+        fileAttach.setFileAttachType(fileType);
+        fileAttach.setFileAttachSize(tmpFile.length());
+
+        File srcFile = new File(srcFilePath);
+        File backupFile = new File(srcFilePath + "_bk");
+        srcFile.renameTo(backupFile);
+
+        if (encodeFile.equalsIgnoreCase("Y")) {
+            try {
+                Common.encodeFile(tmpFilePath, desFilePath);
+                tmpFile.delete();
+            } catch (IOException ex) {
+                backupFile.renameTo(srcFile);
+                LOG.error("replaceFile().encodeFile()", ex);
+                return "file encode error!!!";
+            }
+        } else {
+            File desFile = new File(desFilePath);
+            tmpFile.renameTo(desFile);
+        }
+        backupFile.delete();
+
+        update(fileAttach);
         return null;
     }
 
