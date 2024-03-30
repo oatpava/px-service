@@ -1715,7 +1715,7 @@ public class FileAttachResource {
             fileAttach.setLinkType(linkType);
             fileAttach.setLinkId(linkId);
             fileAttach.setReferenceId(0);
-            fileAttach.setSecrets(Integer.parseInt(nameAfterType[1]));
+            fileAttach.setSecrets(nameAfterType.length == 1 ? 1 : Integer.parseInt(nameAfterType[1]));
             fileAttach = fileAttachService.create(fileAttach);
             if (fileAttach != null) {
                 String pathDocumentTemp = paramService.getByParamName("PATH_DOCUMENT_TEMP").getParamValue();
@@ -1726,26 +1726,26 @@ public class FileAttachResource {
                 LOG.debug("fileSave = " + fileSave);
                 tempFile = fileSave;
                 fileAttachService.saveFile(uploadInputStream, fileSave);
-                
+
                 fileSave = fileAttachService.moveToRealPath(fileAttach.getId());
-                
+
                 File file = new File(fileSave);
                 fileAttach.setFileAttachSize(file.length());
                 fileAttach = fileAttachService.update(fileAttach);
                 LOG.debug("fileAttach Id = " + fileAttach.getId());
-                
-                if (Integer.parseInt(nameAfterType[2]) > 0) {//upload edit file
+
+                if (nameAfterType.length == 2 && Integer.parseInt(nameAfterType[2]) > 0) {//upload edit file
                     isAdd = false;
-                    
+
                     FileAttach oldFileAttach = fileAttachService.getByIdNotRemoved(Integer.parseInt(nameAfterType[2]));
                     oldFileAttach.setUpdatedBy(Integer.parseInt(httpHeaders.getHeaderString("userID")));
                     oldFileAttach.setReferenceId(fileAttach.getId());
                     oldFileAttach = fileAttachService.update(oldFileAttach);
-                    
+
                     fileAttach.setOrderNo(oldFileAttach.getOrderNo());
                     fileAttach = fileAttachService.update(fileAttach);
                 }
-                
+
                 FileAttachModel newFileAttachModel = fileAttachService.tranformToModel(fileAttach);
                 String url = pathDocumentHttp + linkType + "/" + fileAttachService.buildHtmlPathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
                 String thumbnailUrl = fileAttachService.buildThumbhunailUrl(fileAttach.getFileAttachType(), url);
