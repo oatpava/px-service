@@ -294,32 +294,32 @@ public class UserService implements GenericService<User, UserModel> {
         return user;
     }
 
-    public User saveLogForLogin(User user, String clientIp) {
-        String logDescription = this.generateLogForLogin(user);
+    public UserProfile saveLogForLogin(UserProfile userProfile, String clientIp) {
+        String logDescription = this.generateLogForLogin(userProfile.getUser());
         LogData logData = new LogData();
-        logData.setCreatedBy(user.getId());
+        logData.setCreatedBy(userProfile.getId());
         logData.setDescription(logDescription);
-        logData.setEntityName(user.getClass().getName());
-        logData.setLinkId(user.getId());
+        logData.setEntityName(userProfile.getClass().getName());
+        logData.setLinkId(userProfile.getId());
         logData.setModuleName(LogData.MODULE_ADMIN);
         logData.setIpAddress(clientIp);
         LogDataService logDataService = new LogDataService();
         logDataService.login(logData);
-        return user;
+        return userProfile;
     }
 
-    public User saveLogForLogout(User user, String clientIp) {
-        String logDescription = this.generateLogForLogout(user);
+    public UserProfile saveLogForLogout(UserProfile userProfile, String clientIp) {
+        String logDescription = this.generateLogForLogout(userProfile.getUser());
         LogData logData = new LogData();
-        logData.setCreatedBy(user.getId());
+        logData.setCreatedBy(userProfile.getId());
         logData.setDescription(logDescription);
-        logData.setEntityName(user.getClass().getName());
-        logData.setLinkId(user.getId());
+        logData.setEntityName(userProfile.getClass().getName());
+        logData.setLinkId(userProfile.getId());
         logData.setModuleName(LogData.MODULE_ADMIN);
         logData.setIpAddress(clientIp);
         LogDataService logDataService = new LogDataService();
         logDataService.logout(logData);
-        return user;
+        return userProfile;
     }
 
     public User saveLogForUpdatePassword(User user, String clientIp) {

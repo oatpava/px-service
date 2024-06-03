@@ -70,30 +70,17 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
         LogDataModel logDataModel = null;
         UserProfileService userProfileService = new UserProfileService();
         ModuleService moduleService = new ModuleService();
-        String logType = "";
-        int userCreated = 1;
         if (logData != null) {
             logDataModel = new LogDataModel();
             logDataModel.setId(logData.getId());
-            if (logData.getType() == 1) {
-                logType = logData.getDescription();
-            } else if (logData.getType() == 2) {
-                logType = logData.getDescription();
-            } else if (logData.getType() == 3) {
-                logType = logData.getDescription();
-            } else {
-                logType = logData.getDescription();
-            }
             logDataModel.setCreatedDate(Common.localDateTimeToString2(logData.getCreatedDate()));
-            logDataModel.setDescription(logType);
+            logDataModel.setDescription(logData.getDescription());
             logDataModel.setIpAddress(logData.getIpAddress());
-            userCreated = logData.getCreatedBy();
-            if (userCreated <= 0) {
-                userCreated = 1;
-            }
-            List<UserProfile> listUserProfile = userProfileService.listByUserId(userCreated, "id", "asc");
-            String name = (listUserProfile.size() > 0) ? listUserProfile.get(0).getUserProfileFullName() : "-";
-            logDataModel.setUserProfileName(name);
+
+            int userProfileId = logData.getCreatedBy() > 0 ? logData.getCreatedBy() : 1;
+            UserProfile userProfile = userProfileService.getById(userProfileId);
+            logDataModel.setUserProfileName(userProfile != null ? userProfile.getUserProfileFullName() : "-");
+
             if (logData.getType() == 4 || logData.getType() == 10) {//4=login, 10=logout
                 logDataModel.setModuleName(moduleService.getByModuleCode("wf").getModuleName());
                 logDataModel.setModuleIcon(moduleService.getByModuleCode("wf").getModuleIcon());
