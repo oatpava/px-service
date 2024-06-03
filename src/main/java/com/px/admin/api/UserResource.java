@@ -352,7 +352,7 @@ public class UserResource {
 //                    response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
 //                    responseData.put("message", "");
                     //LogData For Login
-                    userService.saveLogForLogin(user, httpHeaders.getHeaderString("clientIp"));
+                    userService.saveLogForLogin(userProfile, httpHeaders.getHeaderString("clientIp"));
                 }
                 authenticationModel = new AuthenticationModel(result);
                 responseData.put("data", authenticationModel);
@@ -1292,10 +1292,10 @@ public class UserResource {
         try {
             UserService userService = new UserService();
             UserProfileService userProfileService = new UserProfileService();
-            User user = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID"))).getUser();
+            UserProfile userProfile = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID")));
             //LogData For Logout
-            userService.saveLogForLogout(user, httpHeaders.getHeaderString("clientIp"));
-            responseData.put("data", userService.tranformToModel(user));
+            userService.saveLogForLogout(userProfile, httpHeaders.getHeaderString("clientIp"));
+            responseData.put("data", userService.tranformToModel(userProfile.getUser()));
             status = Response.Status.OK;
             responseData.put("success", true);
         } catch (Exception ex) {
