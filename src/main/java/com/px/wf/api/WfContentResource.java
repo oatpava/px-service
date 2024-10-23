@@ -2830,4 +2830,47 @@ public class WfContentResource {
         return Response.status(status).entity(gs.toJson(responseData)).build();
     }
 
+    @ApiOperation(
+            value = "สร้างข้อมูลประวัติการใช้งานระบบ เปิดหนังสือ",
+            notes = "สร้างข้อมูลประวัติการใช้งานระบบ เปิดหนังสือ",
+            response = WfContentModel.class
+    )
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "LogData created successfully."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Path(value = "/logOpen")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createLogOpen(
+            @BeanParam VersionModel versionModel,
+            WfContentModel wfContentModel
+    ) {
+        LOG.info("createLogOpen...");
+        Gson gs = new GsonBuilder()
+                .setVersion(versionModel.getVersion())
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        responseData.put("success", false);
+        try {
+            WfContentService wfContentService = new WfContentService();
+            wfContentModel = wfContentService.saveLogForOpen(wfContentModel, httpHeaders.getHeaderString("clientIp"), Integer.parseInt(httpHeaders.getHeaderString("userID")));
+            status = Response.Status.OK;
+            responseData.put("data", wfContentModel);
+            responseData.put("success", true);
+            responseData.put("message", "WfContent successfully.");
+            //LogData For Create
+
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("errorMessage", ex.getMessage());
+        }
+        return Response.status(status).entity(gs.toJson(responseData)).build();
+    }
+
 }
