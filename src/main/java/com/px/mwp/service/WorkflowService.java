@@ -189,7 +189,6 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
     private String genDetail(Workflow workflow) {
         String detail = "";
         int contentFormat = Integer.parseInt(new ParamService().getByParamName("CONTENTFORMAT").getParamValue());
-        char actionType = workflow.getWorkflowActionType().charAt(0);
         String name = "-";
         String contentNoOrder = "-";
         String bookNo = "-";
@@ -211,12 +210,12 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
         if (workflow.getWorkflowStr04() != null) {
             bookNo = workflow.getWorkflowStr04();
         }
-        switch (actionType) {
-            case ('N'): {
+        switch (workflow.getWorkflowActionType()) {
+            case ("N"): {
                 detail = name + " [สร้างหนังสือ] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
-            case ('R'): {
+            case ("R"): {
                 int folderId = new WfContentService().getById(workflow.getLinkId2()).getWfContentFolderId();
                 String folderType = new WfFolderService().getById(folderId).getWfContentType().getContentTypeName();
                 String str01 = workflow.getWorkflowStr01();
@@ -231,7 +230,7 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 detail = name + " [ลง" + folderType + extraAction + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
-            case ('S'): {
+            case ("S"): {
                 WorkflowToService workflowToService = new WorkflowToService();
                 List<WorkflowTo> listWorkflowTo = workflowToService.listByWorkflowId(workflow.getId());
                 String sendTo = "-";
@@ -257,7 +256,7 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 detail = name + " [ส่งหนังสือให้] " + sendTo + " ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo + sendCc;
             }
             break;
-            case ('A'): {
+            case ("A"): {
                 WorkflowToService workflowToService = new WorkflowToService();
                 List<WorkflowTo> listWorkflowTo = workflowToService.listByWorkflowId(workflow.getId());
                 String sendTo = "-";
@@ -283,17 +282,18 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 detail = name + " [ส่งหนังสือ (ตอบกลับ) ให้] " + sendTo + " ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo + sendCc;
             }
             break;
-            case ('F'): {
-                String action = (workflow.getLinkId3() == 0) ? "ทำเรื่องเสร็จ" : "ทำเรื่องเสร็จจัดเก็บ";
+            case ("F"): {
+                String action = workflow.getLinkId3() == 0 ? "ทำเรื่องเสร็จ" : "ทำเรื่องเสร็จจัดเก็บ";
                 detail = name + " [" + action + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
-            case ('C'): {
-                String action = (workflow.getWorkflowDescription() != null && workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
+            case ("C"): {
+                String description = workflow.getWorkflowDescription();
+                String action = description == null ? "ยกเลิกหนังสือ" : description.equals("ย้ายหนังสือ") ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
                 detail = name + " [" + action + "] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
-            case ('D'): {
+            case ("D"): {
                 String users = "";
                 if (workflow.getWorkflowStr01() != null) {
                     users = workflow.getWorkflowStr01();
@@ -301,11 +301,11 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
                 detail = name + " [ยกเลิกการส่ง] " + users + " ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
-            case ('E'): {
+            case ("E"): {
                 detail = name + " [ยกเลิกเรื่องเสร็จ] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
-            case ('B'): {
+            case ("B"): {
                 detail = name + " [แก้ไขการยกเลิกหนังสือ] ลำดับเลขทะเบียน " + contentNoOrder + " เลขที่หนังสือ " + bookNo;
             }
             break;
@@ -593,50 +593,38 @@ public class WorkflowService implements GenericService<Workflow, WorkflowModel> 
     }
 
     private String getAction(Workflow workflow) {
-        char actiontype = workflow.getWorkflowActionType().charAt(0);
-        String action;
-        switch (actiontype) {
-            case 'N':
-                action = "สร้างหนังสือ";
-                break;
-            case 'R':
+        switch (workflow.getWorkflowActionType()) {
+            case "N":
+                return "สร้างหนังสือ";
+            case "R":
                 String str01 = workflow.getWorkflowStr01();
-                action = "ลงทะเบียน";
                 if (str01 != null) {
                     if (str01.equals("1")) {
-                        action = "ลงทะเบียน" + "\r\n" + "(รับเรื่องอีกครั้ง)";
+                        return "ลงทะเบียน" + "\r\n" + "(รับเรื่องอีกครั้ง)";
                     } else if (str01.equals("2")) {
-                        action = "ลงทะเบียน" + "\r\n" + "(เชื่อมโยงข้อมูล)";
+                        return "ลงทะเบียน" + "\r\n" + "(เชื่อมโยงข้อมูล)";
                     }
+                } else {
+                    return "ลงทะเบียน";
                 }
-                break;
-            case 'S':
-                action = "ส่งหนังสือให้";
-                break;
-            case 'A':
-                action = "ตอบกลับหนังสือให้";
-                break;
-            case 'F':
-//                action = (workflow.getLinkId3() == 0) ? "ทำเรื่องเสร็จ" : "ทำเรื่องเสร็จจัดเก็บ";
-                action = "ทำเรื่องเสร็จ";
-                break;
-            case 'C':
-                action = (workflow.getWorkflowDescription().equals("ย้ายหนังสือ")) ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
-                break;
-            case 'D':
-                action = "ยกเลิกการส่ง";
-                break;
-            case 'E':
-                action = "ยกเลิกเรื่องเสร็จ";
-                break;
-            case 'B':
-                action = "แก้ไขการยกเลิกหนังสือ";
-                break;
+            case "S":
+                return "ส่งหนังสือให้";
+            case "A":
+                return "ตอบกลับหนังสือให้";
+            case "F":
+                return workflow.getLinkId3() == 0 ? "ทำเรื่องเสร็จ" : "ทำเรื่องเสร็จจัดเก็บ";
+            case "C":
+                String description = workflow.getWorkflowDescription();
+                return description == null ? "ยกเลิกหนังสือ" : description.equals("ย้ายหนังสือ") ? "ย้ายหนังสือ" : "ยกเลิกหนังสือ";
+            case "D":
+                return "ยกเลิกการส่ง";
+            case "E":
+                return "ยกเลิกเรื่องเสร็จ";
+            case "B":
+                return "แก้ไขการยกเลิกหนังสือ";
             default:
-                action = "-";
-                break;
+                return "-";
         }
-        return action;
     }
 
     private String findActionId(List<Workflow> list, int id) {
