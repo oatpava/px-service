@@ -812,22 +812,19 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         return myWork;
     }
 
-    public WfContentModel saveLogForOpen(WfContentModel wfContentModel, String clientIp, int userProfileId) {
+    public WfContent saveLogForOpen(WfContent wfContent, String clientIp, String type, int userId) {
         //For Create Log when open WfContent
-        String logDescription = this.generateLogForOpenEntity(wfContentModel);
+        String logDescription = this.generateLogForOpenEntity(wfContent, type);
         LogData logData = new LogData();
-        logData.setCreatedBy(userProfileId);
+        logData.setCreatedBy(userId);
         logData.setDescription(logDescription);
-        logData.setEntityName(new WfContent().getClass().getName());
-        logData.setLinkId(wfContentModel.getId());
+        logData.setEntityName(wfContent.getClass().getName());
+        logData.setLinkId(wfContent.getId());
         logData.setModuleName(LogData.MODULE_WF);
         logData.setIpAddress(clientIp);
         LogDataService logDataService = new LogDataService();
         logDataService.open(logData);
-        
-        wfContentModel.setWfContentText09(null);
-        wfContentModel.setWfContentText10(null);
-        return wfContentModel;
+        return wfContent;
     }
 
     private String generateLogForCreateEntity(WfContent wfContent) {
@@ -1063,27 +1060,12 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         return descriptionLog.toString();
     }
 
-    private String generateLogForOpenEntity(WfContentModel wfContentModel) {
+    private String generateLogForOpenEntity(WfContent wfContent, String type) {
         StringBuilder descriptionLog = new StringBuilder();
-        descriptionLog.append("เปิดอ่านหนังสือ:");
-        descriptionLog.append(" เลขทะเบียน : ");
-        descriptionLog.append(Common.noNull(wfContentModel.getWfContentContentNo(), ""));
-        if (!wfContentModel.getWfContentBookNo().equals("") && wfContentModel.getWfContentBookNo() != null) {
-            descriptionLog.append(" เลขที่หนังสือ : ");
-            descriptionLog.append(Common.noNull(wfContentModel.getWfContentBookNo(), ""));
-        }
-        descriptionLog.append(" เรื่อง : ");
-        descriptionLog.append(Common.noNull(wfContentModel.getWfContentTitle(), ""));
-
-        String folderName = Common.noNull(wfContentModel.getWfContentText09(), null);
-        if (folderName != null) {
-            descriptionLog.append(" ในแฟ้มทะเบียน : ");
-            descriptionLog.append(folderName);
-            descriptionLog.append(" ของหน่วยงาน : ");
-        } else {
-            descriptionLog.append(" ในกล่องหนังสือเข้าของหน่วยงาน : ");
-        }
-        descriptionLog.append(Common.noNull(wfContentModel.getWfContentText10(), ""));
+        descriptionLog.append("เปิดหนังสือ [");
+        descriptionLog.append(type);
+        descriptionLog.append("]: เลขทะเบียน :");
+        descriptionLog.append(Common.noNull(wfContent.getWfContentContentNo(), ""));
 
         return descriptionLog.toString();
     }
