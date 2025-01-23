@@ -2291,6 +2291,7 @@ public class WfContentResource {
         responseData.put("message", "prepareShowFromTo not found in the database.");
         try {
             String replacedName = name.replaceAll("xxxx", " ");
+            replacedName = replacedName.replaceAll("yyyy", "\t");
             int userType = 2;//outside
             StructureModel structureModel = null;
             StructureService structureService = new StructureService();
