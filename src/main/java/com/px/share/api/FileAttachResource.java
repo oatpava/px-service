@@ -12,7 +12,6 @@ import com.px.share.model.VersionModel;
 import com.px.share.model.FileAttachModel;
 import com.px.share.model.FileAttachBase64Model;
 import com.px.share.model.FileAttachModel2;
-import com.px.share.model.FileAttachWfSearchModel;
 import com.px.share.service.FileAttachService;
 import com.px.share.service.ParamService;
 import com.px.wf.entity.WfContent;
@@ -2136,30 +2135,29 @@ public class FileAttachResource {
         responseData.put("message", "FileAttach not found in the database.");
         responseData.put("errorMessage", "");
         try {
+            String data = "false";
             FileAttachService fileAttachService = new FileAttachService();
             ParamService paramService = new ParamService();
             FileAttach fileAttach = fileAttachService.getById(attachId);
-            String pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
-            String filePath = fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(attachId) + fileAttach.getFileAttachType();
-            String pathFile = pathDocument + filePath;
-            String data = "false";
-            File f = new File(pathFile);
+            if (fileAttach != null) {
+                String pathDocument = paramService.getByParamName("PATH_DOCUMENT").getParamValue();
+                String filePath = fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(attachId) + fileAttach.getFileAttachType();
+                String pathFile = pathDocument + filePath;
 
-            if (f.exists() && !f.isDirectory()) {
-                // found
-                data = "true";
-            } else {
-                // not found
-                data = "false";
+                File f = new File(pathFile);
+                if (f.exists() && !f.isDirectory()) {
+                    // found
+                    data = "true";
+                } else {
+                    // not found
+                    data = "false";
+                }
             }
-
             status = Response.Status.OK;
             responseData.put("data", data);
             responseData.put("message", "FileAttach success.");
-
             responseData.put("success", true);
         } catch (Exception ex) {
-            ex.printStackTrace();
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
             responseData.put("errorMessage", ex.getMessage());
