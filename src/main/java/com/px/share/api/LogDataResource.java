@@ -1072,8 +1072,7 @@ public class LogDataResource {
                 tempTable.setStr02(model.getUserProfileName());
                 tempTable.setStr03(model.getCreatedDate());
                 tempTable.setStr04(model.getIpAddress());
-                tempTable.setStr05(model.getDescription());
-                tempTable.setText01(model.getModuleIcon());
+                tempTable.setText01(model.getDescription());
                 tempTableService.create(tempTable);
             });
             responseData.put("data", null);
