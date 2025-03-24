@@ -26,6 +26,7 @@ import com.px.share.service.LogDataService;
 import com.px.share.service.ParamService;
 import com.px.mwp.entity.Workflow;
 import com.px.share.entity.FileAttach;
+import com.px.share.model.FileAttachModel;
 import com.px.share.service.FileAttachService;
 import com.px.wf.model.WfContentSearchModel;
 import java.io.BufferedReader;
@@ -824,8 +825,48 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         logData.setIpAddress(clientIp);
         LogDataService logDataService = new LogDataService();
         logDataService.open(logData);
-        
+
         wfContentModel.setWfContentText09(null);
+        wfContentModel.setWfContentText10(null);
+        return wfContentModel;
+    }
+
+    public WfContentModel saveLogForViewFile(WfContentModel wfContentModel, String clientIp, int userProfileId) {
+        //For Create Log when view FileAttach
+        String logDescription = "เปิดอ่านเอกสาร: " + wfContentModel.getWfContentText10()
+                + " เลขทะเบียน : " + Common.noNull(wfContentModel.getWfContentContentNo(), "")
+                + " เลขที่หนังสือ : " + Common.noNull(wfContentModel.getWfContentBookNo(), "");
+        LogData logData = new LogData();
+        logData.setCreatedBy(userProfileId);
+        logData.setDescription(logDescription);
+        logData.setEntityName(new WfContent().getClass().getName());
+        logData.setLinkId(wfContentModel.getWfContentInt10());
+        logData.setModuleName(LogData.MODULE_WF);
+        logData.setIpAddress(clientIp);
+        LogDataService logDataService = new LogDataService();
+        logDataService.viewFile(logData);
+
+        wfContentModel.setWfContentInt10(0);
+        wfContentModel.setWfContentText10(null);
+        return wfContentModel;
+    }
+
+    public WfContentModel saveLogForDownloadFile(WfContentModel wfContentModel, String clientIp, int userProfileId) {
+        //For Create Log when download FileAttach
+        String logDescription = "สำเนาเอกสาร: " + wfContentModel.getWfContentText10()
+                + " เลขทะเบียน : " + Common.noNull(wfContentModel.getWfContentContentNo(), "")
+                + " เลขที่หนังสือ : " + Common.noNull(wfContentModel.getWfContentBookNo(), "");
+        LogData logData = new LogData();
+        logData.setCreatedBy(userProfileId);
+        logData.setDescription(logDescription);
+        logData.setEntityName(new WfContent().getClass().getName());
+        logData.setLinkId(wfContentModel.getWfContentInt10());
+        logData.setModuleName(LogData.MODULE_WF);
+        logData.setIpAddress(clientIp);
+        LogDataService logDataService = new LogDataService();
+        logDataService.export(logData);
+
+        wfContentModel.setWfContentInt10(0);
         wfContentModel.setWfContentText10(null);
         return wfContentModel;
     }

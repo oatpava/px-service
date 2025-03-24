@@ -207,6 +207,14 @@ public class LogDataService implements GenericService<LogData, LogDataModel> {
         return this.create(logData);
     }
 
+    public LogData viewFile(LogData logData) {
+        checkNotNull(logData, "logData entity must not be null");
+        checkNotNull(logData.getCreatedBy(), "create by must not be null");
+        //Type 11 for viewFile
+        logData.setType(11);
+        return this.create(logData);
+    }
+
     public Integer countLogByModuleNameNoDate(String moduleName) {
         checkNotNull(moduleName, "moduleName must not be null");
         return logDataDaoImpl.countLogByModuleNameNoDate(moduleName);
