@@ -833,9 +833,14 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
 
     public WfContentModel saveLogForViewFile(WfContentModel wfContentModel, String clientIp, int userProfileId) {
         //For Create Log when view FileAttach
-        String logDescription = "เปิดอ่านเอกสาร: " + wfContentModel.getWfContentText10()
+        final String folderName = Common.noNull(wfContentModel.getWfContentText09(), null);
+
+        String logDescription = "เปิดอ่านเอกสาร: " + wfContentModel.getWfContentText08()
                 + " เลขทะเบียน : " + Common.noNull(wfContentModel.getWfContentContentNo(), "")
-                + " เลขที่หนังสือ : " + Common.noNull(wfContentModel.getWfContentBookNo(), "");
+                + " เลขที่หนังสือ : " + Common.noNull(wfContentModel.getWfContentBookNo(), "")
+                + (folderName != null ? " ในแฟ้มทะเบียน : " + folderName + " ของหน่วยงาน : " : " ในกล่องหนังสือเข้าของหน่วยงาน : ")
+                + Common.noNull(wfContentModel.getWfContentText10(), "");
+
         LogData logData = new LogData();
         logData.setCreatedBy(userProfileId);
         logData.setDescription(logDescription);
@@ -847,15 +852,22 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         logDataService.viewFile(logData);
 
         wfContentModel.setWfContentInt10(0);
+        wfContentModel.setWfContentText08(null);
+        wfContentModel.setWfContentText09(null);
         wfContentModel.setWfContentText10(null);
         return wfContentModel;
     }
 
     public WfContentModel saveLogForDownloadFile(WfContentModel wfContentModel, String clientIp, int userProfileId) {
         //For Create Log when download FileAttach
-        String logDescription = "สำเนาเอกสาร: " + wfContentModel.getWfContentText10()
+        final String folderName = Common.noNull(wfContentModel.getWfContentText09(), null);
+
+        String logDescription = "สำเนาเอกสาร: " + wfContentModel.getWfContentText08()
                 + " เลขทะเบียน : " + Common.noNull(wfContentModel.getWfContentContentNo(), "")
-                + " เลขที่หนังสือ : " + Common.noNull(wfContentModel.getWfContentBookNo(), "");
+                + " เลขที่หนังสือ : " + Common.noNull(wfContentModel.getWfContentBookNo(), "")
+                + (folderName != null ? " ในแฟ้มทะเบียน : " + folderName + " ของหน่วยงาน : " : " ในกล่องหนังสือเข้าของหน่วยงาน : ")
+                + Common.noNull(wfContentModel.getWfContentText10(), "");
+
         LogData logData = new LogData();
         logData.setCreatedBy(userProfileId);
         logData.setDescription(logDescription);
@@ -867,6 +879,8 @@ public class WfContentService implements GenericService<WfContent, WfContentMode
         logDataService.export(logData);
 
         wfContentModel.setWfContentInt10(0);
+        wfContentModel.setWfContentText08(null);
+        wfContentModel.setWfContentText09(null);
         wfContentModel.setWfContentText10(null);
         return wfContentModel;
     }
