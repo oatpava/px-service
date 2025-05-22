@@ -45,13 +45,15 @@ public class RequestFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         //        LOG.debug("RequestFilter...");
 
-        String client_ip = httpServletRequest.getHeader("x-real-ip");
-        if (client_ip == null || client_ip.isEmpty()) { // extract from forward ips
-            String ipForwarded = httpServletRequest.getHeader("x-forwarded-for");
-            String[] ips = ipForwarded == null ? null : ipForwarded.split(",");
-            client_ip = (ips == null || ips.length == 0) ? null : ips[0];
-            // extract from remote addr
-            client_ip = (client_ip == null || client_ip.isEmpty()) ? httpServletRequest.getRemoteAddr() : client_ip;
+        String client_ip;
+        String ipForwarded = httpServletRequest.getHeader("x-forwarded-for");
+        String firstIpForwarded = (ipForwarded == null || ipForwarded.isEmpty()) ? null : ipForwarded.split(",")[0];
+        client_ip = (firstIpForwarded == null || firstIpForwarded.isEmpty()) ? null : firstIpForwarded.trim();
+        if (client_ip == null || client_ip.isEmpty()) {
+            client_ip = httpServletRequest.getHeader("x-real-ip");
+            if (client_ip == null || client_ip.isEmpty()) {
+                client_ip = httpServletRequest.getRemoteAddr();
+            }
         }
 
         // IMPORTANT!!! First, Acknowledge any pre-flight test from browsers for this case before validating the headers (CORS stuff)
@@ -62,24 +64,24 @@ public class RequestFilter implements ContainerRequestFilter {
 
         String path = requestContext.getUriInfo().getPath();
         String token = requestContext.getHeaderString(HTTPHeaderNames.AUTH_TOKEN);
-        LOG.debug("path = "+path);
-        LOG.debug("token = "+token);
+        LOG.debug("path = " + path);
+        LOG.debug("token = " + token);
 //        LOG.debug("client_ip = "+client_ip);
 
         MultivaluedMap<String, String> headers = requestContext.getHeaders();
         MultivaluedMap<String, String> queryparams = requestContext.getUriInfo().getQueryParameters();
-        String queryUri = requestContext.getUriInfo().getBaseUriBuilder().toString()+path;
+        String queryUri = requestContext.getUriInfo().getBaseUriBuilder().toString() + path;
         String queryParam = "";
-        for( Map.Entry<String, List<String>> query : queryparams.entrySet() ){
+        for (Map.Entry<String, List<String>> query : queryparams.entrySet()) {
 //            LOG.debug("query = "+query);
             String key = query.getKey();
 //            LOG.debug("key = "+key);
-            if(key.equalsIgnoreCase("q")){
+            if (key.equalsIgnoreCase("q")) {
                 queryParam = query.getValue().get(0);
 //                LOG.debug("queryParam = "+queryParam);
                 queryParam = Common.decryptQueryParam(queryParam);
 //                LOG.debug("queryParam = "+queryParam);
-                queryUri = queryUri+"?"+queryParam;
+                queryUri = queryUri + "?" + queryParam;
 //                LOG.debug("queryUri = "+queryUri);
             }
         }
@@ -88,7 +90,7 @@ public class RequestFilter implements ContainerRequestFilter {
                 && !path.startsWith("v1/users/checkEmail")
                 && !path.startsWith("v1/users/changePass")
                 && !path.startsWith("v1/users/sendEmail")
-                && !path.startsWith("swagger.json")                 
+                && !path.startsWith("swagger.json")
                 && !path.startsWith("v1/users/getMocktoken")
                 && !path.startsWith("v1/imports")) {
             if (token != null && token.length() > 0) {
@@ -108,15 +110,15 @@ public class RequestFilter implements ContainerRequestFilter {
 //                    headers.add("userType", userType);
 //                    headers.add("clientIp", client_ip);
 //                    requestContext.setRequestUri(UriBuilder.fromUri(queryUri).build());
-                    if(!path.startsWith("checkAuth")){
+                    if (!path.startsWith("checkAuth")) {
                         headers.add("userID", userId);
                         headers.add("userType", userType);
                         headers.add("clientIp", client_ip);
                         requestContext.setRequestUri(UriBuilder.fromUri(queryUri).build());
-                    }else{
-                        if(!userType.equals("1")){
+                    } else {
+                        if (!userType.equals("1")) {
                             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-                        }else{
+                        } else {
                             requestContext.abortWith(Response.status(Response.Status.OK).build());
                         }
                     }
@@ -134,7 +136,7 @@ public class RequestFilter implements ContainerRequestFilter {
 //                    headers.add("userID", userId);
 //                    headers.add("userType", userType);
 //                    headers.add("clientIp", client_ip);
-                    
+
                 } catch (JWTVerificationException ex) {
                     //UTF-8 encoding not supported
                     LOG.error(ex);
