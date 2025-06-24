@@ -2,6 +2,8 @@ package com.px.wf.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.px.share.model.ListOptionModel;
+import com.px.wf.model.ImportProfileModel;
 import com.px.wf.model.ImportStatusModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,8 +21,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 import com.px.wf.model.ImportWfContentModel;
+import com.px.wf.service.ImportProfileService;
 import com.px.wf.service.ImportService;
+import java.util.List;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 
 /**
  *
@@ -466,6 +474,182 @@ public class ImportResource {
             importService.deleteEntities();
         }
         return Response.status(responseStatus).entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "สร้างข้อมูลแการเชื่อมโยงระบบ",
+            notes = "สร้างข้อมูลแการเชื่อมโยงระบบ"
+    )
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Create Success."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/profile")
+    public Response createProfile(
+            ImportProfileModel importProfileModel
+    ) {
+        LOG.info("createProfile...");
+        Gson gs = new GsonBuilder()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status responseStatus = Response.Status.INTERNAL_SERVER_ERROR;
+        ImportProfileService importProfileService = new ImportProfileService();
+        try {
+            ImportProfileModel responseModel = importProfileService.createProfile(importProfileModel);
+            responseData.put("success", true);
+            responseData.put("data", responseModel);
+            responseStatus = Response.Status.CREATED;
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("success", false);
+            responseData.put("errorMessage", ex.getMessage());
+        }
+
+        return Response.status(responseStatus)
+                .entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "แก้ไขข้อมูลแการเชื่อมโยงระบบ",
+            notes = "แก้ไขข้อมูลแการเชื่อมโยงระบบ"
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Success."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/profile")
+    public Response updateProfile(
+            ImportProfileModel importProfileModel
+    ) {
+        LOG.info("updateProfile...");
+        Gson gs = new GsonBuilder()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status responseStatus = Response.Status.INTERNAL_SERVER_ERROR;
+        ImportProfileService importProfileService = new ImportProfileService();
+        try {
+            ImportProfileModel responseModel = importProfileService.updateProfile(importProfileModel);
+            if (responseModel != null) {
+                responseData.put("success", true);
+                responseData.put("data", responseModel);
+                responseStatus = Response.Status.OK;
+            } else {
+                responseData.put("success", false);
+                responseData.put("errorMessage", "Import UserProfile not found!");
+                responseStatus = Response.Status.NOT_FOUND;
+            }
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("success", false);
+            responseData.put("errorMessage", ex.getMessage());
+        }
+
+        return Response.status(responseStatus)
+                .entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "ขอข้อมูลแการเชื่อมโยงระบบ",
+            notes = "ขอข้อมูลแการเชื่อมโยงระบบ"
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Success."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/profile")
+    public Response listProfile(
+            @BeanParam ListOptionModel listOptionModel
+    ) {
+        LOG.info("listProfile...");
+        Gson gs = new GsonBuilder()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status responseStatus = Response.Status.INTERNAL_SERVER_ERROR;
+        ImportProfileService importProfileService = new ImportProfileService();
+        try {
+            List<ImportProfileModel> listImportProfileModel = importProfileService.listProfile(listOptionModel.getSort(), listOptionModel.getDir());
+            responseData.put("success", true);
+            responseData.put("data", listImportProfileModel);
+            responseStatus = Response.Status.OK;
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("success", false);
+            responseData.put("errorMessage", ex.getMessage());
+        }
+
+        return Response.status(responseStatus)
+                .entity(gs.toJson(responseData)).build();
+    }
+
+    @ApiOperation(
+            value = "ลบข้อมูลแการเชื่อมโยงระบบ",
+            notes = "ลบข้อมูลแการเชื่อมโยงระบบ"
+    )
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Success."),
+        @ApiResponse(code = 404, message = "Not found!."),
+        @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @DELETE
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(value = "/profile/{id}")
+    public Response removeProfile(
+            @ApiParam(name = "id", value = "รหัสข้อมูลเการเชื่อมระบบ", required = true)
+            @PathParam("id") int id,
+            @ApiParam(name = "removedBy", value = "รหัสข้อมูลเผู้ลบ", required = true)
+            @QueryParam("removedBy") int removedBy
+    ) {
+        LOG.info("removeProfile...");
+        Gson gs = new GsonBuilder()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+        HashMap responseData = new HashMap();
+        Status responseStatus = Response.Status.INTERNAL_SERVER_ERROR;
+        ImportProfileService importProfileService = new ImportProfileService();
+        try {
+            ImportProfileModel responseModel = importProfileService.removeProfile(id, removedBy);
+            if (responseModel != null) {
+                responseData.put("success", true);
+                responseData.put("data", responseModel);
+                responseStatus = Response.Status.OK;
+            } else {
+                responseData.put("success", false);
+                responseData.put("errorMessage", "Import UserProfile not found!");
+                responseStatus = Response.Status.NOT_FOUND;
+            }
+        } catch (Exception ex) {
+            LOG.error("Exception = " + ex.getMessage());
+            responseData.put("success", false);
+            responseData.put("errorMessage", ex.getMessage());
+        }
+
+        return Response.status(responseStatus)
+                .entity(gs.toJson(responseData)).build();
     }
 
 }

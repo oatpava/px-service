@@ -127,6 +127,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
         DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
         criteria.createCriteria("user", "u", JoinType.INNER_JOIN);
         criteria.add(conjunction);
+        criteria = createOrder(criteria, sort, dir);
         return this.listByCriteria(criteria);
     }
 
@@ -183,7 +184,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
     }
 
     private DetachedCriteria createOrder(DetachedCriteria criteria, String sort, String dir) {
-        if (!sort.isEmpty()) {
+        if (sort !=null && !sort.isEmpty()) {
             if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
                 switch (sort) {
                     case "createdDate":
@@ -195,6 +196,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
                     case "orderNo":
                         criteria.addOrder(Order.asc("this.orderNo"));
                         break;
+                    case "id":
+                        criteria.addOrder(Order.asc("this.id"));
+                        break;
                 }
             } else if ((!dir.isEmpty()) && dir.equalsIgnoreCase("desc")) {
                 switch (sort) {
@@ -202,10 +206,13 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
                         criteria.addOrder(Order.desc("this.createdDate"));
                         break;
                     case "structure":
-                        criteria.addOrder(Order.asc("this.structure.id"));
+                        criteria.addOrder(Order.desc("this.structure.id"));
                         break;
                     case "orderNo":
-                        criteria.addOrder(Order.asc("this.orderNo"));
+                        criteria.addOrder(Order.desc("this.orderNo"));
+                        break;
+                    case "id":
+                        criteria.addOrder(Order.desc("this.id"));
                         break;
                 }
             }
@@ -314,6 +321,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
         Conjunction conjunction = Restrictions.conjunction();
         conjunction.add(Restrictions.eq("userProfileCode", userProfileCode));
         conjunction.add(Restrictions.eq("removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
+        criteria.add(conjunction);
+        List<UserProfile> result = this.listByCriteria(criteria);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public UserProfile getByCodeGetRemoved(String userProfileCode) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("userProfileCode", userProfileCode));
         DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
         criteria.add(conjunction);
         List<UserProfile> result = this.listByCriteria(criteria);

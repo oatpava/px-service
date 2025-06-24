@@ -99,7 +99,7 @@ public class Common {
         Email email = new Email(server, port, from, user, pass);
         return email.send(mailSubject, mailTo, mailToCC, mailToBCC, mailBody, fileAttachPath, mailType, debug);
     }
-    
+
     public static boolean sendEmailCustomFrom(String mailSubject, String mailFrom, String mailTo, String mailToCC, String mailToBCC, String mailBody, ArrayList fileAttachPath, String mailType, boolean debug) {
         checkNotNull(mailSubject, "mailSubject must not be null");
         checkNotNull(mailTo, "mailTo must not be null");
@@ -449,8 +449,8 @@ public class Common {
         }
         return resultList;
     }
-    
-    public static String encryptString(String data){
+
+    public static String encryptString(String data) {
         String result = "";
         try {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -467,8 +467,8 @@ public class Common {
         }
         return result;
     }
-    
-    public static String decryptString(String enpryptData){
+
+    public static String decryptString(String enpryptData) {
         String result = "";
         try {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -484,8 +484,8 @@ public class Common {
         }
         return result;
     }
-    
-    public static String decryptQueryParam(String encryptedParam){
+
+    public static String decryptQueryParam(String encryptedParam) {
         String result = "";
         try {
             byte[] decodeParam = Base64.decodeBase64(encryptedParam);
@@ -495,7 +495,7 @@ public class Common {
             final byte[][] keyAndIV = GenerateKeyAndIV(32, 16, 1, saltData, PxInit.KEY.getBytes(StandardCharsets.UTF_8), md5);
             SecretKeySpec key = new SecretKeySpec(keyAndIV[0], "AES");
             IvParameterSpec iv = new IvParameterSpec(keyAndIV[1]);
-            
+
             byte[] encryptedByte = Arrays.copyOfRange(cipherData, 16, cipherData.length);
             Cipher aesCBC = Cipher.getInstance("AES/CBC/PKCS5Padding");
             aesCBC.init(Cipher.DECRYPT_MODE, key, iv);
@@ -506,7 +506,7 @@ public class Common {
         }
         return result;
     }
-    
+
     private static byte[][] GenerateKeyAndIV(int keyLength, int ivLength, int iterations, byte[] salt, byte[] password, MessageDigest md) {
 
         int digestLength = md.getDigestLength();
@@ -556,4 +556,5 @@ public class Common {
             Arrays.fill(generatedData, (byte) 0);
         }
     }
+    
 }
