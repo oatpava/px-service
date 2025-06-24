@@ -587,7 +587,7 @@ public class UserProfileService implements GenericService<UserProfile, UserProfi
                 return false;
             }
 
-            String path = param.getParamValue() + String.valueOf(userProfileId) +".pfx";
+            String path = param.getParamValue() + String.valueOf(userProfileId) + ".pfx";
             File f = new File(path);
             return f.exists();
         } catch (Exception e) {

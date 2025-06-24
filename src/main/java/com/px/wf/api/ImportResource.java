@@ -207,12 +207,12 @@ public class ImportResource {
             responseData.put("success", true);
             responseData.put("data", importService.getData());
             responseStatus = Response.Status.CREATED;
-            System.out.println("success");
+//            System.out.println("success");
         } catch (Exception ex) {
             if (error.get("code") == null) {
                 error.put("code", 500);
                 error.put("message", ex.getMessage());
-                System.out.println("err: " + ex.getMessage());
+//                System.out.println("err: " + ex.getMessage());
             }
             responseData.put("success", false);
             responseData.put("error", error);
