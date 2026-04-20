@@ -5,13 +5,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.px.admin.daoimpl.UserProfileDaoImpl;
 import com.px.admin.daoimpl.VUserProfileDaoImpl;
 import com.px.admin.entity.DigitalKey;
+import com.px.admin.entity.Position;
 import com.px.share.entity.LogData;
 import com.px.admin.entity.Structure;
+import com.px.admin.entity.Title;
+import com.px.admin.entity.User;
 import com.px.admin.entity.UserProfile;
+import com.px.admin.entity.UserProfileType;
+import com.px.admin.entity.UserStatus;
 import com.px.admin.entity.VUserProfile;
 import com.px.admin.model.UserProfileConvertModel;
 import com.px.admin.model.UserProfileModel;
 import com.px.admin.model.VUserProfileModel;
+import com.px.mwp.entity.UserProfileFolder;
+import com.px.mwp.service.UserProfileFolderService;
 import com.px.share.entity.Param;
 import com.px.share.service.FileAttachService;
 import com.px.share.service.GenericService;
@@ -22,8 +29,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
@@ -594,6 +604,153 @@ public class UserProfileService implements GenericService<UserProfile, UserProfi
             e.printStackTrace();
             LOG.error("Exception = " + e.getMessage());
             return false;
+        }
+    }
+
+    public UserProfile createDcenUserProfile(User user, HashMap dcenUserData) {
+        try {
+            UserProfile userProfile = new UserProfile();
+            userProfile.setCreatedBy(1);
+            userProfile.setStructure(Common.prepareObject(new Structure(), -2));//"รอโยกย้ายผู้ใช้งาน"
+            final Title title = new TitleService().getByTitleName(Common.getString(dcenUserData, "prefiX_th"));
+            userProfile.setTitle(title == null ? Common.prepareObject(new Title(), 1) : title);
+            userProfile.setUser(user);
+            userProfile.setUserProfileDefaultSelect(1);
+            userProfile.setUserProfileEmail(Common.getString(dcenUserData, "email"));
+            userProfile.setUserProfileFirstName(Common.getString(dcenUserData, "name_th"));
+            userProfile.setUserProfileFirstNameEng(Common.getString(dcenUserData, "name_en"));
+            userProfile.setUserProfileLastName(Common.getString(dcenUserData, "lastname_th"));
+            userProfile.setUserProfileLastNameEng(Common.getString(dcenUserData, "lastname_en"));
+            userProfile.setUserProfileFullName(userProfile.getUserProfileFirstName() + " " + userProfile.getUserProfileLastName());
+            userProfile.setUserProfileFullNameEng(userProfile.getUserProfileFirstNameEng() + " " + userProfile.getUserProfileLastNameEng());
+            userProfile.setUserProfileTel(Common.getString(dcenUserData, "phone_number_tel"));//*not imp yet
+            userProfile.setUserProfileVersion(1);
+            userProfile.setUserProfileStatus(Common.prepareObject(new UserStatus(), 1));
+            userProfile.setUserProfileType(Common.prepareObject(new UserProfileType(), 2));
+            userProfile.setUserProfileCardId(Common.getString(dcenUserData, "id_card"));
+            userProfile.setUserProfileCode(null);
+            userProfile.setUserProfileAddress(null);
+            final Position position = new PositionService().getByPositionName(Common.getString(dcenUserData, "position"));
+            userProfile.setPosition(position);
+            userProfile.setPositionType(null);
+            userProfile.setPositionLevel(0);
+//            userProfile.setDigitalKey(Common.getString(dcenUserData, "id"));
+            userProfile.setDigitalKey(null);
+            userProfile = create(userProfile);
+
+            List<UserProfileFolder> listfolder = new UserProfileFolderService().createDefaultByUserProfile(userProfile);
+            if (listfolder == null) {
+                userProfileDaoImpl.delete(userProfile);
+                return null;
+            }
+
+            return userProfile;
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            LOG.error("createDcenUserProfile().Exception = " + ex.getMessage());
+            LOG.error("createDcenUserProfile().ST = " + sw.toString());
+            return null;
+        }
+    }
+
+    public UserProfile updateDcenUserProfile(User user, HashMap dcenUserData) {
+        try {
+            final String email = Common.getString(dcenUserData, "email");
+            final List<UserProfile> listUserProfile = userProfileDaoImpl.listByDecenUser(user.getId(), email);
+            if (listUserProfile.isEmpty()) {
+                return createDcenUserProfile(user, dcenUserData);
+            }
+            final UserProfile userProfile = listUserProfile.get(0);
+
+            boolean changed = false;
+
+            final String titleName = Common.getString(dcenUserData, "prefiX_th");
+            if (titleName != null) {
+                if (!userProfile.getTitle().getTitleName().equals(titleName)) {
+                    final Title title = new TitleService().getByTitleName(titleName);
+                    if (title != null) {
+                        changed = true;
+                        userProfile.setTitle(title);
+                    }
+                }
+            }
+
+            final String firstName = Common.getString(dcenUserData, "name_th");
+            if (firstName != null) {
+                if (!userProfile.getUserProfileFirstName().equals(firstName)) {
+                    changed = true;
+                    userProfile.setUserProfileFirstName(firstName);
+                }
+            }
+
+            final String firstNameEng = Common.getString(dcenUserData, "name_en");
+            if (firstNameEng != null) {
+                if (!userProfile.getUserProfileFirstNameEng().equals(firstNameEng)) {
+                    changed = true;
+                    userProfile.setUserProfileFirstNameEng(firstNameEng);
+                }
+            }
+
+            final String lastName = Common.getString(dcenUserData, "lastname_th");
+            if (lastName != null) {
+                if (!userProfile.getUserProfileLastName().equals(lastName)) {
+                    changed = true;
+                    userProfile.setUserProfileLastName(lastName);
+                }
+            }
+
+            final String lastNameEng = Common.getString(dcenUserData, "lastname_en");
+            if (lastNameEng != null) {
+                if (!userProfile.getUserProfileLastNameEng().equals(lastNameEng)) {
+                    changed = true;
+                    userProfile.setUserProfileLastNameEng(lastNameEng);
+                }
+            }
+
+            final String tel = Common.getString(dcenUserData, "phone_number_tel");//*not imp yet
+            if (tel != null) {
+                if (!userProfile.getUserProfileTel().equals(tel)) {
+                    changed = true;
+                    userProfile.setUserProfileTel(tel);
+                }
+            }
+
+            final String idCard = Common.getString(dcenUserData, "id_card");
+            if (idCard != null) {
+                if (!userProfile.getUserProfileCardId().equals(idCard)) {
+                    changed = true;
+                    userProfile.setUserProfileCardId(idCard);
+                }
+            }
+
+            final String positionName = Common.getString(dcenUserData, "position");
+            if (positionName != null) {
+                if (!userProfile.getPosition().getPositionName().equals(positionName)) {
+                    final Position position = new PositionService().getByPositionName(positionName);
+                    if (position != null) {
+                        changed = true;
+                        userProfile.setPosition(position);
+                    }
+                }
+            }
+
+            if (changed) {
+                userProfile.setUpdatedBy(1);
+                userProfile.setUserProfileFullName(userProfile.getUserProfileFirstName() + " " + userProfile.getUserProfileLastName());
+                userProfile.setUserProfileFullNameEng(userProfile.getUserProfileFirstNameEng() + " " + userProfile.getUserProfileLastNameEng());
+                return update(userProfile);
+            }
+
+            return new UserProfile();
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            LOG.error("updateDcenUserProfile().Exception = " + ex.getMessage());
+            LOG.error("updateDcenUserProfile().ST = " + sw.toString());
+            return new UserProfile();
         }
     }
 

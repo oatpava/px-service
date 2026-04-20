@@ -184,7 +184,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
     }
 
     private DetachedCriteria createOrder(DetachedCriteria criteria, String sort, String dir) {
-        if (sort !=null && !sort.isEmpty()) {
+        if (sort != null && !sort.isEmpty()) {
             if ((!dir.isEmpty()) && dir.equalsIgnoreCase("asc")) {
                 switch (sort) {
                     case "createdDate":
@@ -334,6 +334,17 @@ public class UserProfileDaoImpl extends GenericDaoImpl<UserProfile, Integer> imp
         criteria.add(conjunction);
         List<UserProfile> result = this.listByCriteria(criteria);
         return result.isEmpty() ? null : result.get(0);
+    }
+
+    public List<UserProfile> listByDecenUser(int userId, String email) {
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("user.id", userId));
+        conjunction.add(Restrictions.eq("userProfileEmail", email));
+        conjunction.add(Restrictions.eq("removedBy", 0));
+        DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class);
+        criteria.createCriteria("user", "user", JoinType.INNER_JOIN);
+        criteria.add(conjunction).addOrder(Order.desc("this.createdDate"));
+        return this.listByCriteria(criteria);
     }
 
 }

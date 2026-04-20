@@ -1,6 +1,7 @@
 package com.px.share.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.px.share.entity.BaseEntity;
 import com.px.share.entity.Param;
 import com.px.share.service.ParamService;
 import java.io.File;
@@ -26,9 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.crypto.BadPaddingException;
@@ -556,5 +557,22 @@ public class Common {
             Arrays.fill(generatedData, (byte) 0);
         }
     }
-    
+
+    public static String getString(HashMap data, String key) {
+        return data.get(key) != null ? data.get(key).toString() : null;
+    }
+
+    public static Integer getInteger(HashMap data, String key) {
+        return data.get(key) != null ? Integer.valueOf(data.get(key).toString()) : null;
+    }
+
+    public static <Object extends BaseEntity> Object prepareObject(Object obj, Integer value) {
+        if (value != null && value != 0) {
+            obj.setId(value);
+        } else {
+            obj = null;
+        }
+        return obj;
+    }
+
 }

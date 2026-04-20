@@ -255,7 +255,12 @@ public class ImportService {
 
     public ImportStatusModel checkAuthentication(String username, String password) {
         try {
-            final boolean result = new UserService().authenticationUser(username, password);
+            boolean result = false;
+            final HashMap resultData = new UserService().authentication(username, password);
+            if (resultData != null) {
+                result = (resultData.containsKey("data"));
+            }
+
             if (!result) {
                 return new ImportStatusModel(401, "การยืนยันตัวตนไม่สำเร็จ");
             } else {
@@ -843,7 +848,7 @@ public class ImportService {
         final String filePath = fileAttach.getLinkType() + File.separator + fileAttachService.buildFilePathExt(fileAttach.getId()) + fileAttach.getFileAttachType();
         final String dstFilePath = pathDocument + filePath;
         file = new File(dstFilePath);
-        
+
         if (encodeFile.equalsIgnoreCase("Y")) {
             try {
                 Common.encodeFile(templateFilePath, dstFilePath);
@@ -862,7 +867,7 @@ public class ImportService {
                 Files.copy(templateFile.toPath(), file.toPath(), REPLACE_EXISTING);
             } catch (IOException ex) {
                 LOG.error("/imports createFileFromTemplate().copy()", ex);
-               return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (copyFileFromTemplate())");
+                return new ImportStatusModel(500, "บันทึกรายการหนังสือไม่สำเร็จ (copyFileFromTemplate())");
             }
         }
         return new ImportStatusModel();

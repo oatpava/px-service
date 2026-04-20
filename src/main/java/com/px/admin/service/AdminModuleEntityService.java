@@ -1,7 +1,6 @@
 package com.px.admin.service;
 
 import com.px.share.service.ParamService;
-import com.px.admin.entity.Ad;
 import com.px.admin.entity.Module;
 import com.px.admin.entity.ModuleConfig;
 import com.px.share.entity.Param;
@@ -42,7 +41,6 @@ public class AdminModuleEntityService {
 
     public MetadataSources listCreateEntity(MetadataSources metadataSource) {
         //Add Entity 
-        metadataSource.addAnnotatedClass(com.px.admin.entity.Ad.class);
         metadataSource.addAnnotatedClass(com.px.authority.entity.Auth.class);
         metadataSource.addAnnotatedClass(com.px.share.entity.FileAttach.class);
         metadataSource.addAnnotatedClass(com.px.admin.entity.Holiday.class);
@@ -99,21 +97,7 @@ public class AdminModuleEntityService {
         createDataStructure(structureName);
         createDataUser(adminUserName, adminPassword, adminFullName);
         createMonth();
-        createListAd();
         createDataProvince("pc_province.csv");
-    }
-
-    private void createListAd() {
-        AdService adService = new AdService();
-        List<Ad> listAd = adService.listAll("", "");
-        LOG.info("create List Ad. ");
-        LOG.info(listAd);
-        if (!listAd.isEmpty()) {
-            for (Ad ad : listAd) {
-                LOG.info(ad);
-                PxInit.ListAd.add(ad);
-            }
-        }
     }
 
     private void createMonth() {
@@ -405,6 +389,9 @@ public class AdminModuleEntityService {
         listParam.put("PASSEXPIRATION", "90");
         listParam.put("PASSEXPIRATIONTYPE", "60");
         listParam.put("FILE_SIZE_LIMIT", "100");
+        listParam.put("FILE_SIZE_LIMIT", "100");
+        listParam.put("DCEN_API_URI", "http://dcen.dpim.go.th/");
+        listParam.put("DCEN_API_SECRET_KEY", "aab12c76-97db-0dde-6f1e-c080020f8715");
 
         ParamService paramService = new ParamService();
         Param param = null;
@@ -489,19 +476,6 @@ public class AdminModuleEntityService {
                 result = moduleService.update(result);
             }
             LOG.info("Module created successfully." + (t1 + System.currentTimeMillis()));
-        }
-    }
-
-    /**
-     * For create default data when start service.
-     *
-     * author OPAS
-     */
-    private void createDataAd() {
-        AdService adService = new AdService();
-        Ad ad = adService.getById(1);
-        if (ad == null) {
-
         }
     }
 

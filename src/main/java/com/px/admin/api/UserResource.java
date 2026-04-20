@@ -24,9 +24,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
@@ -301,11 +304,6 @@ public class UserResource {
             UserModel userModel
     ) {
         LOG.debug("checkAuthentication...");
-        LOG.debug("name = " + userModel.getName());
-        LOG.debug("passwords = " + userModel.getPasswords());
-        LOG.debug("userId = " + httpHeaders.getHeaderString("userID"));
-        LOG.debug("userType = " + httpHeaders.getHeaderString("userType"));
-        LOG.debug("clientIp = " + httpHeaders.getHeaderString("clientIp"));
         Gson gs = new GsonBuilder()
                 .setVersion(userModel.getVersion())
                 .excludeFieldsWithoutExposeAnnotation()
@@ -318,56 +316,57 @@ public class UserResource {
         responseData.put("success", false);
         responseData.put("message", "Authentication fail.");
         responseData.put("errorMessage", "");
-        AuthenticationModel authenticationModel = new AuthenticationModel(false);
-        responseData.put("data", authenticationModel);
+        responseData.put("data", false);
         try {
             UserService userService = new UserService();
-            boolean result = userService.authenticationUser(userModel.getName(), userModel.getPasswords());
-            if (result) {
-                User user = userService.getUserByUserName(userModel.getName());
-                if (user != null) {
-                    UserProfileService userProfileService = new UserProfileService();
-                    List<UserProfile> listUserProfile = userProfileService.listByUserId(user.getId(), null, null);
-                    UserProfile userProfile = listUserProfile.get(0);
-                    if (userProfile.getUserProfileStatus() != null && userProfile.getUserProfileStatus().getId() != 1) {
-                        if (userProfile.getUserProfileStatus().getId() == 3) {
-                            result = false;
-                            responseData.put("message", "ผู้ใช้นี้ถูกระงับการใช้งาน กรุณาติดต่อแอดมินเพื่อขอใช้งาน.");
-                        } else if (userProfile.getUserProfileStatus().getId() == 2) {
-                            responseData.put("message", "");
-                        }
-                    } else {
-                        final String token = userService.genToken(user, userProfile);
-                        response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
-                        List<UserProfileModel> listUserProfileModel = new ArrayList<>();
-                        listUserProfile.forEach(u -> {
-                            listUserProfileModel.add(userProfileService.tranformToModel(u));
-                        });
-                        responseData.put("userProfiles", listUserProfileModel);
-                        responseData.put("haveCa", userProfileService.checkCa(userProfile.getId()));
-                        responseData.put("message", listUserProfileModel);
-                    }
+            HashMap resultData = userService.authentication(userModel.getName(), userModel.getPasswords());
+            if (resultData.containsKey("data")) {
+                User user = (User) resultData.get("data");
 
-//                    UserProfileService userProfileService = new UserProfileService();
-//                    UserProfile userProfile = userProfileService.getByUserId(user.getId());
-//                    final String token = userService.genToken(user, userProfile);
-//                    response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
-//                    responseData.put("message", "");
-                    //LogData For Login
+                UserProfileService userProfileService = new UserProfileService();
+                List<UserProfile> listUserProfile = userProfileService
+                        .listByUserId(user.getId(), null, null)
+                        .stream()
+                        .filter(userProfile -> {
+                            UserStatus userStatus = userProfile.getUserProfileStatus();
+                            return userStatus == null || userStatus.getId() == 1;
+                        })
+                        .collect(Collectors.toList());
+
+                if (!listUserProfile.isEmpty()) {
+                    final UserProfile userProfile = listUserProfile.get(0);
+                    final String token = userService.genToken(user, userProfile);
+                    response.setHeader(HTTPHeaderNames.AUTH_TOKEN, token);
+
+                    List<UserProfileModel> listUserProfileModel = new ArrayList<>();
+                    listUserProfile.forEach(u -> {
+                        listUserProfileModel.add(userProfileService.tranformToModel(u));
+                    });
+                    responseData.put("data", userService.tranformToModel(user));
+                    responseData.put("status", 1);
+                    responseData.put("message", "");
+                    responseData.put("clientIp", httpHeaders.getHeaderString("clientIp"));
+                    responseData.put("userProfiles", listUserProfileModel);
+                    responseData.put("haveCa", userProfileService.checkCa(userProfile.getId()));
+
                     userService.saveLogForLogin(userProfile, httpHeaders.getHeaderString("clientIp"));
+                } else {
+                    responseData.put("status", -1);
+                    responseData.put("message", "ไม่พบข้อมูลโรายละเอียดผู้ใช้งานของผู้ใช้นี้ กรุณาติดต่อผู้ดูแลระบบ");
                 }
-                authenticationModel = new AuthenticationModel(result);
-                responseData.put("data", authenticationModel);
             } else {
-                responseData.put("message", "คุณกรอก Username และ Password ไม่ถูกต้อง.");
-                authenticationModel = new AuthenticationModel(result);
-                responseData.put("data", authenticationModel);
+                responseData.put("status", Common.getInteger(resultData, "status"));
+                responseData.put("message", Common.getString(resultData, "message"));
             }
+
             status = Response.Status.OK;
             responseData.put("success", true);
-            responseData.put("clientIp", httpHeaders.getHeaderString("clientIp"));
         } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            LOG.error("checkAuthentication.Exception = " + ex.getMessage());
+            LOG.error("checkAuthentication.ST = " + sw.toString());
             status = Response.Status.OK;
             responseData.put("errorMessage", ex.getMessage());
         }
@@ -674,187 +673,6 @@ public class UserResource {
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
-
-    @ApiOperation(
-            value = "Method for check user can login by status id",
-            notes = "ยืนยันการเข้าใช้งานระบบจากสถานะผู้ใช้งาน และช่วงวันที่เปิดใช้งาน",
-            response = AuthenticationModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
-        @ApiResponse(code = 404, message = "Authentication fail."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/login/checkLock/")
-    public Response checkUserStatusId(
-            UserModel userModel
-    ) {
-        LOG.debug("checkUserStatusId...");
-        LOG.debug("name = " + userModel.getName());
-        LOG.debug("userId = " + httpHeaders.getHeaderString("userID"));
-        LOG.debug("clientIp = " + httpHeaders.getHeaderString("clientIp"));
-        Gson gs = new GsonBuilder()
-                .setVersion(userModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Status status = Response.Status.NOT_FOUND;
-        responseData.put("success", false);
-        responseData.put("message", "Authentication fail.");
-        responseData.put("errorMessage", "");
-        AuthenticationModel authenticationModel = new AuthenticationModel(false);
-        responseData.put("data", authenticationModel);
-        try {
-            UserProfileService userProfileService = new UserProfileService();
-            User user = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID"))).getUser();
-            UserService userService = new UserService();
-            boolean result = userService.checkUserLock(user.getId());
-            if (result) {
-                authenticationModel = new AuthenticationModel(result);
-                responseData.put("data", authenticationModel);
-                responseData.put("message", "");
-            }
-            status = Response.Status.OK;
-            responseData.put("success", true);
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            status = Response.Status.OK;
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
-
-    @ApiOperation(
-            value = "Method for check change password",
-            notes = "ตรวจสอบการแจ้งเปลียนพาสเวิร์ด",
-            response = AuthenticationModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
-        @ApiResponse(code = 404, message = "Authentication fail."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/checkChangePassword/")
-    public Response checkChangePassword(
-            UserModel userModel
-    ) {
-        LOG.debug("checkFirstLogin...");
-        LOG.debug("name = " + userModel.getName());
-        LOG.debug("userId = " + httpHeaders.getHeaderString("userID"));
-        LOG.debug("clientIp = " + httpHeaders.getHeaderString("clientIp"));
-        Gson gs = new GsonBuilder()
-                .setVersion(userModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Status status = Response.Status.NOT_FOUND;
-        responseData.put("success", false);
-        responseData.put("message", "check change password fail.");
-        responseData.put("errorMessage", "");
-        AuthenticationModel authenticationModel = new AuthenticationModel(false);
-        responseData.put("data", authenticationModel);
-        try {
-//            UserProfileService userProfileService = new UserProfileService();
-//            User user = userProfileService.getById(Integer.parseInt(httpHeaders.getHeaderString("userID"))).getUser();
-//            User user = userProfileService.getById(3).getUser();
-            UserService userService = new UserService();
-            User user = userService.getUserByUserName(userModel.getName());
-            boolean result = false;
-            result = userService.checkUserExpireDate(user.getId());
-            if (result) {
-                responseData.put("message", "ชื่อผู้ใช้หมดอายุการใช้งาน โปรดติดต่อผู้ดูแลระบบ");
-            } else {
-                Param param = new ParamService().getByParamName("USE_AD");
-                if (!param.getParamValue().equalsIgnoreCase("Y")) {
-                    if (user.getUpdatedBy() == 0) {
-                        result = true;
-                        responseData.put("message", "กรุณาเปลี่ยนรหัสผ่านในครั้งแรกที่เข้าระบบ");
-                    } else {
-                        result = userService.checkUserPasswordExpireDate(user.getId());
-                        if (result) {
-                            responseData.put("message", "รหัสผ่านหมดอายุ กรุณาเปลี่ยนรหัสผ่าน");
-                        }
-                    }
-                }
-            }
-            LOG.debug("result: " + result);
-            authenticationModel = new AuthenticationModel(result);
-            responseData.put("data", authenticationModel);
-
-            status = Response.Status.OK;
-            responseData.put("success", true);
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            status = Response.Status.OK;
-            responseData.put("errorMessage", ex.getMessage());
-        }
-        return Response.status(status).entity(gs.toJson(responseData)).build();
-    }
-
-    @ApiOperation(
-            value = "Method for check change password expire date",
-            notes = "ตรวจสอบวันที่หมดอายุของรหัสผ่าน",
-            response = AuthenticationModel.class
-    )
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Authentication success.", response = AuthenticationModel.class),
-        @ApiResponse(code = 404, message = "Authentication fail."),
-        @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Path(value = "/checkUserPasswordExpireDate/")
-    public Response checkUserPasswordExpireDate(
-            UserModel userModel
-    ) {
-        LOG.debug("checkUserPasswordExpireDate...");
-        LOG.debug("name = " + userModel.getName());
-        LOG.debug("userId = " + httpHeaders.getHeaderString("userID"));
-        LOG.debug("clientIp = " + httpHeaders.getHeaderString("clientIp"));
-        Gson gs = new GsonBuilder()
-                .setVersion(userModel.getVersion())
-                .excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-        HashMap responseData = new HashMap();
-        Status status = Response.Status.NOT_FOUND;
-        responseData.put("success", false);
-        responseData.put("message", "check change password expiredate fail.");
-        responseData.put("errorMessage", "");
-        AuthenticationModel authenticationModel = new AuthenticationModel(false);
-        responseData.put("data", authenticationModel);
-        try {
-            UserService userService = new UserService();
-            User user = userService.getUserByUserName(userModel.getName());
-            boolean result = false;
-            if (user.getUpdatedBy() != 0) {
-                result = userService.checkUserPasswordExpireDate(user.getId());
-                responseData.put("message", "Your password is Expired, Please Change Password");
-            }
-            authenticationModel = new AuthenticationModel(result);
-            responseData.put("data", authenticationModel);
-
-            status = Response.Status.OK;
-            responseData.put("success", true);
-        } catch (Exception ex) {
-            LOG.error("Exception = " + ex.getMessage());
-            status = Response.Status.OK;
             responseData.put("errorMessage", ex.getMessage());
         }
         return Response.status(status).entity(gs.toJson(responseData)).build();
@@ -1366,24 +1184,16 @@ public class UserResource {
     )
     @ApiResponses({
         @ApiResponse(code = 200, message = "User updeted by id success."),
-        @ApiResponse(code = 404, message = "User by id not found in the database."),
+        @ApiResponse(code = 404, message = "User by UserName not found in the database."),
         @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/userName")
     public Response updateStatusByUsername(
-            //            @ApiParam(name = "id", value = "รหัสผู้ใช้งานระบบ", required = true)
-            //            @PathParam("id") int id,
-            //            @ApiParam(name = "userName", value = "ชื่อผู้ใช้งานระบบ", required = true)
-            //            @PathParam("userName") String userName,
-            //            @ApiParam(name = "status", value = "สถานะผู้ใช้งาน", required = true)
-            //            @PathParam("status") int stat,
             UserModel userModel
     ) {
         LOG.debug("updateStatusByUsername...");
-//        LOG.debug("userName = " + userName);
-//        LOG.debug("status = " + stat);
         Gson gs = new GsonBuilder()
                 .setVersion(userModel.getVersion())
                 .excludeFieldsWithoutExposeAnnotation()
@@ -1394,38 +1204,20 @@ public class UserResource {
         HashMap responseData = new HashMap();
         Response.Status status = Response.Status.NOT_FOUND;
         responseData.put("success", false);
-        responseData.put("message", "User by id not found in the database.");
+        responseData.put("message", "User by UserName not found in the database.");
         responseData.put("errorMessage", "");
         try {
             UserService userService = new UserService();
-            UserProfileService userProfileService = new UserProfileService();
-//            User user = userService.getByIdNotRemoved(id);
             User user = userService.getUserByUserName(userModel.getName());
             if (user != null) {
-//                UserProfile userProfile = new UserProfileService().getByUserId(user.getId());//oat-edit
-                UserProfile userProfile = new UserProfileService().getDefaultProfile(user.getId());
-                user.setUpdatedBy(user.getId());
-                userProfile.setUpdatedBy(userProfile.getId());
-//                user.setUserPassword(userModel.getPasswords());
-//                user.setUserActiveDate(dateThaiToLocalDateTime(userModel.getActiveDate()));
-//                user.setUserExpireDate(dateThaiToLocalDateTime(userModel.getExpireDate()));
-//                user.setUserPasswordExpireDate(dateThaiToLocalDateTime(userModel.getPasswordExpireDate()));
-                if (userModel.getStatus() != null) {
-                    UserStatus userStatus = new UserStatusService().getByIdNotRemoved(userModel.getStatus().getId());
-                    user.setUserStatus(userStatus);
-                    userProfile.setUserProfileStatus(userStatus);
-
-                }
+                user.setUserStatus(Common.prepareObject(new UserStatus(), userModel.getStatus().getId()));
                 user = userService.update(user);
-                userProfile = userProfileService.update(userProfile);
 
                 status = Response.Status.OK;
                 responseData.put("data", userService.tranformToModel(user));
                 responseData.put("message", "");
-                //LogData For update password
-                userService.saveLogForUpdatePassword(user, httpHeaders.getHeaderString("clientIp"));
+                responseData.put("success", true);
             }
-            responseData.put("success", true);
         } catch (Exception ex) {
             LOG.error("Exception = " + ex.getMessage());
             status = Response.Status.INTERNAL_SERVER_ERROR;
@@ -1448,7 +1240,7 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(value = "/swapUserProfile")
     public Response swapUserProfile(
-           UserProfileModel userProfileModel
+            UserProfileModel userProfileModel
     ) {
         LOG.debug("swapUserProfile...");
         Gson gs = new GsonBuilder()
@@ -1518,7 +1310,13 @@ public class UserResource {
         responseData.put("message", "Check password fail.");
         responseData.put("errorMessage", "");
         try {
-            responseData.put("data", new UserService().authenticationUser(username, password));
+            boolean result = false;
+            UserService userService = new UserService();
+            HashMap resultData = userService.authentication(username, password);
+            if (resultData != null) {
+                result = (resultData.containsKey("data"));
+            }
+            responseData.put("data", result);
             responseData.put("message", "");
             responseData.put("success", true);
         } catch (Exception ex) {

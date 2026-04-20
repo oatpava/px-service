@@ -62,7 +62,6 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.px.admin.api.AdResource.class);
         resources.add(com.px.admin.api.HolidayResource.class);
         resources.add(com.px.admin.api.LookupDetailResource.class);
         resources.add(com.px.admin.api.LookupResource.class);
