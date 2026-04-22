@@ -80,6 +80,7 @@ public class AdminModuleEntityService {
         metadataSource.addAnnotatedClass(com.px.share.entity.Month.class);
         metadataSource.addAnnotatedClass(com.px.admin.entity.Province.class);
         metadataSource.addAnnotatedClass(com.px.share.entity.FileAttachApprove.class);
+        metadataSource.addAnnotatedClass(com.px.admin.entity.Alert.class);
 
         return metadataSource;
     }
