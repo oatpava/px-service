@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author OPAS
+ * @author Oat
  */
 @Api(value = "Alert การแ้จงเตือน")
 @Path("v1/alerts")
